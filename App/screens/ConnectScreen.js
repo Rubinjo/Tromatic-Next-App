@@ -5,6 +5,8 @@ const ConnectScreen = (props) => {
   return (
     <View style={styles.container}>
       <Text>ConnectScreen!</Text>
+      <Text>ConnectScreen!</Text>
+      <Text>ConnectScreen!</Text>
     </View>
   );
 };
