@@ -18,33 +18,22 @@ import Colors from "../assets/constants/colors";
 import useColorScheme from "react-native/Libraries/Utilities/useColorScheme";
 
 import { CHAMBERS } from "../data/dummy-data";
+import CategoryGridTile from "../components/CategoryGridTile";
 
 const OverviewScreen = (props) => {
   const navigation = useNavigation();
   const renderGridItem = (itemData) => {
     return (
-      <TouchableOpacity
-        onPress={() =>
-          props.navigation.navigate(
-            "Details",
-            {
-              itemId: itemData.item.id,
-              otherParam: "anything you want here",
-            }
-
-            // {
-            //   params: {
-            //     chamberId: itemData.item.id,
-            //     chamberTitle: itemData.item.title,
-            //   },
-            // }
-          )
-        }
-      >
-        <View style={styles.gridItem}>
-          <Text>{itemData.item.title}</Text>
-        </View>
-      </TouchableOpacity>
+      <CategoryGridTile
+        title={itemData.item.title}
+        color={itemData.item.color}
+        onSelect={() => {
+          props.navigation.navigate("Details", {
+            itemId: itemData.item.id,
+            otherParam: "anything you want here",
+          });
+        }}
+      />
     );
   };
 
@@ -87,11 +76,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-  },
-  gridItem: {
-    flex: 1,
-    margin: 15,
-    height: 50,
   },
 });
 
