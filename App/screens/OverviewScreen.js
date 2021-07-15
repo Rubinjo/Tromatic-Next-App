@@ -1,15 +1,24 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Button } from "react-native";
+import {
+  NavigationContainer,
+  CommonActions,
+  useNavigation,
+} from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Colors from "../assets/constants/colors";
 import useColorScheme from "react-native/Libraries/Utilities/useColorScheme";
 
 const OverviewScreen = (props) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Text>OverviewScreen!</Text>
-      <Text>Hello world!</Text>
+      <Button
+        title="Go to details"
+        onPress={() => navigation.navigate("Details")}
+      />
     </View>
   );
 };
