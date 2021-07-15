@@ -2,10 +2,14 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+import Colors from "../assets/constants/colors";
+import useColorScheme from "react-native/Libraries/Utilities/useColorScheme";
+
 const OverviewScreen = (props) => {
   return (
     <View style={styles.container}>
       <Text>OverviewScreen!</Text>
+      <Text>Hello world!</Text>
     </View>
   );
 };
@@ -14,7 +18,11 @@ const OverviewScreen = (props) => {
 export const tabOptions = (navData) => {
   return {
     tabBarIcon: (props) => (
-      <MaterialCommunityIcons name="engine" size={props.size} color="white" />
+      <MaterialCommunityIcons
+        name="engine"
+        size={props.size}
+        color={Colors.PrimaryColor}
+      />
     ),
   };
 };

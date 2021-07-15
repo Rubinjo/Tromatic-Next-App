@@ -13,14 +13,14 @@ import SettingsScreen from "../screens/SettingsScreen";
 import SignInScreen from "../screens/SignInScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 
-import COLORS from "../assets/constants/colors";
+import Colors from "../assets/constants/colors";
 
 // Krijg de kleuren enzo nog niet helemaal werkent
 // en krijg dat de juiste headers showen nog niet goed (momenteel heb je een header van de stack en van de tab navigators)
 
 const defaultStackOptions = {
   headerStyle: {
-    backgroundColor: COLORS.PrimaryColor,
+    backgroundColor: Colors.PrimaryColor,
   },
   title: "",
   headerTintColor: "white",
