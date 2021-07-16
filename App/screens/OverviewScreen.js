@@ -44,11 +44,13 @@ const OverviewScreen = (props) => {
         data={CHAMBERS}
         renderItem={renderGridItem}
       />
-      <Text>OverviewScreen!</Text>
-      <Button
+      <View style={{ padding: 10 }}>
+        <Text>Overview of chambers</Text>
+      </View>
+      {/* <Button
         title="Go to details"
         onPress={() => navigation.navigate("Details")}
-      />
+      /> */}
     </View>
   );
 };

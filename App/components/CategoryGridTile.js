@@ -1,15 +1,23 @@
 import React from "react";
-import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  StyleSheet,
+  TouchableNativeFeedback,
+} from "react-native";
 
 const CategoryGridTile = (props) => {
   return (
-    <TouchableOpacity style={styles.gridItem} onPress={props.onSelect}>
-      <View
-        style={{ ...styles.container, ...{ backgroundColor: props.color } }}
-      >
-        <Text>{props.title}</Text>
-      </View>
-    </TouchableOpacity>
+    <View style={styles.gridItem}>
+      <TouchableNativeFeedback style={{ flex: 1 }} onPress={props.onSelect}>
+        <View
+          style={{ ...styles.container, ...{ backgroundColor: props.color } }}
+        >
+          <Text>{props.title}</Text>
+        </View>
+      </TouchableNativeFeedback>
+    </View>
   );
 };
 
@@ -19,6 +27,8 @@ const styles = StyleSheet.create({
     margin: 15,
     width: 300,
     height: 50,
+    borderRadius: 10,
+    overflow: "hidden",
   },
   container: {
     flex: 1,
