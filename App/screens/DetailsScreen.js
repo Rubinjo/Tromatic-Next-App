@@ -8,6 +8,7 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+import LineChart from "../components/Chart";
 import { CHAMBERS } from "../data/dummy-data";
 
 const DetailsScreen = (props) => {
@@ -22,6 +23,9 @@ const DetailsScreen = (props) => {
       {/* <Text>{selectedChamber.title}</Text> */}
       <Text>itemId: {JSON.stringify(itemId)}</Text>
       <Text>otherParam: {JSON.stringify(otherParam)}</Text>
+      <View>
+        <LineChart />
+      </View>
     </View>
   );
 };
