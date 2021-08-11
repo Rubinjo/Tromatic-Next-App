@@ -9,7 +9,9 @@ import OverviewScreen, {
   tabOptions as overviewTabOptions,
 } from "../screens/OverviewScreen";
 import ResetPasswordScreen from "../screens/ResetPasswordScreen";
-import SettingsScreen from "../screens/SettingsScreen";
+import SettingsScreen, {
+  tabOptions as settingsTabOptions,
+} from "../screens/SettingsScreen";
 import SignInScreen from "../screens/SignInScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 
@@ -19,14 +21,15 @@ import Colors from "../assets/constants/colors";
 // en krijg dat de juiste headers showen nog niet goed (momenteel heb je een header van de stack en van de tab navigators)
 
 const defaultStackOptions = {
-  headerStyle: {
-    backgroundColor: Colors.PrimaryColor,
-  },
-  title: "",
-  headerTintColor: "white",
+  headerStyle: { backgroundColor: Colors.PrimaryColor },
+  headerTitle: "",
 };
 const defaultTabOptions = {
-  showLabel: false,
+  tabBarActiveTintColor: "white",
+  tabBarInactiveTintColor: "white",
+  tabBarStyle: { backgroundColor: Colors.PrimaryColor },
+  headerStyle: { backgroundColor: Colors.PrimaryColor },
+  headerTitle: "",
 };
 
 const LoginStack = createStackNavigator();
@@ -56,7 +59,11 @@ const AppNavigator = (props) => {
             component={OverviewStackNav}
             options={overviewTabOptions}
           />
-          <Tab.Screen name="Settings" component={SettingsScreen} />
+          <Tab.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={settingsTabOptions}
+          />
         </Tab.Navigator>
       ) : (
         <LoginStack.Navigator>

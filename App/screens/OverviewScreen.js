@@ -55,20 +55,17 @@ const OverviewScreen = (props) => {
   );
 };
 
-OverviewScreen.navigationOptions = {
-  headerTitle: "Overview",
-};
-
-// Hij is wit dus je ziet hem momenteel niet
 export const tabOptions = (navData) => {
   return {
-    tabBarIcon: (props) => (
-      <MaterialCommunityIcons
-        name="engine"
-        size={props.size}
-        color={Colors.PrimaryColor}
-      />
-    ),
+    tabBarIcon: (props) => {
+      let iconName;
+      iconName = props.focused ? "engine" : "engine-outline";
+      return (
+        <MaterialCommunityIcons name={iconName} size={34} color={"white"} />
+      );
+    },
+    tabBarLabel: "Overview",
+    headerShown: false,
   };
 };
 
