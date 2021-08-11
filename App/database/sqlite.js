@@ -39,6 +39,25 @@ export const fetchSettings = () => {
   return promise;
 };
 
+// Insert language setting into database
+export const insertLanguage = (language) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "INSERT INTO settings (language) VALUES (?);",
+        [language],
+        (_, result) => {
+          resolve(result);
+        },
+        (_, err) => {
+          reject(err);
+        }
+      );
+    });
+  });
+  return promise;
+};
+
 // Update language setting of database
 export const updateLanguage = (language) => {
   const promise = new Promise((resolve, reject) => {
