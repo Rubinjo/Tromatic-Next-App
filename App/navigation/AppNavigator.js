@@ -12,13 +12,12 @@ import ResetPasswordScreen from "../screens/ResetPasswordScreen";
 import SettingsScreen, {
   tabOptions as settingsTabOptions,
 } from "../screens/SettingsScreen";
-import SignInScreen from "../screens/SignInScreen";
+import SignInScreen, {
+  stackOptions as signInStackOptions,
+} from "../screens/SignInScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 
 import Colors from "../assets/constants/colors";
-
-// Krijg de kleuren enzo nog niet helemaal werkent
-// en krijg dat de juiste headers showen nog niet goed (momenteel heb je een header van de stack en van de tab navigators)
 
 const defaultStackOptions = {
   headerStyle: { backgroundColor: Colors.PrimaryColor },
@@ -47,7 +46,7 @@ const OverviewStackNav = (props) => {
 
 // Create userSigned in variable that triggers different navigation stack
 // Below is simple dummy for testing
-const userSignedIn = true;
+const userSignedIn = false;
 
 const AppNavigator = (props) => {
   return (
@@ -67,7 +66,11 @@ const AppNavigator = (props) => {
         </Tab.Navigator>
       ) : (
         <LoginStack.Navigator>
-          <LoginStack.Screen name="SignIn" component={SignInScreen} />
+          <LoginStack.Screen
+            name="SignIn"
+            component={SignInScreen}
+            options={signInStackOptions}
+          />
           <LoginStack.Screen name="SignUp" component={SignUpScreen} />
           <LoginStack.Screen
             name="ResetPassword"
