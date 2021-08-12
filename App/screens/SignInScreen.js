@@ -24,14 +24,66 @@ const SignInScreen = (props) => {
     <View style={styles.container}>
       <View style={styles.backgroundSquare}></View>
       <View style={styles.backgroundTriangle}></View>
-      <Text>Welcome</Text>
-      <TextInput placeholder="Email" keyboardType="email-address" />
-      <TextInput placeholder="Password" />
-      <TouchableOpacity>
-        <Text>Sign in</Text>
+      <View
+        style={{
+          marginBottom: "auto",
+          marginTop: 20 + Config.deviceHeight * 0.06,
+        }}
+      >
+        <Text style={[styles.headText, { fontSize: Config.deviceWidth * 0.1 }]}>
+          Welcome
+        </Text>
+      </View>
+      <View
+        style={{
+          marginBottom: Config.deviceWidth * 0.1,
+        }}
+      >
+        <TextInput
+          style={styles.input}
+          autoCompleteType="email"
+          placeholder="Email"
+          keyboardType="email-address"
+          returnKeyType="next"
+          // onSubmitEditing={() => {
+          //   this.passwordInput.focus();
+          // }}
+          blurOnSubmit={false}
+          textContentType="emailAddress"
+        />
+        <TextInput
+          style={styles.input}
+          autoCompleteType="password"
+          placeholder="Password"
+          returnKeyType="done"
+          // ref={(input) => {
+          //   this.passwordInput = input;
+          // }}
+          textContentType="password"
+        />
+      </View>
+      <TouchableOpacity style={styles.button}>
+        <Text
+          style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
+        >
+          Sign in
+        </Text>
       </TouchableOpacity>
-      <Text>Forgot your password?</Text>
+      <TouchableOpacity>
+        <Text style={styles.headText}>Forgot your password?</Text>
+      </TouchableOpacity>
       <DropDownPicker
+        style={{
+          width: Config.deviceWidth * 0.5,
+          alignSelf: "center",
+          borderColor: "darkgrey",
+        }}
+        dropDownContainerStyle={{
+          width: Config.deviceWidth * 0.5,
+          alignSelf: "center",
+          borderColor: "darkgrey",
+        }}
+        dropDownDirection="BOTTOM"
         open={open}
         value={value}
         items={items}
@@ -39,10 +91,14 @@ const SignInScreen = (props) => {
         setValue={setValue}
         setItems={setItems}
       />
-      <Text>Don't have an account?</Text>
-      <TouchableOpacity>
-        <Text>SIGN UP</Text>
-      </TouchableOpacity>
+      <View style={{ flexDirection: "row", marginTop: "auto" }}>
+        <Text style={styles.text}>Don't have an account?</Text>
+        <TouchableOpacity>
+          <Text style={[styles.headText, { color: Colors.PrimaryColor }]}>
+            SIGN UP
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -82,6 +138,38 @@ const styles = StyleSheet.create({
     borderLeftColor: "transparent",
     position: "absolute",
     top: Config.deviceHeight * 0.7,
+  },
+  headText: {
+    fontFamily: "noto-sans-jp-bold",
+    color: "white",
+  },
+  text: {
+    fontFamily: "noto-sans-jp-regular",
+    color: "darkgrey",
+    marginRight: 6,
+  },
+  input: {
+    width: Config.deviceWidth * 0.8,
+    backgroundColor: "white",
+    borderColor: "darkgray",
+    borderWidth: 0.5,
+    borderRadius: 3,
+    paddingHorizontal: Config.deviceWidth * 0.04,
+    paddingVertical: Config.deviceHeight * 0.01,
+    fontSize: Config.deviceWidth * 0.05,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
+    marginTop: 6 + Config.deviceHeight * 0.02,
+  },
+  button: {
+    backgroundColor: Colors.SecondaryColor,
+    borderRadius: 32,
+    paddingHorizontal: Config.deviceWidth * 0.2,
   },
 });
 
