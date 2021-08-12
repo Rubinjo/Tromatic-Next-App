@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import * as Font from "expo-font";
+import AppLoading from "expo-app-loading";
 import { createStore, combineReducers } from "redux";
 import { Provider } from "react-redux";
 
@@ -8,6 +9,14 @@ import { initSettings, fetchSettings, insertLanguage } from "./database/sqlite";
 import AppNavigator from "./navigation/AppNavigator";
 import machineReducer from "./store/reducers/machine";
 import userReducer from "./store/reducers/user";
+
+// Fetch custom font-family
+const fetchFonts = async () => {
+  return Font.loadAsync({
+    "noto-sans-jp-regular": require("./assets/fonts/NotoSansJP-Regular.otf"),
+    "noto-sans-jp-bold": require("./assets/fonts/NotoSansJP-Bold.otf"),
+  });
+};
 
 const rootReducer = combineReducers({
   machine: machineReducer,
@@ -17,6 +26,7 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer);
 
 export default function App() {
+  const [fontLoaded, setFontLoaded] = useState(false);
   const [savedLanguage, setSavedLanguage] = useState([]);
 
   // Initialize SQLite database
@@ -57,6 +67,16 @@ export default function App() {
     loadDatabase();
   }, []);
 
+  if (!fontLoaded) {
+    return (
+      <AppLoading
+        startAsync={fetchFonts}
+        onFinish={() => setFontLoaded(true)}
+        onError={console.warn}
+      />
+    );
+  }
+
   return (
     <Provider store={store}>
       <StatusBar style="auto" />
@@ -64,12 +84,3 @@ export default function App() {
     </Provider>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
