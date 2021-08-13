@@ -69,7 +69,11 @@ const SignInScreen = (props) => {
           Sign in
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          props.navigation.navigate("ResetPassword");
+        }}
+      >
         <Text style={styles.headText}>Forgot your password?</Text>
       </TouchableOpacity>
       <DropDownPicker
