@@ -15,7 +15,9 @@ import SettingsScreen, {
 import SignInScreen, {
   stackOptions as signInStackOptions,
 } from "../screens/SignInScreen";
-import SignUpScreen from "../screens/SignUpScreen";
+import SignUpScreen, {
+  stackOptions as signUpStackOptions,
+} from "../screens/SignUpScreen";
 
 import Colors from "../assets/constants/colors";
 
@@ -71,7 +73,11 @@ const AppNavigator = (props) => {
             component={SignInScreen}
             options={signInStackOptions}
           />
-          <LoginStack.Screen name="SignUp" component={SignUpScreen} />
+          <LoginStack.Screen
+            name="SignUp"
+            component={SignUpScreen}
+            options={signUpStackOptions}
+          />
           <LoginStack.Screen
             name="ResetPassword"
             component={ResetPasswordScreen}

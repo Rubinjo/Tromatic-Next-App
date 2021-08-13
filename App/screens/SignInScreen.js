@@ -93,7 +93,11 @@ const SignInScreen = (props) => {
       />
       <View style={{ flexDirection: "row", marginTop: "auto" }}>
         <Text style={styles.text}>Don't have an account?</Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.navigate("SignUp");
+          }}
+        >
           <Text style={[styles.headText, { color: Colors.PrimaryColor }]}>
             SIGN UP
           </Text>
