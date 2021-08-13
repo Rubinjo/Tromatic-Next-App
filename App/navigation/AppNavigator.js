@@ -8,7 +8,9 @@ import DetailsScreen from "../screens/DetailsScreen";
 import OverviewScreen, {
   tabOptions as overviewTabOptions,
 } from "../screens/OverviewScreen";
-import ResetPasswordScreen from "../screens/ResetPasswordScreen";
+import ResetPasswordScreen, {
+  stackOptions as resetPasswordStackOptions,
+} from "../screens/ResetPasswordScreen";
 import SettingsScreen, {
   tabOptions as settingsTabOptions,
 } from "../screens/SettingsScreen";
@@ -81,6 +83,7 @@ const AppNavigator = (props) => {
           <LoginStack.Screen
             name="ResetPassword"
             component={ResetPasswordScreen}
+            options={resetPasswordStackOptions}
           />
         </LoginStack.Navigator>
       )}
