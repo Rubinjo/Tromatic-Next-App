@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 import DropDownPicker from "react-native-dropdown-picker";
 
 import Config from "../assets/config";
@@ -19,6 +20,15 @@ const SignInScreen = (props) => {
     { label: "German", value: "german" },
     { label: "Dutch", value: "dutch" },
   ]);
+
+  // Update language setting when redux store is loaded
+  useEffect(() => {
+    setValue(language);
+  }, [language]);
+
+  const language = useSelector((state) => state.language.language);
+
+  const dispatch = useDispatch();
 
   return (
     <View style={styles.container}>
@@ -71,6 +81,7 @@ const SignInScreen = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
+          console.log(language);
           props.navigation.navigate("ResetPassword");
         }}
       >
