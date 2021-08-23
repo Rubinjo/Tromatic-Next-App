@@ -1,10 +1,10 @@
 export const UPDATE_LANGUAGE = "UPDATE_LANGUAGE";
 
-export const updateLanguage = (newLanguage) => {
+export const updateLanguage = (language) => {
   return (dispatch) => {
     dispatch({
       type: UPDATE_LANGUAGE,
-      language: newLanguage,
+      language: language,
     });
   };
 };

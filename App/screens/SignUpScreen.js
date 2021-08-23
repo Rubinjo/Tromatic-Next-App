@@ -7,8 +7,9 @@ import {
   View,
 } from "react-native";
 
-import Config from "../assets/config";
+import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
+import i18n from "../utils/i18n";
 
 const SignUpScreen = (props) => {
   return (
@@ -17,13 +18,13 @@ const SignUpScreen = (props) => {
       <View style={styles.backgroundTriangle}></View>
       <View>
         <Text style={[styles.headText, { fontSize: Config.deviceWidth * 0.1 }]}>
-          Sign up
+          {i18n.t("signup.signup")}
         </Text>
       </View>
       <View>
         <TextInput
           style={styles.input}
-          placeholder="Company ID"
+          placeholder={i18n.t("signup.companyid")}
           returnKeyType="next"
           blurOnSubmit={false}
           // onSubmitEditing={() => {
@@ -32,7 +33,7 @@ const SignUpScreen = (props) => {
         />
         <TextInput
           style={styles.input}
-          placeholder="Full name"
+          placeholder={i18n.t("signup.name")}
           autoCompleteType="name"
           textContentType="name"
           returnKeyType="next"
@@ -46,7 +47,7 @@ const SignUpScreen = (props) => {
         />
         <TextInput
           style={styles.input}
-          placeholder="Email"
+          placeholder={i18n.t("signup.email")}
           autoCompleteType="email"
           keyboardType="email-address"
           textContentType="emailAddress"
@@ -61,7 +62,7 @@ const SignUpScreen = (props) => {
         />
         <TextInput
           style={styles.input}
-          placeholder="Password"
+          placeholder={i18n.t("signup.password")}
           textContentType="newPassword"
           returnKeyType="next"
           blurOnSubmit={false}
@@ -74,7 +75,7 @@ const SignUpScreen = (props) => {
         />
         <TextInput
           style={styles.input}
-          placeholder="Confirm password"
+          placeholder={i18n.t("signup.confirm")}
           textContentType="newPassword"
           returnKeyType="done"
           // ref={(input) => {
@@ -86,7 +87,7 @@ const SignUpScreen = (props) => {
         <Text
           style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
         >
-          Sign up
+          {i18n.t("signup.signup")}
         </Text>
       </TouchableOpacity>
     </View>
