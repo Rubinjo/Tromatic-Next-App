@@ -5,8 +5,11 @@ import AppLoading from "expo-app-loading";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import ReduxThunk from "redux-thunk";
+import { persistStore, persistReducer } from "redux-persist";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PersistGate } from "redux-persist/integration/react";
 
-import { initSettings, fetchSettings, insertLanguage } from "./database/sqlite";
+// import { initSettings, fetchSettings, insertLanguage } from "./database/sqlite";
 import AppNavigator from "./navigation/AppNavigator";
 import machineReducer from "./store/reducers/machine";
 import userReducer from "./store/reducers/user";
@@ -26,7 +29,16 @@ const rootReducer = combineReducers({
   language: languageReducer,
 });
 
-const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+const persistConfig = {
+  key: "root",
+  storage: AsyncStorage,
+  whitelist: ["language"],
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const store = createStore(persistedReducer, applyMiddleware(ReduxThunk));
+const persistor = persistStore(store);
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
@@ -82,8 +94,10 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <StatusBar style="auto" />
-      <AppNavigator />
+      <PersistGate loading={null} persistor={persistor}>
+        <StatusBar style="auto" />
+        <AppNavigator />
+      </PersistGate>
     </Provider>
   );
 }
