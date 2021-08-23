@@ -2,8 +2,9 @@ import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
+import ReduxThunk from "redux-thunk";
 
 import { initSettings, fetchSettings, insertLanguage } from "./database/sqlite";
 import AppNavigator from "./navigation/AppNavigator";
@@ -25,7 +26,7 @@ const rootReducer = combineReducers({
   language: languageReducer,
 });
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
