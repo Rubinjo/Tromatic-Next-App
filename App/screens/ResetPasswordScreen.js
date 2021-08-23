@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 
-import Config from "../assets/config";
+import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 
 const ResetPasswordScreen = (props) => {
