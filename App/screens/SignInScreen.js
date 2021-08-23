@@ -9,18 +9,20 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import DropDownPicker from "react-native-dropdown-picker";
 
-import Config from "../assets/config";
+import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import * as languageActions from "../store/actions/language";
+
+import i18n from "../utils/i18n";
 
 const SignInScreen = (props) => {
   const [error, setError] = useState();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    { label: "English", value: "english" },
-    { label: "German", value: "german" },
-    { label: "Dutch", value: "dutch" },
+    { label: i18n.t("signin.english"), value: "en" },
+    { label: i18n.t("signin.german"), value: "de" },
+    { label: i18n.t("signin.dutch"), value: "nl" },
   ]);
 
   // Update language setting when redux store is loaded
@@ -43,7 +45,7 @@ const SignInScreen = (props) => {
         }}
       >
         <Text style={[styles.headText, { fontSize: Config.deviceWidth * 0.1 }]}>
-          Welcome
+          {i18n.t("signin.welcome")}
         </Text>
       </View>
       <View
@@ -54,7 +56,7 @@ const SignInScreen = (props) => {
         <TextInput
           style={styles.input}
           autoCompleteType="email"
-          placeholder="Email"
+          placeholder={i18n.t("signin.email")}
           keyboardType="email-address"
           returnKeyType="next"
           // onSubmitEditing={() => {
@@ -66,7 +68,7 @@ const SignInScreen = (props) => {
         <TextInput
           style={styles.input}
           autoCompleteType="password"
-          placeholder="Password"
+          placeholder={i18n.t("signin.password")}
           returnKeyType="done"
           // ref={(input) => {
           //   this.passwordInput = input;
@@ -78,7 +80,7 @@ const SignInScreen = (props) => {
         <Text
           style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
         >
-          Sign in
+          {i18n.t("signin.signin")}
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -86,7 +88,7 @@ const SignInScreen = (props) => {
           props.navigation.navigate("ResetPassword");
         }}
       >
-        <Text style={styles.headText}>Forgot your password?</Text>
+        <Text style={styles.headText}>{i18n.t("signin.forgot")}</Text>
       </TouchableOpacity>
       <DropDownPicker
         style={{
@@ -107,6 +109,7 @@ const SignInScreen = (props) => {
         setValue={setValue}
         setItems={setItems}
         onChangeValue={(value) => {
+          i18n.locale = value;
           try {
             dispatch(languageActions.updateLanguage(value));
           } catch (err) {
@@ -116,14 +119,14 @@ const SignInScreen = (props) => {
         }}
       />
       <View style={{ flexDirection: "row", marginTop: "auto" }}>
-        <Text style={styles.text}>Don't have an account?</Text>
+        <Text style={styles.text}>{i18n.t("signin.account")}</Text>
         <TouchableOpacity
           onPress={() => {
             props.navigation.navigate("SignUp");
           }}
         >
           <Text style={[styles.headText, { color: Colors.PrimaryColor }]}>
-            SIGN UP
+            {i18n.t("signin.signup")}
           </Text>
         </TouchableOpacity>
       </View>

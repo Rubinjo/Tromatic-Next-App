@@ -1,0 +1,22 @@
+{
+  "signin": {
+    "welcome": "Welkom",
+    "email": "Email",
+    "password": "Wachtwoord",
+    "signin": "Log in",
+    "forgot": "Wachtwoord vergeten?",
+    "english": "Engels",
+    "german": "Duits",
+    "dutch": "Nederlands",
+    "account": "Nog geen account?",
+    "signup": "REGISTREREN"
+  },
+  "signup": {
+    "signup": "Registreren",
+    "companyid": "Bedrijfs-ID",
+    "name": "Voor- en achternaam",
+    "email": "Email",
+    "password": "Wachtwoord",
+    "confirm": "Bevestig wachtwoord"
+  }
+}
