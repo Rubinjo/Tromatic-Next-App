@@ -11,8 +11,10 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 import Config from "../assets/config";
 import Colors from "../assets/constants/colors";
+import * as languageActions from "../store/actions/language";
 
 const SignInScreen = (props) => {
+  const [error, setError] = useState();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
@@ -81,7 +83,6 @@ const SignInScreen = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          console.log(language);
           props.navigation.navigate("ResetPassword");
         }}
       >
@@ -105,6 +106,14 @@ const SignInScreen = (props) => {
         setOpen={setOpen}
         setValue={setValue}
         setItems={setItems}
+        onChangeValue={(value) => {
+          try {
+            dispatch(languageActions.updateLanguage(value));
+          } catch (err) {
+            console.log(err);
+            setError(err.message);
+          }
+        }}
       />
       <View style={{ flexDirection: "row", marginTop: "auto" }}>
         <Text style={styles.text}>Don't have an account?</Text>
