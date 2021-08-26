@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -20,9 +21,39 @@ const SignInScreen = (props) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    { label: i18n.t("signin.english"), value: "en" },
-    { label: i18n.t("signin.german"), value: "de" },
-    { label: i18n.t("signin.dutch"), value: "nl" },
+    {
+      label: "English",
+      value: "en",
+      icon: () => (
+        <View style={{ flexDirection: "row" }}>
+          <Image
+            source={require("../assets/united-kingdom.png")}
+            style={[styles.icon, { marginRight: Config.deviceWidth * 0.005 }]}
+          />
+          <Image
+            source={require("../assets/united-states-of-america.png")}
+            style={styles.icon}
+          />
+        </View>
+      ),
+    },
+    {
+      label: "Deutsch",
+      value: "de",
+      icon: () => (
+        <Image source={require("../assets/germany.png")} style={styles.icon} />
+      ),
+    },
+    {
+      label: "Nederlands",
+      value: "nl",
+      icon: () => (
+        <Image
+          source={require("../assets/netherlands.png")}
+          style={styles.icon}
+        />
+      ),
+    },
   ]);
 
   // Update language setting when redux store is loaded
@@ -201,6 +232,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.SecondaryColor,
     borderRadius: 32,
     paddingHorizontal: Config.deviceWidth * 0.2,
+  },
+  icon: {
+    width: 25,
+    height: 25,
   },
 });
 
