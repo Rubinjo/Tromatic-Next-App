@@ -12,8 +12,8 @@ import DropDownPicker from "react-native-dropdown-picker";
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import * as languageActions from "../store/actions/language";
-
 import i18n from "../utils/i18n";
+import { signIn } from "../API/firebase";
 
 const SignInScreen = (props) => {
   const [error, setError] = useState();
@@ -24,6 +24,8 @@ const SignInScreen = (props) => {
     { label: i18n.t("signin.german"), value: "de" },
     { label: i18n.t("signin.dutch"), value: "nl" },
   ]);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // Update language setting when redux store is loaded
   useEffect(() => {
@@ -33,6 +35,19 @@ const SignInScreen = (props) => {
   const language = useSelector((state) => state.language.language);
 
   const dispatch = useDispatch();
+
+  const signIn = () => {
+    if (!email) {
+      Alert.alert("Email field is required.");
+    }
+
+    if (!password) {
+      Alert.alert("Password field is required.");
+    }
+    signIn(email, password);
+    setEmail("");
+    setPassword("");
+  };
 
   return (
     <View style={styles.container}>
@@ -64,6 +79,8 @@ const SignInScreen = (props) => {
           // }}
           blurOnSubmit={false}
           textContentType="emailAddress"
+          value={email}
+          onChangeText={(email) => setEmail(email)}
         />
         <TextInput
           style={styles.input}
@@ -74,9 +91,11 @@ const SignInScreen = (props) => {
           //   this.passwordInput = input;
           // }}
           textContentType="password"
+          value={email}
+          onChangeText={(email) => setEmail(email)}
         />
       </View>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={signIn}>
         <Text
           style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
         >
