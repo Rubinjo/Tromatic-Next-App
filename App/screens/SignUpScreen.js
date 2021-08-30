@@ -1,17 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import i18n from "../utils/i18n";
+import { registration } from "../API/firebase";
 
 const SignUpScreen = (props) => {
+  const [companyID, setCompanyID] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const emptyState = () => {
+    setCompanyID("");
+    setFullName("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+  };
+
+  const signUp = () => {
+    if (!companyID) {
+      Alert.alert("Company ID is required");
+    } else if (!fullName) {
+      Alert.alert("Full name is required.");
+    } else if (!email) {
+      Alert.alert("Email is required.");
+    } else if (!password) {
+      Alert.alert("Password is required.");
+    } else if (!confirmPassword) {
+      setPassword("");
+      Alert.alert("Confirm password is required.");
+    } else if (password !== confirmPassword) {
+      Alert.alert("Password does not match!");
+    } else {
+      registration(companyID, fullName, email, password);
+      emptyState();
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.backgroundSquare}></View>
@@ -30,6 +66,10 @@ const SignUpScreen = (props) => {
           // onSubmitEditing={() => {
           //   this.nameInput.focus();
           // }}
+          value={companyID}
+          onChangeText={(id) => {
+            setCompanyID(id);
+          }}
         />
         <TextInput
           style={styles.input}
@@ -44,6 +84,10 @@ const SignUpScreen = (props) => {
           // onSubmitEditing={() => {
           //   this.emailInput.focus();
           // }}
+          value={fullName}
+          onChangeText={(name) => {
+            setFullName(name);
+          }}
         />
         <TextInput
           style={styles.input}
@@ -59,6 +103,8 @@ const SignUpScreen = (props) => {
           // onSubmitEditing={() => {
           //   this.passwordInput.focus();
           // }}
+          value={email}
+          onChangeText={(email) => setEmail(email)}
         />
         <TextInput
           style={styles.input}
@@ -72,6 +118,8 @@ const SignUpScreen = (props) => {
           // onSubmitEditing={() => {
           //   this.confirmPasswordInput.focus();
           // }}
+          value={password}
+          onChangeText={(password) => setPassword(password)}
         />
         <TextInput
           style={styles.input}
@@ -81,9 +129,11 @@ const SignUpScreen = (props) => {
           // ref={(input) => {
           //   this.confirmPasswordInput = input;
           // }}
+          value={confirmPassword}
+          onChangeText={(password2) => setConfirmPassword(password2)}
         />
       </View>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={signUp}>
         <Text
           style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
         >

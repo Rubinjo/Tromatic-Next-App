@@ -11,3 +11,6 @@ App/web-build/
 
 # macOS
 App/.DS_Store
+
+# Firebase SDK
+app/assets/config/keys.js

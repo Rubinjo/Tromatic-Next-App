@@ -34,7 +34,8 @@
     "redux": "^4.1.0",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "victory-native": "^35.3.3"
+    "victory-native": "^35.3.3",
+    "firebase": "8.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
