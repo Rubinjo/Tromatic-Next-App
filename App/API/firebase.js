@@ -13,6 +13,7 @@ export async function registration(companyID, fullName, email, password) {
         companyID: companyID,
         email: currentUser.email,
         fullName: fullName,
+        new: true,
       });
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
