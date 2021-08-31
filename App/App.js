@@ -16,6 +16,12 @@ import userReducer from "./store/reducers/user";
 import languageReducer from "./store/reducers/language";
 import apiKeys from "./assets/config/keys";
 
+// Ignore timer warning
+// Caused by UseEffect to check for user login (in AppNavigator.js)
+// Currently no alternative solution offered by Expo
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["Setting a timer"]);
+
 // Fetch custom font-family
 const fetchFonts = async () => {
   return Font.loadAsync({
