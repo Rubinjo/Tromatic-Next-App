@@ -6,14 +6,14 @@ export async function registration(companyID, fullName, email, password) {
   try {
     await firebase.auth().createUserWithEmailAndPassword(email, password);
     const currentUser = firebase.auth().currentUser;
-
-    //Does not work yet
-    const db = firebase.firestore();
-    db.collection("users").doc(currentUser.uid).set({
-      email: currentUser.email,
-      fullName: fullName,
-      companyID: companyID,
-    });
+    firebase
+      .database()
+      .ref("users/" + currentUser.uid)
+      .set({
+        companyID: companyID,
+        email: currentUser.email,
+        fullName: fullName,
+      });
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }
