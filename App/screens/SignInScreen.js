@@ -67,7 +67,7 @@ const SignInScreen = (props) => {
 
   const dispatch = useDispatch();
 
-  const signIn = () => {
+  const signInUser = () => {
     if (!email) {
       Alert.alert("Email field is required.");
     }
@@ -122,11 +122,11 @@ const SignInScreen = (props) => {
           //   this.passwordInput = input;
           // }}
           textContentType="password"
-          value={email}
-          onChangeText={(email) => setEmail(email)}
+          value={password}
+          onChangeText={(password) => setPassword(password)}
         />
       </View>
-      <TouchableOpacity style={styles.button} onPress={signIn}>
+      <TouchableOpacity style={styles.button} onPress={signInUser}>
         <Text
           style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
         >
