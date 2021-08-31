@@ -23,7 +23,10 @@ const ResetPasswordScreen = (props) => {
         returnKeyType="done"
         textContentType="emailAddress"
       />
-      <Text>TEXT</Text>
+      <Text>
+        Reset link will be send to you by mail if your email address is known by
+        us.
+      </Text>
       <TouchableOpacity style={styles.button}>
         <Text style={styles.text}>Reset</Text>
       </TouchableOpacity>
