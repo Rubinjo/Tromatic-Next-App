@@ -63,10 +63,13 @@ const SignInScreen = (props) => {
     setValue(language);
   }, [language]);
 
+  // Load language from the redux store
   const language = useSelector((state) => state.language.language);
 
   const dispatch = useDispatch();
 
+  // Login user
+  // uses Firebase Auth
   const signInUser = () => {
     if (!email) {
       Alert.alert("Email field is required.");

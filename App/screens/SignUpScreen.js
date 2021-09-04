@@ -20,6 +20,7 @@ const SignUpScreen = (props) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  // Empty all textinputs
   const emptyState = () => {
     setCompanyID("");
     setFullName("");
@@ -28,6 +29,8 @@ const SignUpScreen = (props) => {
     setConfirmPassword("");
   };
 
+  // Register user
+  // uses Firebase Auth
   const signUp = () => {
     if (!companyID) {
       Alert.alert("Company ID is required");
