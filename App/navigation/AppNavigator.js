@@ -51,7 +51,6 @@ const OverviewStackNav = (props) => {
 
 const AppNavigator = (props) => {
   // Create userSigned in variable that triggers different navigation stack
-  // Below is simple dummy for testing
   const [userSignedIn, setUserSignedIn] = useState(false);
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {

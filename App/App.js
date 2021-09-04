@@ -30,31 +30,38 @@ const fetchFonts = async () => {
   });
 };
 
+// Create root reducer
 const rootReducer = combineReducers({
   machine: machineReducer,
   user: userReducer,
   language: languageReducer,
 });
 
+// Redux persist settings
+// Persist the language store
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
   whitelist: ["language"],
 };
 
+// Apply Redux Persist settings to root reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+// Create store with Redux Thunk middleware and persistant reducer
 const store = createStore(persistedReducer, applyMiddleware(ReduxThunk));
 const persistor = persistStore(store);
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
 
+  // Initialize firebase app if not already active
   if (!firebase.apps.length) {
     console.log("Connected with Firebase");
     firebase.initializeApp(apiKeys.firebaseConfig);
   }
 
+  // Keep splash screen active untill fonts are fully loaded
   if (!fontLoaded) {
     return (
       <AppLoading

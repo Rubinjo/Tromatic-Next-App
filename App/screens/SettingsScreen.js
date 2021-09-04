@@ -61,10 +61,13 @@ const SettingsScreen = (props) => {
     setValue(language);
   }, [language]);
 
+  // Load language from the redux store
   const language = useSelector((state) => state.language.language);
 
   const dispatch = useDispatch();
 
+  // Logout user
+  // uses Firebase Auth
   const signOutUser = () => {
     Alert.alert(
       "Logout warning",
