@@ -6,6 +6,7 @@ import {
   View,
   Alert,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -55,11 +56,20 @@ const SettingsScreen = (props) => {
       ),
     },
   ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
 
   // Update language setting when redux store is loaded
   useEffect(() => {
     setValue(language);
   }, [language]);
+
+  // Show alert when error occurs
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Login error", error, [{ text: "OK" }]);
+    }
+  }, [error]);
 
   // Load language from the redux store
   const language = useSelector((state) => state.language.language);
@@ -78,7 +88,19 @@ const SettingsScreen = (props) => {
           onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
-        { text: "OK", onPress: () => loggingOut() },
+        {
+          text: "OK",
+          onPress: async () => {
+            setError(null);
+            setIsLoading(true);
+            try {
+              await loggingOut();
+            } catch (err) {
+              setIsLoading(false);
+              setError("Something went wrong, please try again later");
+            }
+          },
+        },
       ],
       { cancelable: true }
     );
@@ -121,9 +143,13 @@ const SettingsScreen = (props) => {
           }}
         />
       </View>
-      <TouchableOpacity style={styles.button} onPress={signOutUser}>
-        <Text style={styles.headText}>Sign out</Text>
-      </TouchableOpacity>
+      {isLoading ? (
+        <ActivityIndicator size="large" color={Colors.SecondaryColor} />
+      ) : (
+        <TouchableOpacity style={styles.button} onPress={signOutUser}>
+          <Text style={styles.headText}>Sign out</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

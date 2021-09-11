@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 
 import Config from "../utils/config";
@@ -19,6 +20,15 @@ const SignUpScreen = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+
+  // Show alert when error occurs
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Sign up error", error, [{ text: "OK" }]);
+    }
+  }, [error]);
 
   // Empty all textinputs
   const emptyState = () => {
@@ -31,23 +41,31 @@ const SignUpScreen = (props) => {
 
   // Register user
   // uses Firebase Auth
-  const signUp = () => {
+  const signUp = async () => {
+    setError(null);
     if (!companyID) {
-      Alert.alert("Company ID is required");
+      setError("Company ID is required");
     } else if (!fullName) {
-      Alert.alert("Full name is required.");
+      setError("Full name is required.");
     } else if (!email) {
-      Alert.alert("Email is required.");
+      setError("Email is required.");
     } else if (!password) {
-      Alert.alert("Password is required.");
+      setError("Password is required.");
     } else if (!confirmPassword) {
       setPassword("");
-      Alert.alert("Confirm password is required.");
+      setError("Confirm password is required.");
     } else if (password !== confirmPassword) {
-      Alert.alert("Password does not match!");
+      setError("Password does not match!");
     } else {
-      registration(companyID, fullName, email, password);
-      emptyState();
+      setIsLoading(true);
+      try {
+        await registration(companyID, fullName, email, password);
+      } catch (err) {
+        console.log(err.message);
+        emptyState();
+        setIsLoading(false);
+        setError("Your account could not be created, please try again later");
+      }
     }
   };
 
@@ -136,13 +154,17 @@ const SignUpScreen = (props) => {
           onChangeText={(password2) => setConfirmPassword(password2)}
         />
       </View>
-      <TouchableOpacity style={styles.button} onPress={signUp}>
-        <Text
-          style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
-        >
-          {i18n.t("signup.signup")}
-        </Text>
-      </TouchableOpacity>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="white" />
+      ) : (
+        <TouchableOpacity style={styles.button} onPress={signUp}>
+          <Text
+            style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
+          >
+            {i18n.t("signup.signup")}
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
