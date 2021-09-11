@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   View,
   Image,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -17,7 +19,6 @@ import i18n from "../utils/i18n";
 import { signIn } from "../API/firebase";
 
 const SignInScreen = (props) => {
-  const [error, setError] = useState();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
@@ -57,11 +58,20 @@ const SignInScreen = (props) => {
   ]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
 
   // Update language setting when redux store is loaded
   useEffect(() => {
     setValue(language);
   }, [language]);
+
+  // Show alert when error occurs
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Login error", error, [{ text: "OK" }]);
+    }
+  }, [error]);
 
   // Load language from the redux store
   const language = useSelector((state) => state.language.language);
@@ -70,17 +80,24 @@ const SignInScreen = (props) => {
 
   // Login user
   // uses Firebase Auth
-  const signInUser = () => {
+  const signInUser = async () => {
+    setError(null);
     if (!email) {
-      Alert.alert("Email field is required.");
+      setError("Email field is required");
+    } else if (!password) {
+      setError("Password field is required");
+    } else {
+      setIsLoading(true);
+      try {
+        await signIn(email, password);
+      } catch (err) {
+        console.log(err.message);
+        setEmail("");
+        setPassword("");
+        setIsLoading(false);
+        setError("The entered credentials are wrong");
+      }
     }
-
-    if (!password) {
-      Alert.alert("Password field is required.");
-    }
-    signIn(email, password);
-    setEmail("");
-    setPassword("");
   };
 
   return (
@@ -129,13 +146,17 @@ const SignInScreen = (props) => {
           onChangeText={(password) => setPassword(password)}
         />
       </View>
-      <TouchableOpacity style={styles.button} onPress={signInUser}>
-        <Text
-          style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
-        >
-          {i18n.t("signin.signin")}
-        </Text>
-      </TouchableOpacity>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="white" />
+      ) : (
+        <TouchableOpacity style={styles.button} onPress={signInUser}>
+          <Text
+            style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
+          >
+            {i18n.t("signin.signin")}
+          </Text>
+        </TouchableOpacity>
+      )}
       <TouchableOpacity
         onPress={() => {
           props.navigation.navigate("ResetPassword");
