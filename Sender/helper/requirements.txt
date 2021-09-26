@@ -1,0 +1,3 @@
+#### Python package requirements for sender component ####
+watchdog
+pyrebase4
