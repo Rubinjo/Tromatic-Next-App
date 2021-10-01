@@ -35,6 +35,9 @@ class MyHandler(FileSystemEventHandler):
         if event.event_type == "created" and event.src_path[-4:] == ".txt":
             f = open(event.src_path, "r")
             print(f.read())
+
+
+            results = db.child("users").push(data, user['idToken'])
         else:
             print("[{}] INFO: [{}] on: [{}] [No further action]".format(
                 time.asctime(), event.event_type, event.src_path
@@ -50,6 +53,8 @@ if __name__=="__main__":
     # Authenticate user
     auth = firebase.auth()
     user = auth.sign_in_with_email_and_password(email, password)
+    # Get a reference to the database
+    db = firebase.database()
 
     # Run watcher
     w.run()
