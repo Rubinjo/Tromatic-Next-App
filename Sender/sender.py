@@ -3,7 +3,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import pyrebase
 
-from helper.config import firebaseConfig
+from helper.key import firebaseConfig
 from helper.login import email, password
 
 DIRECTORY = "./folder"
