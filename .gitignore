@@ -13,4 +13,9 @@ App/web-build/
 App/.DS_Store
 
 # Firebase SDK
-app/assets/config/keys.js
+App/assets/config/keys.js
+Sender/helper/key.py
+
+# Sender credentials
+Sender/helper/login.py
+
