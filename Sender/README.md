@@ -35,3 +35,9 @@ firebaseConfig = {
 email = "email"
 password = "password"
 ```
+
+5. Add sender.py to Windows startup (by adding it to the Run Registry):
+
+```
+python ./helper/addRegistry.py
+```
