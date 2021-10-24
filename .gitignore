@@ -14,10 +14,10 @@ App/.DS_Store
 
 # Firebase SDK
 App/assets/config/keys.js
-Comms_Python/helper/key.py
-Comms_JS/helper/key.js
+comms-python/helper/key.py
+comms-js/helper/key.js
 
 # Sender credentials
-Comms_Python/helper/login.py
-Comms_JS/helper/login.js
+comms-python/helper/login.py
+comms-js/helper/login.js
 
