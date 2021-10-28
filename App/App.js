@@ -16,8 +16,6 @@ import userReducer from "./store/reducers/user";
 import languageReducer from "./store/reducers/language";
 import apiKeys from "./assets/config/keys";
 
-// Hello
-
 // Ignore timer warning
 // Caused by UseEffect to check for user login (in AppNavigator.js)
 // Currently no alternative solution offered by Expo
