@@ -16,7 +16,7 @@ import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import * as languageActions from "../store/actions/language";
 import i18n from "../utils/i18n";
-import { signIn } from "../API/firebase";
+import { signInAccount } from "../API/firebase";
 
 const SignInScreen = (props) => {
   const [open, setOpen] = useState(false);
@@ -89,7 +89,7 @@ const SignInScreen = (props) => {
     } else {
       setIsLoading(true);
       try {
-        await signIn(email, password);
+        await signInAccount(email, password);
       } catch (err) {
         console.log(err.message);
         setEmail("");

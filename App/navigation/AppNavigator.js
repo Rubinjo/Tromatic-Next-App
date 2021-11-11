@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import * as firebase from "firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import ConnectScreen from "../screens/ConnectScreen";
 import DetailsScreen from "../screens/DetailsScreen";
@@ -53,7 +53,8 @@ const AppNavigator = (props) => {
   // Create userSigned in variable that triggers different navigation stack
   const [userSignedIn, setUserSignedIn] = useState(false);
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserSignedIn(true);
       } else {
