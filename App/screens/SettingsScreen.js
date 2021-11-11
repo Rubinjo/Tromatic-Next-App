@@ -14,7 +14,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 import Colors from "../assets/constants/colors";
 import Config from "../utils/config";
-import { loggingOut } from "../API/firebase";
+import { signOutAccount } from "../API/firebase";
 import * as languageActions from "../store/actions/language";
 import i18n from "../utils/i18n";
 
@@ -94,7 +94,7 @@ const SettingsScreen = (props) => {
             setError(null);
             setIsLoading(true);
             try {
-              await loggingOut();
+              await signOutAccount();
             } catch (err) {
               setIsLoading(false);
               setError("Something went wrong, please try again later");

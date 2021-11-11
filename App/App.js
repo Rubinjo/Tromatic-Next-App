@@ -8,7 +8,7 @@ import ReduxThunk from "redux-thunk";
 import { persistStore, persistReducer } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PersistGate } from "redux-persist/integration/react";
-import * as firebase from "firebase";
+import { initializeApp } from "firebase/app";
 
 import AppNavigator from "./navigation/AppNavigator";
 import machineReducer from "./store/reducers/machine";
@@ -55,11 +55,8 @@ const persistor = persistStore(store);
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
 
-  // Initialize firebase app if not already active
-  if (!firebase.apps.length) {
-    console.log("Connected with Firebase");
-    firebase.initializeApp(apiKeys.firebaseConfig);
-  }
+  const app = initializeApp(apiKeys.firebaseConfig);
+  console.log("Connected with Firebase");
 
   // Keep splash screen active untill fonts are fully loaded
   if (!fontLoaded) {
