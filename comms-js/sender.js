@@ -5,7 +5,7 @@ const { firebaseConfig } = require("./helper/key");
 const { email, password } = require("./helper/login");
 const { initializeApp } = require("firebase/app");
 const { getAuth, signInWithEmailAndPassword } = require("firebase/auth");
-const { getDatabase, ref, set } = require("firebase/database");
+const { getDatabase, ref, update } = require("firebase/database");
 
 /**
  * Location of folder that will be scanned.
@@ -18,20 +18,11 @@ const folder = "./folder";
  * @param {string} email - Email of concerned user
  * @param {string} password - Password of concerned user
  */
-function setupFirebase(firebaseConfig, email, password) {
+async function setupFirebase(firebaseConfig, email, password) {
   const app = initializeApp(firebaseConfig);
-  const auth = getAuth();
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    });
-  const db = getDatabase();
+  const auth = getAuth(app);
+  await signInWithEmailAndPassword(auth, email, password);
+  return getDatabase(app);
 }
 
 console.log(`Watching for file changes on ${folder}`);
@@ -43,16 +34,16 @@ console.log(`Watching for file changes on ${folder}`);
 let md5Previous = null;
 
 /**
- * Check if timeout period is over.
+ * Variable to check if timeout period is over.
  * @type {boolean}
  */
 let fsWait = false;
 
-setupFirebase(firebaseConfig, email, password);
+const db = setupFirebase(firebaseConfig, email, password);
 
 /**
- * Constantly watch machine outputted .txt files that are located in specified folder location.
- * Send outputted params to firebase.
+ * Send drychamber values to firebase constantly.
+ * Done by watching machine outputted .txt files that are located in specified folder location.
  * @param {string} folder - Location of folder that will be watched.
  * @param {string} event - Type of event that happened.
  * @param {string} filename - Name of file that has changed.
@@ -74,27 +65,10 @@ fs.watch(folder, (event, filename) => {
     md5Previous = md5Current;
     console.log(`${filename} file Changed`);
 
-    // Get a new key
-    const newKey = push(
-      child(
-        ref(db),
-        "companies/" + companyId + "/machines/" + machineId + "/params"
-      )
-    ).key;
+    // Transform data here
 
-    set(
-      ref(
-        db,
-        "companies/" +
-          companyId +
-          "/machines/" +
-          machineId +
-          "/params/" +
-          newKey
-      ),
-      {
-        time: new Date().toTimeString(),
-      }
-    );
+    update(ref(db, "machines/" + machineId), {
+      timestamp: new Date().toTimeString(),
+    });
   }
 });
