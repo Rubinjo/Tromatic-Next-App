@@ -1,16 +1,47 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
+import { useSelector } from "react-redux";
+import { resetPasswordAccount } from "../API/firebase";
 
 const ResetPasswordScreen = (props) => {
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState();
+
+  // Show alert when error occurs
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Error", error, [{ text: "OK" }]);
+    }
+  }, [error]);
+
+  // Load language from the redux store
+  const language = useSelector((state) => state.language.language);
+
+  const resetPasswordEmail = async () => {
+    setError(null);
+    if (!email) {
+      setError("Email field is required");
+    } else {
+      try {
+        await resetPasswordAccount(email, language);
+        setEmail("");
+      } catch (err) {
+        console.log(err.message);
+        setEmail("");
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.backgroundSquare}></View>
@@ -22,12 +53,14 @@ const ResetPasswordScreen = (props) => {
         keyboardType="email-address"
         returnKeyType="done"
         textContentType="emailAddress"
+        value={email}
+        onChangeText={(email) => setEmail(email)}
       />
       <Text>
         Reset link will be send to you by mail if your email address is known by
         us.
       </Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity onPress={resetPasswordEmail} style={styles.button}>
         <Text style={styles.text}>Reset</Text>
       </TouchableOpacity>
     </View>

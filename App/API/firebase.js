@@ -3,6 +3,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { getDatabase, ref, set, update } from "firebase/database";
 
@@ -44,6 +45,16 @@ export async function signOutAccount() {
       lastActivity: new Date().toString(),
     });
     await signOut(auth);
+  } catch (err) {
+    throw new Error(err.message);
+  }
+}
+
+export async function resetPasswordAccount(email, language) {
+  try {
+    const auth = getAuth();
+    auth.languageCode = language;
+    await sendPasswordResetEmail(auth, email);
   } catch (err) {
     throw new Error(err.message);
   }
