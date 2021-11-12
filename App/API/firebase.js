@@ -12,17 +12,12 @@ export async function registration(companyID, fullName, email, password) {
     await createUserWithEmailAndPassword(auth, email, password);
     const currentUser = auth.currentUser;
     const db = getDatabase();
-    const updates = {};
-    updates["users/" + currentUser.uid] = {
+    set(ref(db, "users/" + currentUser.uid), {
       email: currentUser.email,
       fullName: fullName,
-      companyID: companyID,
-    };
-    updates["companies/" + companyID + "/users/" + currentUser.uid] = {
-      creation: new Date().toString(),
-      new: true,
-    };
-    update(ref(db), updates);
+      cid: companyID,
+      lastActivity: new Date().toString(),
+    });
   } catch (err) {
     throw new Error(err.message);
   }
