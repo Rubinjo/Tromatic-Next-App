@@ -5,7 +5,13 @@ import {
   signOut,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { getDatabase, ref, set, update } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  set,
+  update,
+  serverTimestamp,
+} from "firebase/database";
 
 export async function registration(companyID, fullName, email, password) {
   try {
@@ -17,7 +23,7 @@ export async function registration(companyID, fullName, email, password) {
       email: currentUser.email,
       fullName: fullName,
       cid: companyID,
-      lastActivity: new Date().toString(),
+      lastActivity: serverTimestamp(),
     });
   } catch (err) {
     throw new Error(err.message);
@@ -30,7 +36,7 @@ export async function signInAccount(email, password) {
     await signInWithEmailAndPassword(auth, email, password);
     const db = getDatabase();
     update(ref(db, "users/" + auth.currentUser.uid), {
-      lastActivity: new Date().toString(),
+      lastActivity: serverTimestamp(),
     });
   } catch (err) {
     throw new Error(err.message);
@@ -42,7 +48,7 @@ export async function signOutAccount() {
     const auth = getAuth();
     const db = getDatabase();
     update(ref(db, "users/" + auth.currentUser.uid), {
-      lastActivity: new Date().toString(),
+      lastActivity: serverTimestamp(),
     });
     await signOut(auth);
   } catch (err) {
