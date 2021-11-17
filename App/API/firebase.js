@@ -47,7 +47,7 @@ export async function signOutAccount() {
   try {
     const auth = getAuth();
     const db = getDatabase();
-    update(ref(db, "users/" + auth.currentUser.uid), {
+    await update(ref(db, "users/" + auth.currentUser.uid), {
       lastActivity: serverTimestamp(),
     });
     await signOut(auth);
