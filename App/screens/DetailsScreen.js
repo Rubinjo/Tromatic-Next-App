@@ -6,7 +6,7 @@ import {
   useRoute,
   useNavigation,
 } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+// import { createNativeStackNavigator } from "@react-navigation/native-stack"; Uninstalled at this moment
 
 import LineChart from "../components/Chart";
 import { CHAMBERS } from "../data/dummy-data";
