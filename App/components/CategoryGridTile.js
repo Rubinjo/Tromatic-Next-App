@@ -29,7 +29,8 @@ const CategoryGridTile = (props) => {
               value={value}
               onValueChange={(value) => setValue(value)}
               // disabled={true}
-              minimumTrackTintColor={Colors.SecondaryColor}
+              minimumTrackTintColor={Colors.PrimaryColor}
+              maximumTrackTintColor={Colors.SecondaryColor}
             />
           </View>
           <Text>Time left: {value}</Text>
@@ -64,11 +65,11 @@ const styles = StyleSheet.create({
     width: Config.deviceWidth * 0.7,
     alignItems: "stretch",
     justifyContent: "center",
+    marginLeft: Config.deviceWidth * 0.02, // Fix unaccurate track bug
   },
   track: {
-    height: Config.deviceWidth * 0.05,
+    height: Config.deviceHeight * 0.028,
     borderRadius: 6,
-    backgroundColor: Colors.PrimaryColor,
     shadowColor: "black",
     shadowOffset: {
       width: 0,
@@ -77,6 +78,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1,
     elevation: 2,
+    marginRight: Config.deviceWidth * 0.02, // Fix unaccurate track bug
   },
   thumb: {
     opacity: 0,
