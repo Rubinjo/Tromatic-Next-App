@@ -7,13 +7,14 @@ import {
   TouchableNativeFeedback,
 } from "react-native";
 
+import Light from "./Light";
+
 const CategoryGridTile = (props) => {
   return (
     <View style={styles.gridItem}>
       <TouchableNativeFeedback style={{ flex: 1 }} onPress={props.onSelect}>
-        <View
-          style={{ ...styles.container, ...{ backgroundColor: props.color } }}
-        >
+        <View style={{ ...styles.container, backgroundColor: props.color }}>
+          <Light color={props.color} />
           <Text>{props.title}</Text>
         </View>
       </TouchableNativeFeedback>
