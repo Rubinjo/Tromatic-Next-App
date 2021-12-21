@@ -46,23 +46,39 @@ const ResetPasswordScreen = (props) => {
     <View style={styles.container}>
       <View style={styles.backgroundSquare}></View>
       <View style={styles.backgroundTriangle}></View>
-      <TextInput
-        style={styles.input}
-        autoCompleteType="email"
-        placeholder="Email"
-        keyboardType="email-address"
-        returnKeyType="done"
-        textContentType="emailAddress"
-        value={email}
-        onChangeText={(email) => setEmail(email)}
-      />
-      <Text>
-        Reset link will be send to you by mail if your email address is known by
-        us.
-      </Text>
-      <TouchableOpacity onPress={resetPasswordEmail} style={styles.button}>
-        <Text style={styles.text}>Reset</Text>
-      </TouchableOpacity>
+      <View
+        style={{
+          alignItems: "center",
+          marginBottom: "auto",
+          marginTop: 22 + Config.deviceHeight * 0.08,
+        }}
+      >
+        <TextInput
+          style={styles.input}
+          autoCompleteType="email"
+          placeholder="Email"
+          keyboardType="email-address"
+          returnKeyType="done"
+          textContentType="emailAddress"
+          value={email}
+          onChangeText={(email) => setEmail(email)}
+        />
+        <View style={{ width: "70%", marginTop: Config.deviceHeight * 0.005 }}>
+          <Text
+            style={{
+              fontFamily: "noto-sans-jp-bold",
+              fontSize: 2 + Config.deviceWidth * 0.035,
+              color: "white",
+            }}
+          >
+            Reset link will be send to you by mail if your email address is
+            known by us.
+          </Text>
+        </View>
+        <TouchableOpacity onPress={resetPasswordEmail} style={styles.button}>
+          <Text style={styles.text}>Reset</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -82,7 +98,7 @@ const styles = StyleSheet.create({
   },
   backgroundSquare: {
     width: Config.deviceWidth,
-    height: Config.deviceHeight * 0.3,
+    height: Config.deviceHeight * 0.47,
     backgroundColor: Colors.PrimaryColor,
     position: "absolute",
     top: 0,
@@ -101,7 +117,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "transparent",
     borderLeftColor: "transparent",
     position: "absolute",
-    top: Config.deviceHeight * 0.3,
+    top: Config.deviceHeight * 0.47,
   },
   input: {
     width: Config.deviceWidth * 0.8,
@@ -125,6 +141,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.SecondaryColor,
     borderRadius: 32,
     paddingHorizontal: Config.deviceWidth * 0.2,
+    marginTop: Config.deviceHeight * 0.02,
   },
   text: {
     fontFamily: "noto-sans-jp-bold",

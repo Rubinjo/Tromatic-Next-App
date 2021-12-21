@@ -116,82 +116,100 @@ const SignInScreen = (props) => {
       </View>
       <View
         style={{
-          marginBottom: Config.deviceWidth * 0.1,
+          alignItems: "center",
+          flex: 1,
+          marginTop: Config.deviceHeight * 0.02,
         }}
       >
-        <TextInput
-          style={styles.input}
-          autoCompleteType="email"
-          placeholder={i18n.t("signin.email")}
-          keyboardType="email-address"
-          returnKeyType="next"
-          // onSubmitEditing={() => {
-          //   this.passwordInput.focus();
-          // }}
-          blurOnSubmit={false}
-          textContentType="emailAddress"
-          value={email}
-          onChangeText={(email) => setEmail(email)}
-        />
-        <TextInput
-          style={styles.input}
-          autoCompleteType="password"
-          placeholder={i18n.t("signin.password")}
-          returnKeyType="done"
-          // ref={(input) => {
-          //   this.passwordInput = input;
-          // }}
-          textContentType="password"
-          value={password}
-          onChangeText={(password) => setPassword(password)}
+        <View
+          style={{
+            marginBottom: Config.deviceWidth * 0.1,
+          }}
+        >
+          <TextInput
+            style={styles.input}
+            autoCompleteType="email"
+            placeholder={i18n.t("signin.email")}
+            keyboardType="email-address"
+            returnKeyType="next"
+            // onSubmitEditing={() => {
+            //   this.passwordInput.focus();
+            // }}
+            blurOnSubmit={false}
+            textContentType="emailAddress"
+            value={email}
+            onChangeText={(email) => setEmail(email)}
+          />
+          <TextInput
+            style={styles.input}
+            autoCompleteType="password"
+            placeholder={i18n.t("signin.password")}
+            returnKeyType="done"
+            // ref={(input) => {
+            //   this.passwordInput = input;
+            // }}
+            textContentType="password"
+            value={password}
+            onChangeText={(password) => setPassword(password)}
+          />
+        </View>
+        <View
+          style={{
+            alignItems: "center",
+            marginTop: Config.deviceHeight * 0.02,
+          }}
+        >
+          {isLoading ? (
+            <ActivityIndicator size="large" color="white" />
+          ) : (
+            <TouchableOpacity style={styles.button} onPress={signInUser}>
+              <Text
+                style={[
+                  styles.headText,
+                  { fontSize: Config.deviceWidth * 0.07 },
+                ]}
+              >
+                {i18n.t("signin.signin")}
+              </Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate("ResetPassword");
+            }}
+          >
+            <Text style={styles.headText}>{i18n.t("signin.forgot")}</Text>
+          </TouchableOpacity>
+        </View>
+        <DropDownPicker
+          style={{
+            width: Config.deviceWidth * 0.5,
+            marginTop: Config.deviceHeight * 0.01,
+            borderColor: "darkgrey",
+          }}
+          dropDownContainerStyle={{
+            width: Config.deviceWidth * 0.5,
+            alignSelf: "center",
+            borderColor: "darkgrey",
+          }}
+          dropDownDirection="BOTTOM"
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+          onChangeValue={(value) => {
+            i18n.locale = value;
+            try {
+              dispatch(languageActions.updateLanguage(value));
+            } catch (err) {
+              console.log(err);
+              setError(err.message);
+            }
+          }}
         />
       </View>
-      {isLoading ? (
-        <ActivityIndicator size="large" color="white" />
-      ) : (
-        <TouchableOpacity style={styles.button} onPress={signInUser}>
-          <Text
-            style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
-          >
-            {i18n.t("signin.signin")}
-          </Text>
-        </TouchableOpacity>
-      )}
-      <TouchableOpacity
-        onPress={() => {
-          props.navigation.navigate("ResetPassword");
-        }}
-      >
-        <Text style={styles.headText}>{i18n.t("signin.forgot")}</Text>
-      </TouchableOpacity>
-      <DropDownPicker
-        style={{
-          width: Config.deviceWidth * 0.5,
-          alignSelf: "center",
-          borderColor: "darkgrey",
-        }}
-        dropDownContainerStyle={{
-          width: Config.deviceWidth * 0.5,
-          alignSelf: "center",
-          borderColor: "darkgrey",
-        }}
-        dropDownDirection="BOTTOM"
-        open={open}
-        value={value}
-        items={items}
-        setOpen={setOpen}
-        setValue={setValue}
-        setItems={setItems}
-        onChangeValue={(value) => {
-          i18n.locale = value;
-          try {
-            dispatch(languageActions.updateLanguage(value));
-          } catch (err) {
-            console.log(err);
-            setError(err.message);
-          }
-        }}
-      />
       <View style={{ flexDirection: "row", marginTop: "auto" }}>
         <Text style={styles.text}>{i18n.t("signin.account")}</Text>
         <TouchableOpacity
@@ -223,7 +241,7 @@ const styles = StyleSheet.create({
   },
   backgroundSquare: {
     width: Config.deviceWidth,
-    height: Config.deviceHeight * 0.7,
+    height: Config.deviceHeight * 0.75,
     backgroundColor: Colors.PrimaryColor,
     position: "absolute",
     top: 0,
@@ -242,7 +260,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "transparent",
     borderLeftColor: "transparent",
     position: "absolute",
-    top: Config.deviceHeight * 0.7,
+    top: Config.deviceHeight * 0.75,
   },
   headText: {
     fontFamily: "noto-sans-jp-bold",

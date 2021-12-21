@@ -73,12 +73,17 @@ const SignUpScreen = (props) => {
     <View style={styles.container}>
       <View style={styles.backgroundSquare}></View>
       <View style={styles.backgroundTriangle}></View>
-      <View>
+      <View
+        style={{
+          marginBottom: "auto",
+          marginTop: 20 + Config.deviceHeight * 0.06,
+        }}
+      >
         <Text style={[styles.headText, { fontSize: Config.deviceWidth * 0.1 }]}>
           {i18n.t("signup.signup")}
         </Text>
       </View>
-      <View>
+      <View style={{ flex: 1 }}>
         <TextInput
           style={styles.input}
           placeholder={i18n.t("signup.companyid")}
@@ -153,18 +158,19 @@ const SignUpScreen = (props) => {
           value={confirmPassword}
           onChangeText={(password2) => setConfirmPassword(password2)}
         />
+
+        {isLoading ? (
+          <ActivityIndicator size="large" color="white" />
+        ) : (
+          <TouchableOpacity style={styles.button} onPress={signUp}>
+            <Text
+              style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
+            >
+              {i18n.t("signup.signup")}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
-      {isLoading ? (
-        <ActivityIndicator size="large" color="white" />
-      ) : (
-        <TouchableOpacity style={styles.button} onPress={signUp}>
-          <Text
-            style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
-          >
-            {i18n.t("signup.signup")}
-          </Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 };
@@ -184,7 +190,7 @@ const styles = StyleSheet.create({
   },
   backgroundSquare: {
     width: Config.deviceWidth,
-    height: Config.deviceHeight * 0.85,
+    height: Config.deviceHeight * 0.9,
     backgroundColor: Colors.PrimaryColor,
     position: "absolute",
     top: 0,
@@ -203,7 +209,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "transparent",
     borderLeftColor: "transparent",
     position: "absolute",
-    top: Config.deviceHeight * 0.85,
+    top: Config.deviceHeight * 0.9,
   },
   headText: {
     fontFamily: "noto-sans-jp-bold",
@@ -225,12 +231,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
     elevation: 4,
-    marginTop: 6 + Config.deviceHeight * 0.02,
+    marginTop: 6 + Config.deviceHeight * 0.03,
   },
   button: {
     backgroundColor: Colors.SecondaryColor,
     borderRadius: 32,
     paddingHorizontal: Config.deviceWidth * 0.2,
+    marginTop: 6 + Config.deviceHeight * 0.04,
   },
 });
 
