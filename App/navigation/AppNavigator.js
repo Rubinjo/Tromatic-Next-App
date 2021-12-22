@@ -9,6 +9,7 @@ import DetailsScreen from "../screens/DetailsScreen";
 import OverviewScreen, {
   tabOptions as overviewTabOptions,
 } from "../screens/OverviewScreen";
+import GraphScreen from "../screens/GraphScreen";
 import ResetPasswordScreen, {
   stackOptions as resetPasswordStackOptions,
 } from "../screens/ResetPasswordScreen";
@@ -45,6 +46,7 @@ const OverviewStackNav = (props) => {
     <OverviewStack.Navigator screenOptions={defaultStackOptions}>
       <OverviewStack.Screen name="Overview" component={OverviewScreen} />
       <OverviewStack.Screen name="Details" component={DetailsScreen} />
+      <OverviewStack.Screen name="Graph" component={GraphScreen} />
     </OverviewStack.Navigator>
   );
 };
