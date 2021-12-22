@@ -28,11 +28,11 @@ const SignInScreen = (props) => {
       icon: () => (
         <View style={{ flexDirection: "row" }}>
           <Image
-            source={require("../assets/united-kingdom.png")}
+            source={require("../assets/flags/united-kingdom.png")}
             style={[styles.icon, { marginRight: Config.deviceWidth * 0.005 }]}
           />
           <Image
-            source={require("../assets/united-states-of-america.png")}
+            source={require("../assets/flags/united-states-of-america.png")}
             style={styles.icon}
           />
         </View>
@@ -42,7 +42,10 @@ const SignInScreen = (props) => {
       label: "Deutsch",
       value: "de",
       icon: () => (
-        <Image source={require("../assets/germany.png")} style={styles.icon} />
+        <Image
+          source={require("../assets/flags/germany.png")}
+          style={styles.icon}
+        />
       ),
     },
     {
@@ -50,7 +53,7 @@ const SignInScreen = (props) => {
       value: "nl",
       icon: () => (
         <Image
-          source={require("../assets/netherlands.png")}
+          source={require("../assets/flags/netherlands.png")}
           style={styles.icon}
         />
       ),
