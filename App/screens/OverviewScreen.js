@@ -15,7 +15,6 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Colors from "../assets/constants/colors";
-import useColorScheme from "react-native/Libraries/Utilities/useColorScheme";
 
 import { CHAMBERS } from "../data/dummy-data";
 import CategoryGridTile from "../components/CategoryGridTile";
@@ -44,13 +43,6 @@ const OverviewScreen = (props) => {
         data={CHAMBERS}
         renderItem={renderGridItem}
       />
-      <View style={{ padding: 10 }}>
-        <Text>Overview of chambers</Text>
-      </View>
-      {/* <Button
-        title="Go to details"
-        onPress={() => navigation.navigate("Details")}
-      /> */}
     </View>
   );
 };
@@ -72,8 +64,7 @@ export const tabOptions = (navData) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
+    alignItems: "stretch",
     justifyContent: "center",
   },
 });
