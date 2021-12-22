@@ -12,10 +12,16 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 
+import Counter from "../components/Counter";
 import SliderTile from "../components/SliderTile";
 
 const DetailsScreen = (props) => {
+  const [temperature, setTemperature] = useState(99);
   const [valve, setValve] = useState(1);
+
+  const onTemperatureChange = (value) => {
+    setTemperature(value);
+  };
 
   const onValveChange = (value) => {
     setValve(value);
@@ -31,6 +37,7 @@ const DetailsScreen = (props) => {
       {/* <Text>{selectedChamber.title}</Text> */}
       {/* <Text>itemId: {JSON.stringify(itemId)}</Text>
       <Text>otherParam: {JSON.stringify(otherParam)}</Text> */}
+      <Counter temperature={temperature} onChange={onTemperatureChange} />
       <SliderTile
         title="Valves"
         stepCount={[...Array(5).keys()]} // Array of steps (step length you want ++)
