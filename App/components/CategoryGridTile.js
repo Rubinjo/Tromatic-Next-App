@@ -17,10 +17,11 @@ const CategoryGridTile = (props) => {
   const [value, setValue] = useState(1);
   return (
     <View style={styles.gridItem}>
-      <TouchableNativeFeedback style={{ flex: 1 }} onPress={props.onSelect}>
+      <TouchableNativeFeedback onPress={props.onSelect}>
         <View style={styles.container}>
           <View
             style={{
+              flex: 1,
               flexDirection: "row",
               alignItems: "center",
               marginBottom: "auto",
@@ -30,7 +31,9 @@ const CategoryGridTile = (props) => {
             }}
           >
             <Light color={props.color} />
-            <View style={{ marginLeft: 1 + Config.deviceWidth * 0.02 }}>
+            <View
+              style={{ flex: 1, marginLeft: 1 + Config.deviceWidth * 0.02 }}
+            >
               <Text
                 style={{
                   fontFamily: "noto-sans-jp-bold",
@@ -64,6 +67,7 @@ const CategoryGridTile = (props) => {
             </View>
             <View
               style={{
+                flex: 1,
                 marginLeft: "auto",
                 marginRight: 4 + Config.deviceWidth * 0.02,
                 marginTop: -1 - Config.deviceHeight * 0.02,
@@ -166,6 +170,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   sliderContainer: {
+    flex: 1,
     width: Config.deviceWidth * 0.7,
     alignItems: "stretch",
     justifyContent: "center",
