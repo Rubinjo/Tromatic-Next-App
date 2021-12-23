@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // import {
 //   NavigationContainer,
@@ -18,13 +19,33 @@ import SliderTile from "../components/SliderTile";
 const DetailsScreen = (props) => {
   const [temperature, setTemperature] = useState(99);
   const [valve, setValve] = useState(1);
+  const [areChanges, setAreChanges] = useState(false);
+
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerRight: (props) =>
+        areChanges ? (
+          <TouchableOpacity onPress={sendData} style={{ marginRight: 12 }}>
+            <MaterialCommunityIcons name={"check"} size={34} color={"white"} />
+          </TouchableOpacity>
+        ) : (
+          <View></View>
+        ),
+    });
+  }, [areChanges]);
 
   const onTemperatureChange = (value) => {
+    setAreChanges(true);
     setTemperature(value);
   };
 
   const onValveChange = (value) => {
+    setAreChanges(true);
     setValve(value);
+  };
+
+  const sendData = () => {
+    console.log("Test");
   };
 
   // const navigation = useNavigation();
