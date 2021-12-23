@@ -28,6 +28,7 @@ import Colors from "../assets/constants/colors";
 const defaultStackOptions = {
   headerStyle: { backgroundColor: Colors.PrimaryColor },
   headerTitle: "",
+  headerTintColor: "white",
 };
 const defaultTabOptions = {
   tabBarActiveTintColor: "white",
