@@ -1,15 +1,72 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
 import LineChart from "../components/LineChart";
+import Config from "../utils/config";
 
-const GraphScreen = () => {
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+const GraphScreen = (props) => {
   return (
     <View>
-      <Text>Graph Screen!</Text>
+      <TouchableOpacity
+        style={{
+          width: "100%",
+          marginBottom: "auto",
+          borderTopWidth: 1,
+          borderBottomWidth: 1,
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+        onPress={() => {
+          props.navigation.navigate("GraphSelector");
+        }}
+      >
+        <Text
+          style={{
+            marginLeft: Config.deviceWidth * 0.04,
+            fontFamily: "noto-sans-jp-regular",
+          }}
+        >
+          Variable selector
+        </Text>
+        <MaterialCommunityIcons name={"menu-right"} size={34} color={"black"} />
+      </TouchableOpacity>
       <LineChart />
+      <View style={{ flexDirection: "row" }}>
+        <TouchableOpacity
+          style={[styles.selectionContainer, { borderRightWidth: 1 }]}
+        >
+          <Text style={styles.selectionText}>1 day</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.selectionContainer, { borderRightWidth: 1 }]}
+        >
+          <Text style={styles.selectionText}>12 hours</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.selectionContainer, { borderRightWidth: 1 }]}
+        >
+          <Text style={styles.selectionText}>3 hours</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.selectionContainer}>
+          <Text style={styles.selectionText}>1 hour</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  selectionContainer: {
+    flex: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+  },
+  selectionText: {
+    textAlign: "center",
+    fontFamily: "noto-sans-jp-regular",
+  },
+});
 
 export default GraphScreen;
