@@ -4,12 +4,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import ConnectScreen from "../screens/ConnectScreen";
 import DetailsScreen from "../screens/DetailsScreen";
 import OverviewScreen, {
   tabOptions as overviewTabOptions,
 } from "../screens/OverviewScreen";
 import GraphScreen from "../screens/GraphScreen";
+import GraphSelectorScreen from "../screens/GraphSelectorScreen";
 import ResetPasswordScreen, {
   stackOptions as resetPasswordStackOptions,
 } from "../screens/ResetPasswordScreen";
@@ -48,6 +48,10 @@ const OverviewStackNav = (props) => {
       <OverviewStack.Screen name="Overview" component={OverviewScreen} />
       <OverviewStack.Screen name="Details" component={DetailsScreen} />
       <OverviewStack.Screen name="Graph" component={GraphScreen} />
+      <OverviewStack.Screen
+        name="GraphSelector"
+        component={GraphSelectorScreen}
+      />
     </OverviewStack.Navigator>
   );
 };
