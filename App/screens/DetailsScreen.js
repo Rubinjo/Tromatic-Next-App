@@ -17,7 +17,7 @@ import Counter from "../components/Counter";
 import SliderTile from "../components/SliderTile";
 
 const DetailsScreen = (props) => {
-  const [temperature, setTemperature] = useState(99);
+  const [temperature, setTemperature] = useState(1);
   const [valve, setValve] = useState(1);
   const [areChanges, setAreChanges] = useState(false);
 
@@ -58,7 +58,7 @@ const DetailsScreen = (props) => {
       {/* <Text>{selectedChamber.title}</Text> */}
       {/* <Text>itemId: {JSON.stringify(itemId)}</Text>
       <Text>otherParam: {JSON.stringify(otherParam)}</Text> */}
-      <Counter temperature={temperature} onChange={onTemperatureChange} />
+      <Counter value={temperature} onChange={onTemperatureChange} />
       <SliderTile
         title="Valves"
         stepCount={[...Array(5).keys()]} // Array of steps (step length you want ++)
