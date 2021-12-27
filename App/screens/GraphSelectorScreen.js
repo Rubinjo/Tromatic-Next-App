@@ -1,20 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Config from "../utils/config";
+import * as graphActions from "../store/actions/graph";
+
+import { useSelector, useDispatch } from "react-redux";
 
 const GraphSelectorScreen = (props) => {
-  const [isSelected, setIsSelected] = useState(0);
+  const [selected, setSelected] = useState(null);
+
+  // Update graph setting when redux store is loaded
+  useEffect(() => {
+    setSelected(graphPar);
+  }, [graphPar]);
+
+  // Load graph from the redux store
+  const graphPar = useSelector((state) => state.graph.graph);
+
+  const dispatch = useDispatch();
+
+  const onChangeGraph = (par) => {
+    try {
+      dispatch(graphActions.updateGraph(par));
+      setSelected(par);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <View>
       <TouchableOpacity
-        onPress={() => setIsSelected(0)}
+        onPress={() => onChangeGraph("Variable-1")}
         style={[styles.container, { borderTopWidth: 1 }]}
       >
         <Text style={styles.text}>Variable 1</Text>
-        {isSelected == 0 && (
+        {selected == "Variable-1" && (
           <MaterialCommunityIcons
             style={styles.icon}
             name={"check"}
@@ -24,11 +46,11 @@ const GraphSelectorScreen = (props) => {
         )}
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => setIsSelected(1)}
+        onPress={() => onChangeGraph("Variable-2")}
         style={styles.container}
       >
         <Text style={styles.text}>Variable 2</Text>
-        {isSelected == 1 && (
+        {selected == "Variable-2" && (
           <MaterialCommunityIcons
             style={styles.icon}
             name={"check"}
