@@ -14,6 +14,7 @@ import AppNavigator from "./navigation/AppNavigator";
 import machineReducer from "./store/reducers/machine";
 import userReducer from "./store/reducers/user";
 import languageReducer from "./store/reducers/language";
+import graphReducer from "./store/reducers/graph";
 import apiKeys from "./assets/config/keys";
 
 // Ignore timer warning
@@ -35,14 +36,15 @@ const rootReducer = combineReducers({
   machine: machineReducer,
   user: userReducer,
   language: languageReducer,
+  graph: graphReducer,
 });
 
 // Redux persist settings
-// Persist the language store
+// Persist the language & graph store
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["language"],
+  whitelist: ["language", "graph"],
 };
 
 // Apply Redux Persist settings to root reducer

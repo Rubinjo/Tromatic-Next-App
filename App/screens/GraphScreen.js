@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
 
 import LineChart from "../components/LineChart";
 import Config from "../utils/config";
@@ -7,6 +8,9 @@ import Config from "../utils/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const GraphScreen = (props) => {
+  // Load graph from the redux store
+  const graphPar = useSelector((state) => state.graph.graph);
+
   return (
     <View>
       <TouchableOpacity
