@@ -33,28 +33,28 @@ const OverviewScreen = (props) => {
     onValue(userRef, (snapshot) => {
       const cid = snapshot.val();
       setCid(cid, true);
-    });
-    const machinesRef = ref(db, "companies/" + cid + "/machines");
-    onValue(machinesRef, (snapshot) => {
-      const fetchedData = [];
-      snapshot.forEach((childSnapshot) => {
-        const childKey = childSnapshot.key;
-        const childData = childSnapshot.val();
-        const parsRef = ref(db, "machines/" + childKey);
-        onValue(parsRef, (snapshot) => {
-          const parData = snapshot.val();
-          fetchedData.push(
-            new Machine(
-              childKey,
-              cid,
-              childData.type,
-              childData.creation,
-              parData.temperature
-            )
-          );
+      const machinesRef = ref(db, "companies/" + cid + "/machines");
+      onValue(machinesRef, (snapshot) => {
+        const fetchedData = [];
+        snapshot.forEach((childSnapshot) => {
+          const childKey = childSnapshot.key;
+          const childData = childSnapshot.val();
+          const parsRef = ref(db, "machines/" + childKey);
+          onValue(parsRef, (snapshot) => {
+            const parData = snapshot.val();
+            fetchedData.push(
+              new Machine(
+                childKey,
+                cid,
+                childData.type,
+                childData.creation,
+                parData.temperature
+              )
+            );
+            setData(fetchedData);
+          });
         });
       });
-      setData(fetchedData);
     });
     console.log(cid);
     console.log(data);
@@ -80,7 +80,7 @@ const OverviewScreen = (props) => {
     <View style={styles.container}>
       <FlatList
         keyExtractor={(item, index) => item.id}
-        data={CHAMBERS}
+        data={data}
         renderItem={renderGridItem}
       />
     </View>
