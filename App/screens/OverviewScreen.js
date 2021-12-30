@@ -48,6 +48,7 @@ const OverviewScreen = (props) => {
                 cid,
                 childData.type,
                 childData.creation,
+                parData.statusLight,
                 parData.temperature
               )
             );
@@ -56,7 +57,6 @@ const OverviewScreen = (props) => {
         });
       });
     });
-    console.log(cid);
     console.log(data);
   }, []);
   // const navigation = useNavigation();
@@ -64,12 +64,11 @@ const OverviewScreen = (props) => {
   const renderGridItem = (itemData) => {
     return (
       <CategoryGridTile
-        title={itemData.item.title}
-        // color={itemData.item.color}
+        title={itemData.item.type}
+        color={itemData.item.statusLight}
         onSelect={() => {
           props.navigation.navigate("Details", {
-            itemId: itemData.item.id,
-            otherParam: "anything you want here",
+            item: itemData.item,
           });
         }}
       />
