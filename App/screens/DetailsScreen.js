@@ -18,7 +18,9 @@ import Counter from "../components/Counter";
 import SliderTile from "../components/SliderTile";
 
 const DetailsScreen = (props) => {
-  const [temperature, setTemperature] = useState(1);
+  const [temperature, setTemperature] = useState(
+    props.route.params.item.temperature
+  );
   const [valve, setValve] = useState(1);
   const [areChanges, setAreChanges] = useState(false);
 
