@@ -72,7 +72,7 @@ const OverviewScreen = (props) => {
         color={itemData.item.statusLight}
         onSelect={() => {
           props.navigation.navigate("Details", {
-            item: itemData.item,
+            machineId: itemData.item.id,
           });
         }}
       />
