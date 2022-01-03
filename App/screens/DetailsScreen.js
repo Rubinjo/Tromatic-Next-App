@@ -2,13 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-// import {
-//   NavigationContainer,
-//   useRoute,
-//   useNavigation,
-// } from "@react-navigation/native";
-// import { createNativeStackNavigator } from "@react-navigation/native-stack"; Uninstalled at this moment
+import { getDatabase, ref, onValue } from "firebase/database";
 
 // import { CHAMBERS } from "../data/dummy-data";
 import Config from "../utils/config";
@@ -18,11 +12,19 @@ import Counter from "../components/Counter";
 import SliderTile from "../components/SliderTile";
 
 const DetailsScreen = (props) => {
-  const [temperature, setTemperature] = useState(
-    props.route.params.item.temperature
-  );
-  const [valve, setValve] = useState(1);
+  const [temperature, setTemperature] = useState(0);
+  const [valve, setValve] = useState(0);
   const [areChanges, setAreChanges] = useState(false);
+
+  useEffect(() => {
+    const db = getDatabase();
+    const machineRef = ref(db, "machines/" + props.route.params.machineId);
+    onValue(machineRef, (snapshot) => {
+      const machine = snapshot.val();
+      setTemperature(machine.temperature);
+      setValve(machine.valves);
+    });
+  }, []);
 
   useEffect(() => {
     props.navigation.setOptions({
@@ -48,7 +50,14 @@ const DetailsScreen = (props) => {
   };
 
   const sendData = () => {
-    console.log("Test");
+    // const db = getDatabase();
+    // const updates = {};
+    // updates["machines/" + props.route.params.item.id + "/temperature"] =
+    //   temperature;
+    // updates["machines/" + props.route.params.item.id + "/valves"] = valve;
+    // update(ref(db), updates);
+    props.navigation.setParams();
+    // setAreChanges(false);
   };
 
   // const navigation = useNavigation();
