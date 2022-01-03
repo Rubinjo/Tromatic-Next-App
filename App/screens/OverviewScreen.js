@@ -23,16 +23,13 @@ import Machine from "../models/machine";
 import CategoryGridTile from "../components/CategoryGridTile";
 
 const OverviewScreen = (props) => {
-  const [cid, setCid] = useState(null);
   const [data, setData] = useState([]);
-
   useEffect(() => {
     const auth = getAuth();
     const db = getDatabase();
     const userRef = ref(db, "users/" + auth.currentUser.uid + "/cid");
     onValue(userRef, (snapshot) => {
       const cid = snapshot.val();
-      setCid(cid, true);
       const machinesRef = ref(db, "companies/" + cid + "/machines");
       onValue(machinesRef, (snapshot) => {
         const fetchedData = [];
@@ -52,14 +49,21 @@ const OverviewScreen = (props) => {
                 parData.temperature
               )
             );
-            setData(fetchedData);
+            setData(
+              fetchedData.reduce(function (filtered, machine) {
+                if (
+                  !filtered.some((filMachine) => filMachine.id === machine.id)
+                ) {
+                  filtered.push(machine);
+                }
+                return filtered;
+              }, [])
+            );
           });
         });
       });
     });
-    console.log(data);
   }, []);
-  // const navigation = useNavigation();
 
   const renderGridItem = (itemData) => {
     return (
