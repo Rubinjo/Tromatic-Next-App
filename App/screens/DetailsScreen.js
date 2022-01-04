@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, update } from "firebase/database";
 
 // import { CHAMBERS } from "../data/dummy-data";
 import Config from "../utils/config";
@@ -50,14 +50,13 @@ const DetailsScreen = (props) => {
   };
 
   const sendData = () => {
-    // const db = getDatabase();
-    // const updates = {};
-    // updates["machines/" + props.route.params.item.id + "/temperature"] =
-    //   temperature;
-    // updates["machines/" + props.route.params.item.id + "/valves"] = valve;
-    // update(ref(db), updates);
-    props.navigation.setParams();
-    // setAreChanges(false);
+    const db = getDatabase();
+    const updates = {};
+    updates["machines/" + props.route.params.machineId + "/temperature"] =
+      temperature;
+    updates["machines/" + props.route.params.machineId + "/valves"] = valve;
+    update(ref(db), updates);
+    setAreChanges(false);
   };
 
   // const navigation = useNavigation();
