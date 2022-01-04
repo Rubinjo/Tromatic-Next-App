@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 
@@ -8,8 +8,14 @@ import Config from "../utils/config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const GraphScreen = (props) => {
+  const [activeTimeNum, setActiveTimeNum] = useState(3);
+
   // Load graph from the redux store
   const graphPar = useSelector((state) => state.graph.graph);
+
+  const selectGraphTime = (timeNum) => {
+    setActiveTimeNum(timeNum);
+  };
 
   return (
     <View>
@@ -39,22 +45,94 @@ const GraphScreen = (props) => {
       <LineChart />
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity
-          style={[styles.selectionContainer, { borderRightWidth: 1 }]}
+          onPress={() => {
+            selectGraphTime(0);
+          }}
+          style={
+            activeTimeNum == 0
+              ? [styles.selectionContainerActive, { borderRightWidth: 1 }]
+              : styles.selectionContainer
+          }
         >
-          <Text style={styles.selectionText}>1 day</Text>
+          <Text
+            style={
+              activeTimeNum == 0
+                ? styles.selectionTextActive
+                : styles.selectionText
+            }
+          >
+            1 day
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.selectionContainer, { borderRightWidth: 1 }]}
+          onPress={() => {
+            selectGraphTime(1);
+          }}
+          style={
+            activeTimeNum == 1
+              ? [
+                  styles.selectionContainerActive,
+                  { borderLeftWidth: 1, borderRightWidth: 1 },
+                ]
+              : activeTimeNum == 0
+              ? [styles.selectionContainer, { borderRightWidth: 1 }]
+              : [styles.selectionContainer, { borderLeftWidth: 1 }]
+          }
         >
-          <Text style={styles.selectionText}>12 hours</Text>
+          <Text
+            style={
+              activeTimeNum == 1
+                ? styles.selectionTextActive
+                : styles.selectionText
+            }
+          >
+            12 hours
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.selectionContainer, { borderRightWidth: 1 }]}
+          onPress={() => {
+            selectGraphTime(2);
+          }}
+          style={
+            activeTimeNum == 2
+              ? [
+                  styles.selectionContainerActive,
+                  { borderLeftWidth: 1, borderRightWidth: 1 },
+                ]
+              : activeTimeNum == 3
+              ? [styles.selectionContainer, { borderLeftWidth: 1 }]
+              : [styles.selectionContainer, { borderRightWidth: 1 }]
+          }
         >
-          <Text style={styles.selectionText}>3 hours</Text>
+          <Text
+            style={
+              activeTimeNum == 2
+                ? styles.selectionTextActive
+                : styles.selectionText
+            }
+          >
+            3 hours
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.selectionContainer}>
-          <Text style={styles.selectionText}>1 hour</Text>
+        <TouchableOpacity
+          onPress={() => {
+            selectGraphTime(3);
+          }}
+          style={
+            activeTimeNum == 3
+              ? [styles.selectionContainerActive, { borderLeftWidth: 1 }]
+              : styles.selectionContainer
+          }
+        >
+          <Text
+            style={
+              activeTimeNum == 3
+                ? styles.selectionTextActive
+                : styles.selectionText
+            }
+          >
+            1 hour
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -66,10 +144,29 @@ const styles = StyleSheet.create({
     flex: 1,
     borderTopWidth: 1,
     borderBottomWidth: 1,
+    borderColor: "grey",
+  },
+  selectionContainerActive: {
+    flex: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    backgroundColor: "lightgray",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    elevation: 6,
   },
   selectionText: {
     textAlign: "center",
     fontFamily: "noto-sans-jp-regular",
+  },
+  selectionTextActive: {
+    textAlign: "center",
+    fontFamily: "noto-sans-jp-bold",
   },
 });
 
