@@ -14,6 +14,7 @@ import SliderTile from "../components/SliderTile";
 const DetailsScreen = (props) => {
   const [temperature, setTemperature] = useState(0);
   const [valve, setValve] = useState(0);
+  const [statusLight, setStatusLight] = useState(null);
   const [areChanges, setAreChanges] = useState(false);
 
   useEffect(() => {
@@ -22,7 +23,8 @@ const DetailsScreen = (props) => {
     onValue(machineRef, (snapshot) => {
       const machine = snapshot.val();
       setTemperature(machine.temperature);
-      setValve(machine.valves);
+      setValve(machine.valve);
+      setStatusLight(machine.statusLight);
     });
   }, []);
 
@@ -37,16 +39,16 @@ const DetailsScreen = (props) => {
           <View></View>
         ),
     });
-  }, [areChanges]);
+  }, [areChanges, temperature, valve]);
 
-  const onTemperatureChange = (value) => {
+  const onTemperatureChange = (temperature) => {
     setAreChanges(true);
-    setTemperature(value);
+    setTemperature(temperature);
   };
 
-  const onValveChange = (value) => {
+  const onValveChange = (valve) => {
     setAreChanges(true);
-    setValve(value);
+    setValve(valve[0]);
   };
 
   const sendData = () => {
@@ -54,7 +56,7 @@ const DetailsScreen = (props) => {
     const updates = {};
     updates["machines/" + props.route.params.machineId + "/temperature"] =
       temperature;
-    updates["machines/" + props.route.params.machineId + "/valves"] = valve;
+    updates["machines/" + props.route.params.machineId + "/valve"] = valve;
     update(ref(db), updates);
     setAreChanges(false);
   };
