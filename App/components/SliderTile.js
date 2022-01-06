@@ -27,7 +27,7 @@ const SliderTile = (props) => {
             maximumValue={props.stepCount[props.stepCount.length - 1]}
             step={1}
             value={props.value}
-            onValueChange={(value) => props.onChange(value)}
+            onSlidingComplete={(value) => props.onChange(value)}
             minimumTrackTintColor={Colors.PrimaryColor}
             maximumTrackTintColor={Colors.SecondaryColor}
           />
