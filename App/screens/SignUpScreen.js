@@ -30,15 +30,6 @@ const SignUpScreen = (props) => {
     }
   }, [error]);
 
-  // Empty all textinputs
-  const emptyState = () => {
-    setCompanyID("");
-    setFullName("");
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
-  };
-
   // Register user
   // uses Firebase Auth
   const signUp = async () => {
@@ -55,16 +46,17 @@ const SignUpScreen = (props) => {
       setPassword("");
       setError("Confirm password is required.");
     } else if (password !== confirmPassword) {
-      setError("Password does not match!");
+      setPassword("");
+      setConfirmPassword("");
+      setError("Password does not match.");
     } else {
       setIsLoading(true);
       try {
         await registration(companyID, fullName, email, password);
       } catch (err) {
         console.log(err.message);
-        emptyState();
         setIsLoading(false);
-        setError("Your account could not be created, please try again later");
+        setError(err);
       }
     }
   };
