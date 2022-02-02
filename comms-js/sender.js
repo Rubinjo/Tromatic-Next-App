@@ -21,7 +21,11 @@ const folder = "./folder";
 async function setupFirebase(firebaseConfig, email, password) {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  await signInWithEmailAndPassword(auth, email, password);
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (e) {
+    console.error(e.message);
+  }
   return getDatabase(app);
 }
 
@@ -43,13 +47,13 @@ const db = setupFirebase(firebaseConfig, email, password);
 
 /**
  * Send drychamber values to firebase constantly.
- * Done by watching machine outputted .txt files that are located in specified folder location.
+ * Done by watching machine outputted .json files that are located in specified folder location.
  * @param {string} folder - Location of folder that will be watched.
  * @param {string} event - Type of event that happened.
  * @param {string} filename - Name of file that has changed.
  */
 fs.watch(folder, (event, filename) => {
-  if (filename) {
+  if (filename.split(".").pop() === "json") {
     if (fsWait) return;
     // Debounce function
     // Protection against a file triggering multiple times for a single action
@@ -63,12 +67,15 @@ fs.watch(folder, (event, filename) => {
       return;
     }
     md5Previous = md5Current;
-    console.log(`${filename} file Changed`);
+    console.log(`${filename} file recorded`);
 
-    // Transform data here
+    const jsonData = require(folder + "/" + filename);
 
-    update(ref(db, "machines/" + machineId), {
-      timestamp: new Date().toTimeString(),
+    update(ref(db, "machines/" + jsonData.drychamber_id), {
+      timestamp: jsonData.datetime_message,
+      status: jsonData.drychamber_status,
     });
+  } else {
+    console.log(`${filename} file has no .json extension and is ignored`);
   }
 });
