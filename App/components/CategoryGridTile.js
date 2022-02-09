@@ -44,6 +44,35 @@ const CategoryGridTile = (props) => {
                 {props.title}
               </Text>
             </View>
+            {props.color == "red" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginRight: Config.deviceWidth * 0.08,
+                }}
+              >
+                <Image
+                  style={{
+                    height: 5 + Config.deviceHeight * 0.04,
+                    width: 5 + Config.deviceHeight * 0.04,
+                    resizeMode: "contain",
+                  }}
+                  source={require("../assets/icons/warning.png")}
+                />
+                <View style={{ marginLeft: 1 + Config.deviceWidth * 0.02 }}>
+                  <Text
+                    style={{
+                      fontFamily: "noto-sans-jp-regular",
+                      fontSize: 4 + Config.deviceHeight * 0.015,
+                      color: "black",
+                    }}
+                  >
+                    Error: 10
+                  </Text>
+                </View>
+              </View>
+            )}
           </View>
           <View
             style={{
@@ -104,9 +133,13 @@ const CategoryGridTile = (props) => {
                   width: 5 + Config.deviceHeight * 0.04,
                   resizeMode: "contain",
                 }}
-                source={require("../assets/icons/humidity.png")}
+                source={require("../assets/icons/thermometer.png")}
               />
-              <Text>60%</Text>
+              <View>
+                <Text>60 °C</Text>
+                <View style={{ borderBottomWidth: 1 }} />
+                <Text>60 °C</Text>
+              </View>
             </View>
             <View
               style={{
@@ -124,6 +157,28 @@ const CategoryGridTile = (props) => {
                 }}
                 source={require("../assets/icons/humidity.png")}
               />
+              <View>
+                <Text>60%</Text>
+                <View style={{ borderBottomWidth: 1 }} />
+                <Text>60%</Text>
+              </View>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                style={{
+                  height: 5 + Config.deviceHeight * 0.04,
+                  width: 5 + Config.deviceHeight * 0.04,
+                  resizeMode: "contain",
+                }}
+                source={require("../assets/icons/fan.png")}
+              />
               <Text>60%</Text>
             </View>
             <View
@@ -140,9 +195,9 @@ const CategoryGridTile = (props) => {
                   width: 5 + Config.deviceHeight * 0.04,
                   resizeMode: "contain",
                 }}
-                source={require("../assets/icons/humidity.png")}
+                source={require("../assets/icons/atom.png")}
               />
-              <Text>60%</Text>
+              <Text>60 °C</Text>
             </View>
           </View>
         </View>
