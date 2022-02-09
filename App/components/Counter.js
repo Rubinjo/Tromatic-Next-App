@@ -6,7 +6,7 @@ const Counter = (props) => {
   return (
     <View style={{ alignItems: "center" }}>
       <TouchableOpacity
-        onPress={() => props.onChange(props.value + 1)}
+        onPress={() => props.onChange(props.setter + 1)}
         style={[
           styles.input,
           {
@@ -27,7 +27,16 @@ const Counter = (props) => {
           +
         </Text>
       </TouchableOpacity>
-      <View style={[styles.input, { height: Config.deviceHeight * 0.08 }]}>
+      <View
+        style={[
+          styles.input,
+          {
+            height: Config.deviceHeight * 0.08,
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+          },
+        ]}
+      >
         <Text
           style={[
             styles.text,
@@ -37,11 +46,23 @@ const Counter = (props) => {
             },
           ]}
         >
-          {props.value}
+          {props.actual}
+        </Text>
+        <View style={{ height: "100%", borderLeftWidth: 1 }} />
+        <Text
+          style={[
+            styles.text,
+            {
+              fontSize: Config.deviceHeight * 0.045,
+              marginTop: -Config.deviceHeight * 0.0275,
+            },
+          ]}
+        >
+          {props.setter}
         </Text>
       </View>
       <TouchableOpacity
-        onPress={() => props.onChange(props.value - 1)}
+        onPress={() => props.onChange(props.setter - 1)}
         style={[
           styles.input,
           {
@@ -71,7 +92,7 @@ const styles = StyleSheet.create({
     fontFamily: "noto-sans-jp-regular",
   },
   input: {
-    width: Config.deviceWidth * 0.2,
+    width: Config.deviceWidth * 0.24,
     height: Config.deviceHeight * 0.09,
     borderWidth: 1,
     alignItems: "center",

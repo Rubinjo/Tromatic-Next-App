@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Switch,
+  Platform,
+} from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getDatabase, ref, onValue, update } from "firebase/database";
@@ -12,17 +19,28 @@ import Counter from "../components/Counter";
 import SliderTile from "../components/SliderTile";
 
 const DetailsScreen = (props) => {
-  const [temperature, setTemperature] = useState(0);
+  const [actualTemperature, setActualTemperature] = useState(0);
+  const [setTemperature, setSetTemperature] = useState(0);
   const [valve, setValve] = useState(0);
   const [statusLight, setStatusLight] = useState(null);
   const [areChanges, setAreChanges] = useState(false);
+
+  const [m1Toggle, setM1Toggle] = useState(false);
+  const [m2Toggle, setM2Toggle] = useState(false);
+  const [m3Toggle, setM3Toggle] = useState(false);
+  const [m4Toggle, setM4Toggle] = useState(false);
+  const [m5Toggle, setM5Toggle] = useState(false);
+  const [m6Toggle, setM6Toggle] = useState(false);
+  const [m7Toggle, setM7Toggle] = useState(false);
+  const [m8Toggle, setM8Toggle] = useState(false);
 
   useEffect(() => {
     const db = getDatabase();
     const machineRef = ref(db, "machines/" + props.route.params.machineId);
     onValue(machineRef, (snapshot) => {
       const machine = snapshot.val();
-      setTemperature(machine.temperature);
+      setActualTemperature(machine.actualTemperature);
+      setSetTemperature(machine.setTemperature);
       setValve(machine.valve);
       setStatusLight(machine.statusLight);
     });
@@ -39,24 +57,18 @@ const DetailsScreen = (props) => {
           <View></View>
         ),
     });
-  }, [areChanges, temperature, valve]);
+  }, [areChanges, setTemperature, valve]);
 
-  const onTemperatureChange = (temperature) => {
+  const onSetTemperatureChange = (temperature) => {
     setAreChanges(true);
-    setTemperature(temperature);
-  };
-
-  const onValveChange = (valve) => {
-    setAreChanges(true);
-    setValve(valve[0]);
+    setSetTemperature(temperature);
   };
 
   const sendData = () => {
     const db = getDatabase();
     const updates = {};
-    updates["machines/" + props.route.params.machineId + "/temperature"] =
-      temperature;
-    updates["machines/" + props.route.params.machineId + "/valve"] = valve;
+    updates["machines/" + props.route.params.machineId + "/setTemperature"] =
+      setTemperature;
     update(ref(db), updates);
     setAreChanges(false);
   };
@@ -71,13 +83,36 @@ const DetailsScreen = (props) => {
       {/* <Text>{selectedChamber.title}</Text> */}
       {/* <Text>itemId: {JSON.stringify(itemId)}</Text>
       <Text>otherParam: {JSON.stringify(otherParam)}</Text> */}
-      <Counter value={temperature} onChange={onTemperatureChange} />
-      <SliderTile
+      <Counter
+        actual={actualTemperature}
+        setter={setTemperature}
+        onChange={onSetTemperatureChange}
+      />
+      <Switch
+        trackColor={{
+          true: Colors.SecondaryColor,
+          false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
+        }}
+        thumbColor={
+          Platform.OS == "ios"
+            ? "#FFFFFF"
+            : m1Toggle
+            ? Colors.SecondaryColor
+            : "#ffffff"
+        }
+        ios_backgroundColor="#fbfbfb"
+        onValueChange={(value) => setM1Toggle(value)}
+        value={m1Toggle}
+        style={
+          m1Toggle ? styles.switchEnableBorder : styles.switchDisableBorder
+        }
+      />
+      {/* <SliderTile
         title="Valves"
         stepCount={[...Array(5).keys()]} // Array of steps (step length you want ++)
         value={valve}
         onChange={onValveChange}
-      />
+      /> */}
       <TouchableOpacity
         onPress={() => {
           props.navigation.navigate("Graph");
@@ -92,10 +127,19 @@ const DetailsScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
+  },
+  switchEnableBorder: {
+    borderColor: "#6fa6d3",
+    borderWidth: 1,
+  },
+
+  switchDisableBorder: {
+    borderColor: "#f2f2f2",
+    borderWidth: 1,
   },
 });
 
