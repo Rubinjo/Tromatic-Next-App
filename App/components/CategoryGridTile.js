@@ -68,7 +68,7 @@ const CategoryGridTile = (props) => {
                       color: "black",
                     }}
                   >
-                    Error: 10
+                    Error 10
                   </Text>
                 </View>
               </View>
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   },
   sliderContainer: {
     flex: 1,
-    width: Config.deviceWidth * 0.7,
+    width: Config.deviceWidth * 0.85,
     alignItems: "stretch",
     justifyContent: "center",
     marginLeft: Config.deviceWidth * 0.02, // Fix unaccurate track bug

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Switch,
   Platform,
+  Image,
 } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -21,6 +22,8 @@ import SliderTile from "../components/SliderTile";
 const DetailsScreen = (props) => {
   const [actualTemperature, setActualTemperature] = useState(0);
   const [setTemperature, setSetTemperature] = useState(0);
+  const [actualHumidity, setActualHumidity] = useState(0);
+  const [setHumidity, setSetHumidity] = useState(0);
   const [valve, setValve] = useState(0);
   const [statusLight, setStatusLight] = useState(null);
   const [areChanges, setAreChanges] = useState(false);
@@ -64,6 +67,11 @@ const DetailsScreen = (props) => {
     setSetTemperature(temperature);
   };
 
+  const onSetHumidityChange = (humidity) => {
+    setAreChanges(true);
+    setSetHumidity(humidity);
+  };
+
   const sendData = () => {
     const db = getDatabase();
     const updates = {};
@@ -80,14 +88,51 @@ const DetailsScreen = (props) => {
   // const selectedChamber = CHAMBERS.find((chamId) => chamId.id === chamberId);
   return (
     <View style={styles.container}>
-      {/* <Text>{selectedChamber.title}</Text> */}
-      {/* <Text>itemId: {JSON.stringify(itemId)}</Text>
-      <Text>otherParam: {JSON.stringify(otherParam)}</Text> */}
-      <Counter
-        actual={actualTemperature}
-        setter={setTemperature}
-        onChange={onSetTemperatureChange}
-      />
+      <View style={{ flex: 1, flexDirection: "row" }}>
+        <View style={{ alignItems: "center" }}>
+          <Image
+            style={{
+              height: 5 + Config.deviceHeight * 0.04,
+              width: 5 + Config.deviceHeight * 0.04,
+              resizeMode: "contain",
+            }}
+            source={require("../assets/icons/thermometer.png")}
+          />
+          <Text>Temperature</Text>
+          <Counter
+            actual={actualTemperature}
+            setter={setTemperature}
+            onChange={onSetTemperatureChange}
+          />
+        </View>
+        <View>
+          <Image
+            style={{
+              height: 24 + Config.deviceHeight * 0.15,
+              width: 24 + Config.deviceHeight * 0.15,
+              resizeMode: "contain",
+            }}
+            source={require("../assets/icons/fan.png")}
+          />
+        </View>
+        <View style={{ alignItems: "center" }}>
+          <Image
+            style={{
+              height: 5 + Config.deviceHeight * 0.04,
+              width: 5 + Config.deviceHeight * 0.04,
+              resizeMode: "contain",
+            }}
+            source={require("../assets/icons/humidity.png")}
+          />
+          <Text>Humidity</Text>
+          <Counter
+            actual={actualHumidity}
+            setter={setHumidity}
+            onChange={onSetHumidityChange}
+          />
+        </View>
+      </View>
+
       <Switch
         trackColor={{
           true: Colors.SecondaryColor,
