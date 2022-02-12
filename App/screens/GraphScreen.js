@@ -42,7 +42,7 @@ const GraphScreen = (props) => {
         </Text>
         <MaterialCommunityIcons name={"menu-right"} size={34} color={"black"} />
       </TouchableOpacity>
-      <LineChart />
+      <LineChart timer={activeTimeNum} />
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity
           onPress={() => {

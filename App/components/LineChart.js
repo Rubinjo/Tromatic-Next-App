@@ -24,9 +24,10 @@ const datastuff = temperature.forEach((element) => {
 let last = temperature[temperature.length - 1];
 console.log(last);
 
-const LineChart = () => {
+const LineChart = (props) => {
   const datatemp = temperature;
   const datahumi = humidity;
+  console.log(props.timer);
   return (
     <View style={{ backgroundColor: "#ffffff" }}>
       <View style={styles.titlebox}>
@@ -40,7 +41,7 @@ const LineChart = () => {
               data: { stroke: "#c43a31" },
               parent: { border: "1px solid #ccc" },
             }}
-            domain={{ x: [0, 24], y: [0, 100] }}
+            domain={{ x: [0, props.timer], y: [0, 100] }}
             data={datatemp}
           ></VictoryLine>
           <VictoryLine
