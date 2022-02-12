@@ -16,7 +16,7 @@ import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import * as languageActions from "../store/actions/language";
 import i18n from "../utils/i18n";
-import { signInAccount } from "../API/firebase";
+import { signInAccount } from "../auth/firebase";
 
 const SignInScreen = (props) => {
   const [open, setOpen] = useState(false);
