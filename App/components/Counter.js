@@ -6,7 +6,7 @@ const Counter = (props) => {
   return (
     <View style={{ alignItems: "center" }}>
       <TouchableOpacity
-        onPress={() => props.onChange(props.setter + 1)}
+        onPress={() => props.onChange(props.item, props.setter + 1)}
         style={[
           styles.input,
           {
@@ -62,7 +62,7 @@ const Counter = (props) => {
         </Text>
       </View>
       <TouchableOpacity
-        onPress={() => props.onChange(props.setter - 1)}
+        onPress={() => props.onChange(props.item, props.setter - 1)}
         style={[
           styles.input,
           {
