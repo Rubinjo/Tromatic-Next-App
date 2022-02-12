@@ -7,6 +7,7 @@ import {
   VictoryLine,
   VictoryLegend,
   VictoryTheme,
+  VictoryScatter,
   LineSegment,
 } from "victory-native";
 
@@ -24,9 +25,22 @@ const datastuff = temperature.forEach((element) => {
 let last = temperature[temperature.length - 1];
 console.log(last);
 
-const LineChart = () => {
+// class CatPoint extends React.Component {
+//   render() {
+//     const { x, y, datum } = this.props; // VictoryScatter supplies x, y and datum
+//     const cat = datum._y >= 0 ? "Cat" : "Cats";
+//     return (
+//       <Text x={x} y={y} fontSize={30}>
+//         {cat}
+//       </Text>
+//     );
+//   }
+// }
+
+const LineChart = (props) => {
   const datatemp = temperature;
   const datahumi = humidity;
+  console.log(props.timer);
   return (
     <View style={{ backgroundColor: "#ffffff" }}>
       <View style={styles.titlebox}>
@@ -40,7 +54,7 @@ const LineChart = () => {
               data: { stroke: "#c43a31" },
               parent: { border: "1px solid #ccc" },
             }}
-            domain={{ x: [0, 24], y: [0, 100] }}
+            domain={{ x: [0, props.timer], y: [0, 100] }}
             data={datatemp}
           ></VictoryLine>
           <VictoryLine
@@ -50,6 +64,11 @@ const LineChart = () => {
             }}
             data={datahumi}
           ></VictoryLine>
+          {/* <VictoryScatter
+            dataComponent={<CatPoint />}
+            y={(d) => Math.sin(2 * Math.PI * d.x)}
+            samples={15}
+          /> */}
         </VictoryGroup>
         <VictoryAxis label="Time [h]" />
         <VictoryAxis
