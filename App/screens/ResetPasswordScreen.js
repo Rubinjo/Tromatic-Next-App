@@ -11,7 +11,7 @@ import {
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import { useSelector } from "react-redux";
-import { resetPasswordAccount } from "../API/firebase";
+import { resetPasswordAccount } from "../auth/firebase";
 
 const ResetPasswordScreen = (props) => {
   const [email, setEmail] = useState("");

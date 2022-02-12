@@ -14,7 +14,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 import Colors from "../assets/constants/colors";
 import Config from "../utils/config";
-import { signOutAccount } from "../API/firebase";
+import { signOutAccount } from "../auth/firebase";
 import * as languageActions from "../store/actions/language";
 import i18n from "../utils/i18n";
 

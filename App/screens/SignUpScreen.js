@@ -12,7 +12,7 @@ import {
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import i18n from "../utils/i18n";
-import { registration } from "../API/firebase";
+import { registration } from "../auth/firebase";
 
 const SignUpScreen = (props) => {
   const [companyID, setCompanyID] = useState("");
