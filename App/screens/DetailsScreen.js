@@ -19,34 +19,39 @@ import Colors from "../assets/constants/colors";
 
 import Counter from "../components/Counter";
 import SliderTile from "../components/SliderTile";
+import humidity from "../data/dummy-data-humi";
 
 const DetailsScreen = (props) => {
-  const [actualTemperature, setActualTemperature] = useState(0);
-  const [setTemperature, setSetTemperature] = useState(0);
-  const [actualHumidity, setActualHumidity] = useState(0);
-  const [setHumidity, setSetHumidity] = useState(0);
-  const [valve, setValve] = useState(0);
-  const [statusLight, setStatusLight] = useState(null);
   const [areChanges, setAreChanges] = useState(false);
-
-  const [m1Toggle, setM1Toggle] = useState(false);
-  const [m2Toggle, setM2Toggle] = useState(false);
-  const [m3Toggle, setM3Toggle] = useState(false);
-  const [m4Toggle, setM4Toggle] = useState(false);
-  const [m5Toggle, setM5Toggle] = useState(false);
-  const [m6Toggle, setM6Toggle] = useState(false);
-  const [m7Toggle, setM7Toggle] = useState(false);
-  const [m8Toggle, setM8Toggle] = useState(false);
+  const [data, setData] = useState({
+    actualTemperature: 0,
+    setTemperature: 0,
+    actualHumidity: 0,
+    setHumidity: 0,
+    valve: 0,
+    statusLight: null,
+    m1Toggle: false,
+    m2Toggle: false,
+    m3Toggle: false,
+    m4Toggle: false,
+    m5Toggle: false,
+    m6Toggle: false,
+    m7Toggle: false,
+    m8Toggle: false,
+  });
 
   useEffect(() => {
     const db = getDatabase();
     const machineRef = ref(db, "machines/" + props.route.params.machineId);
     onValue(machineRef, (snapshot) => {
       const machine = snapshot.val();
-      setActualTemperature(machine.actualTemperature);
-      setSetTemperature(machine.setTemperature);
-      setValve(machine.valve);
-      setStatusLight(machine.statusLight);
+      setData({
+        ...data,
+        actualTemperature: machine.actualTemperature,
+        setTemperature: machine.setTemperature,
+        valve: machine.valve,
+        statusLight: machine.statusLight,
+      });
     });
   }, []);
 
@@ -61,16 +66,11 @@ const DetailsScreen = (props) => {
           <View></View>
         ),
     });
-  }, [areChanges, setTemperature, valve]);
+  }, [areChanges, data]);
 
-  const onSetTemperatureChange = (temperature) => {
+  const onChange = (item, value) => {
     setAreChanges(true);
-    setSetTemperature(temperature);
-  };
-
-  const onSetHumidityChange = (humidity) => {
-    setAreChanges(true);
-    setSetHumidity(humidity);
+    setData({ ...data, [item]: value });
   };
 
   const sendData = () => {
@@ -107,9 +107,10 @@ const DetailsScreen = (props) => {
           />
           <Text>Temperature</Text>
           <Counter
-            actual={actualTemperature}
-            setter={setTemperature}
-            onChange={onSetTemperatureChange}
+            item={"setTemperature"}
+            actual={data.actualTemperature}
+            setter={data.setTemperature}
+            onChange={onChange}
           />
         </View>
         <View>
@@ -133,9 +134,10 @@ const DetailsScreen = (props) => {
           />
           <Text>Humidity</Text>
           <Counter
-            actual={actualHumidity}
-            setter={setHumidity}
-            onChange={onSetHumidityChange}
+            item={"setHumidity"}
+            actual={data.actualHumidity}
+            setter={data.setHumidity}
+            onChange={onChange}
           />
         </View>
       </View>
@@ -321,15 +323,15 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : m1Toggle
+                  : data.m1Toggle
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setM1Toggle(value)}
-              value={m1Toggle}
+              onValueChange={(value) => setData({ ...data, m1Toggle: value })}
+              value={data.m1Toggle}
               style={
-                m1Toggle
+                data.m1Toggle
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
@@ -345,15 +347,15 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : m2Toggle
+                  : data.m2Toggle
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setM2Toggle(value)}
-              value={m2Toggle}
+              onValueChange={(value) => setData({ ...data, m2Toggle: value })}
+              value={data.m2Toggle}
               style={
-                m2Toggle
+                data.m2Toggle
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
@@ -369,15 +371,15 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : m3Toggle
+                  : data.m3Toggle
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setM3Toggle(value)}
-              value={m3Toggle}
+              onValueChange={(value) => setData({ ...data, m3Toggle: value })}
+              value={data.m3Toggle}
               style={
-                m3Toggle
+                data.m3Toggle
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
@@ -393,15 +395,15 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : m4Toggle
+                  : data.m4Toggle
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setM4Toggle(value)}
-              value={m4Toggle}
+              onValueChange={(value) => setData({ ...data, m4Toggle: value })}
+              value={data.m4Toggle}
               style={
-                m4Toggle
+                data.m4Toggle
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
@@ -419,15 +421,15 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : m5Toggle
+                  : data.m5Toggle
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setM5Toggle(value)}
-              value={m5Toggle}
+              onValueChange={(value) => setData({ ...data, m5Toggle: value })}
+              value={data.m5Toggle}
               style={
-                m5Toggle
+                data.m5Toggle
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
@@ -443,15 +445,15 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : m6Toggle
+                  : data.m6Toggle
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setM6Toggle(value)}
-              value={m6Toggle}
+              onValueChange={(value) => setData({ ...data, m6Toggle: value })}
+              value={data.m6Toggle}
               style={
-                m6Toggle
+                data.m6Toggle
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
@@ -467,15 +469,15 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : m7Toggle
+                  : data.m7Toggle
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setM7Toggle(value)}
-              value={m7Toggle}
+              onValueChange={(value) => setData({ ...data, m7Toggle: value })}
+              value={data.m7Toggle}
               style={
-                m7Toggle
+                data.m7Toggle
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
@@ -491,15 +493,15 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : m8Toggle
+                  : data.m8Toggle
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setM8Toggle(value)}
-              value={m8Toggle}
+              onValueChange={(value) => setData({ ...data, m8Toggle: value })}
+              value={data.m8Toggle}
               style={
-                m8Toggle
+                data.m8Toggle
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
