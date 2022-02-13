@@ -521,7 +521,9 @@ const DetailsScreen = (props) => {
           props.navigation.navigate("Graph");
         }}
       >
-        <Text>See Graph</Text>
+        <View style={styles.graphBox}>
+          <Text>View graph</Text>
+        </View>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -542,6 +544,14 @@ const styles = StyleSheet.create({
   switchDisableBorder: {
     borderColor: "#f2f2f2",
     borderWidth: 1,
+  },
+  graphBox: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
   },
 });
 
