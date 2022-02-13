@@ -47,14 +47,17 @@ const LineChart = (props) => {
         <Text>Temperature over time, 24h</Text>
       </View>
 
-      <VictoryChart gridComponent={<LineSegment type={"grid"} />}>
+      <VictoryChart
+        gridComponent={<LineSegment type={"grid"} />}
+        maxDomain={{ x: props.timer }}
+      >
         <VictoryGroup>
           <VictoryLine
             style={{
               data: { stroke: "#c43a31" },
               parent: { border: "1px solid #ccc" },
             }}
-            domain={{ x: [0, props.timer], y: [0, 100] }}
+            domain={{ y: [0, 100] }} //x=24
             data={datatemp}
           ></VictoryLine>
           <VictoryLine

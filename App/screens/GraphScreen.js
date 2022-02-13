@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 
 import LineChart from "../components/LineChart";
+import LineChart2 from "../components/Home";
+import Home from "../components/Home";
 import Config from "../utils/config";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -43,10 +45,13 @@ const GraphScreen = (props) => {
         <MaterialCommunityIcons name={"menu-right"} size={34} color={"black"} />
       </TouchableOpacity>
       <LineChart timer={activeTimeNum} />
+      {/* <LineChart2 timer={activeTimeNum} /> */}
+      {/* <Home /> */}
+      {/*weird example*/}
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity
           onPress={() => {
-            selectGraphTime(0);
+            selectGraphTime(24);
           }}
           style={
             activeTimeNum == 0
@@ -66,7 +71,7 @@ const GraphScreen = (props) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            selectGraphTime(1);
+            selectGraphTime(12);
           }}
           style={
             activeTimeNum == 1
@@ -91,7 +96,7 @@ const GraphScreen = (props) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            selectGraphTime(2);
+            selectGraphTime(3);
           }}
           style={
             activeTimeNum == 2
@@ -116,7 +121,7 @@ const GraphScreen = (props) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            selectGraphTime(3);
+            selectGraphTime(1);
           }}
           style={
             activeTimeNum == 3
