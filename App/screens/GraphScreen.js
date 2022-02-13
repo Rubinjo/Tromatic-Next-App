@@ -54,14 +54,14 @@ const GraphScreen = (props) => {
             selectGraphTime(24);
           }}
           style={
-            activeTimeNum == 0
+            activeTimeNum == 24
               ? [styles.selectionContainerActive, { borderRightWidth: 1 }]
               : styles.selectionContainer
           }
         >
           <Text
             style={
-              activeTimeNum == 0
+              activeTimeNum == 24
                 ? styles.selectionTextActive
                 : styles.selectionText
             }
@@ -74,19 +74,19 @@ const GraphScreen = (props) => {
             selectGraphTime(12);
           }}
           style={
-            activeTimeNum == 1
+            activeTimeNum == 12
               ? [
                   styles.selectionContainerActive,
                   { borderLeftWidth: 1, borderRightWidth: 1 },
                 ]
-              : activeTimeNum == 0
+              : activeTimeNum == 12
               ? [styles.selectionContainer, { borderRightWidth: 1 }]
               : [styles.selectionContainer, { borderLeftWidth: 1 }]
           }
         >
           <Text
             style={
-              activeTimeNum == 1
+              activeTimeNum == 12
                 ? styles.selectionTextActive
                 : styles.selectionText
             }
@@ -99,7 +99,7 @@ const GraphScreen = (props) => {
             selectGraphTime(3);
           }}
           style={
-            activeTimeNum == 2
+            activeTimeNum == 3
               ? [
                   styles.selectionContainerActive,
                   { borderLeftWidth: 1, borderRightWidth: 1 },
@@ -111,7 +111,7 @@ const GraphScreen = (props) => {
         >
           <Text
             style={
-              activeTimeNum == 2
+              activeTimeNum == 3
                 ? styles.selectionTextActive
                 : styles.selectionText
             }
@@ -124,14 +124,14 @@ const GraphScreen = (props) => {
             selectGraphTime(1);
           }}
           style={
-            activeTimeNum == 3
+            activeTimeNum == 1
               ? [styles.selectionContainerActive, { borderLeftWidth: 1 }]
               : styles.selectionContainer
           }
         >
           <Text
             style={
-              activeTimeNum == 3
+              activeTimeNum == 1
                 ? styles.selectionTextActive
                 : styles.selectionText
             }
