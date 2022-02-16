@@ -41,6 +41,7 @@ const LineChart = (props) => {
   const datatemp = temperature;
   const datahumi = humidity;
   console.log(props.timer);
+  const timeAdjusted = 24 - props.timer;
   return (
     <View style={{ backgroundColor: "#ffffff" }}>
       <View style={styles.titlebox}>
@@ -49,7 +50,7 @@ const LineChart = (props) => {
 
       <VictoryChart
         gridComponent={<LineSegment type={"grid"} />}
-        maxDomain={{ x: props.timer }}
+        minDomain={{ x: timeAdjusted }}
       >
         <VictoryGroup>
           <VictoryLine
