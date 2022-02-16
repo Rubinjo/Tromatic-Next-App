@@ -24,6 +24,7 @@ const datastuff = temperature.forEach((element) => {
 
 let last = temperature[temperature.length - 1];
 console.log(last);
+console.log(Date());
 
 // class CatPoint extends React.Component {
 //   render() {
@@ -45,7 +46,7 @@ const LineChart = (props) => {
   return (
     <View style={{ backgroundColor: "#ffffff" }}>
       <View style={styles.titlebox}>
-        <Text>Temperature over time, 24h</Text>
+        <Text>Variables over time</Text>
       </View>
 
       <VictoryChart
@@ -74,7 +75,7 @@ const LineChart = (props) => {
             samples={15}
           /> */}
         </VictoryGroup>
-        <VictoryAxis label="Time [h]" />
+        <VictoryAxis label="Time [h]" scale={{ x: "time" }} />
         <VictoryAxis
           dependentAxis
           // label="Temperature [°C]"
@@ -114,9 +115,10 @@ const LineChart = (props) => {
           ]}
         />
       </VictoryChart>
-      <View>
+      <View alignItems="center">
         <Text>
-          The machine has been running for: {last.x}h and is at {last.y}°C
+          The machine has been running for: {last.x}h and is at{" "}
+          {last.y.toFixed(2)}°C
         </Text>
       </View>
     </View>
