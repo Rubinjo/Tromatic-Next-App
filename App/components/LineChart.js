@@ -46,7 +46,7 @@ const LineChart = (props) => {
   return (
     <View style={{ backgroundColor: "#ffffff" }}>
       <View style={styles.titlebox}>
-        <Text>Variables over time</Text>
+        <Text style={{}}>Variables over time</Text>
       </View>
 
       <VictoryChart
