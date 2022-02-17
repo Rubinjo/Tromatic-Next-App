@@ -9,6 +9,7 @@ import {
   VictoryTheme,
   VictoryScatter,
   LineSegment,
+  VictoryZoomContainer,
 } from "victory-native";
 
 import temperature from "../data/dummy-data-temp";
@@ -26,6 +27,7 @@ let last = temperature[temperature.length - 1];
 console.log(last);
 console.log(Date());
 
+// cat example which worked
 // class CatPoint extends React.Component {
 //   render() {
 //     const { x, y, datum } = this.props; // VictoryScatter supplies x, y and datum
@@ -37,6 +39,14 @@ console.log(Date());
 //     );
 //   }
 // }
+
+handleZoom() = (domain) => {
+  this.setState({selectedDomain: domain});
+}
+
+handleBrush() = (domain) => {
+  this.setState({zoomDomain: domain});
+}
 
 const LineChart = (props) => {
   const datatemp = temperature;
@@ -98,6 +108,16 @@ const LineChart = (props) => {
             grid: { stroke: "#818e99", strokeWidth: 0.5 },
           }}
         />
+        <VictoryZoomContainer 
+        responsive={false} 
+        zoomDimension="x"                 
+        zoomDomain={this.state.zoomDomain}
+        onZoomDomainChange={this.handleZoom.bind(this)}/>
+                      <VictoryBrushContainer responsive={false}
+                brushDimension="x"
+                brushDomain={this.state.selectedDomain}
+                onBrushDomainChange={this.handleBrush.bind(this)}
+              />
         <VictoryLegend
           x={Dimensions.get("screen").width / 2 - 100}
           orientation="horizontal"
