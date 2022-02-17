@@ -52,8 +52,9 @@ const LineChart = (props) => {
       <VictoryChart
         gridComponent={<LineSegment type={"grid"} />}
         minDomain={{ x: timeAdjusted }}
+        style={{}}
       >
-        <VictoryGroup>
+        <VictoryGroup style={{}}>
           <VictoryLine
             style={{
               data: { stroke: "#c43a31" },
@@ -75,9 +76,10 @@ const LineChart = (props) => {
             samples={15}
           /> */}
         </VictoryGroup>
-        <VictoryAxis label="Time [h]" scale={{ x: "time" }} />
+        <VictoryAxis label="Time [h]" scale={{ x: "time" }} style={{}} />
         <VictoryAxis
           dependentAxis
+          style={{}}
           // label="Temperature [°C]"
           // style={{
           //   axisLabel: {
@@ -113,10 +115,11 @@ const LineChart = (props) => {
               },
             },
           ]}
+          style={{}}
         />
       </VictoryChart>
       <View alignItems="center">
-        <Text>
+        <Text style={{}}>
           The machine has been running for: {last.x}h and is at{" "}
           {last.y.toFixed(2)}°C
         </Text>
