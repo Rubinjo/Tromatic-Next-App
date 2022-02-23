@@ -40,13 +40,13 @@ console.log(Date());
 //   }
 // }
 
-handleZoom() = (domain) => {
-  this.setState({selectedDomain: domain});
-}
+// handleZoom() = (domain) => {
+//   this.setState({selectedDomain: domain});
+// }
 
-handleBrush() = (domain) => {
-  this.setState({zoomDomain: domain});
-}
+// handleBrush() = (domain) => {
+//   this.setState({zoomDomain: domain});
+// }
 
 const LineChart = (props) => {
   const datatemp = temperature;
@@ -108,16 +108,18 @@ const LineChart = (props) => {
             grid: { stroke: "#818e99", strokeWidth: 0.5 },
           }}
         />
-        <VictoryZoomContainer 
-        responsive={false} 
-        zoomDimension="x"                 
-        zoomDomain={this.state.zoomDomain}
-        onZoomDomainChange={this.handleZoom.bind(this)}/>
-                      <VictoryBrushContainer responsive={false}
-                brushDimension="x"
-                brushDomain={this.state.selectedDomain}
-                onBrushDomainChange={this.handleBrush.bind(this)}
-              />
+        {/* <VictoryZoomContainer
+          responsive={false}
+          zoomDimension="x"
+          zoomDomain={this.state.zoomDomain}
+          onZoomDomainChange={this.handleZoom.bind(this)}
+        />
+        <VictoryBrushContainer
+          responsive={false}
+          brushDimension="x"
+          brushDomain={this.state.selectedDomain}
+          onBrushDomainChange={this.handleBrush.bind(this)}
+        /> */}
         <VictoryLegend
           x={Dimensions.get("screen").width / 2 - 100}
           orientation="horizontal"
