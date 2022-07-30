@@ -140,7 +140,6 @@ const GraphScreen = (props) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <Text>Hello world!</Text>
     </View>
   );
 };

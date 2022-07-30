@@ -225,7 +225,7 @@ const DetailsScreen = (props) => {
         style={{
           flexDirection: "row",
           justifyContent: "space-evenly",
-          marginBottom: -42,
+          marginBottom: -44,
         }}
       >
         <View style={{ alignItems: "center" }}>
@@ -312,7 +312,7 @@ const DetailsScreen = (props) => {
       <View style={{ borderBottomWidth: 1 }} />
       <View style={{ borderBottomWidth: 1, marginTop: 17 }} />
       <View style={{ flexDirection: "row", width: "100%" }}>
-        <View style={{ flexDirection: "column", width: "50%" }}>
+        <View style={{ marginLeft: 5, flexDirection: "column", width: "50%" }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text>M1</Text>
             <Switch
@@ -548,8 +548,7 @@ const styles = StyleSheet.create({
   graphBox: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
+    paddingVertical: 20,
     borderRadius: 4,
     elevation: 3,
   },
