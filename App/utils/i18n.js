@@ -1,17 +1,15 @@
-import * as Localization from "expo-localization";
-import i18n from "i18n-js";
+import { I18n } from "i18n-js";
 
 // Import all locales
 import de from "../locales/de.json";
 import en from "../locales/en.json";
 import nl from "../locales/nl.json";
 
-// Define the supported translations
-i18n.translations = {
-  en,
-  de,
-  nl,
-};
+const i18n = new I18n({
+  ...en,
+  ...de,
+  ...nl,
+});
 
 i18n.locale = "nl";
 

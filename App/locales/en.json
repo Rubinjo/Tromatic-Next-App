@@ -1,19 +1,21 @@
 {
-  "signin": {
-    "welcome": "Welcome",
-    "email": "Email",
-    "password": "Password",
-    "signin": "Sign in",
-    "forgot": "Forgot your password?",
-    "account": "Don't have an account?",
-    "signup": "SIGN UP"
-  },
-  "signup": {
-    "signup": "Sign up",
-    "companyid": "Company-ID",
-    "name": "Full Name",
-    "email": "Email",
-    "password": "Password",
-    "confirm": "Confirm password"
+  "en": {
+    "signin": {
+      "welcome": "Welcome",
+      "email": "Email",
+      "password": "Password",
+      "signin": "Sign in",
+      "forgot": "Forgot your password?",
+      "account": "Don't have an account?",
+      "signup": "SIGN UP"
+    },
+    "signup": {
+      "signup": "Sign up",
+      "companyid": "Company-ID",
+      "name": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "confirm": "Confirm password"
+    }
   }
 }
