@@ -2,7 +2,7 @@ const fs = require("fs");
 const md5 = require("md5");
 require("log-timestamp");
 const { firebaseConfig } = require("./helper/key");
-const { email, password } = require("./helper/login");
+const { EMAIL, PASSWORD } = require("./helper/login");
 const { initializeApp } = require("firebase/app");
 const { getAuth, signInWithEmailAndPassword } = require("firebase/auth");
 const { getDatabase, ref, update } = require("firebase/database");
@@ -43,7 +43,7 @@ let md5Previous = null;
  */
 let fsWait = false;
 
-const db = setupFirebase(firebaseConfig, email, password);
+const db = setupFirebase(firebaseConfig, EMAIL, PASSWORD);
 
 /**
  * Send drychamber values to firebase constantly.
@@ -68,13 +68,15 @@ fs.watch(folder, (event, filename) => {
     }
     md5Previous = md5Current;
     console.log(`${filename} file recorded`);
-
-    const jsonData = require(folder + "/" + filename);
-
-    update(ref(db, "machines/" + jsonData.drychamber_id), {
-      timestamp: jsonData.datetime_message,
-      status: jsonData.drychamber_status,
-    });
+    try {
+      const jsonData = require(folder + "/" + filename);
+      update(ref(db, "machines/" + jsonData.drychamber_id), {
+        timestamp: jsonData.datetime_message,
+        status: jsonData.drychamber_status,
+      });
+    } catch (e) {
+      console.error(e);
+    }
   } else {
     console.log(`${filename} file has no .json extension and is ignored`);
   }
