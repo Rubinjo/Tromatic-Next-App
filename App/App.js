@@ -1,7 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { View } from "react-native";
 import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import ReduxThunk from "redux-thunk";
@@ -16,12 +17,6 @@ import userReducer from "./store/reducers/user";
 import languageReducer from "./store/reducers/language";
 import graphReducer from "./store/reducers/graph";
 import apiKeys from "./assets/config/keys";
-
-// Ignore timer warning
-// Caused by UseEffect to check for user login (in AppNavigator.js)
-// Currently no alternative solution offered by Expo
-import { LogBox } from "react-native";
-LogBox.ignoreLogs(["Setting a timer"]);
 
 // Fetch custom font-family
 const fetchFonts = async () => {
@@ -55,28 +50,45 @@ const store = createStore(persistedReducer, applyMiddleware(ReduxThunk));
 const persistor = persistStore(store);
 
 export default function App() {
-  const [fontLoaded, setFontLoaded] = useState(false);
+  const [appIsReady, setAppIsReady] = useState(false);
 
-  const app = initializeApp(apiKeys.firebaseConfig);
-  console.log("Connected with Firebase");
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await fetchFonts();
+        console.log("Loaded fonts");
 
-  // Keep splash screen active untill fonts are fully loaded
-  if (!fontLoaded) {
-    return (
-      <AppLoading
-        startAsync={fetchFonts}
-        onFinish={() => setFontLoaded(true)}
-        onError={console.warn}
-      />
-    );
+        initializeApp(apiKeys.firebaseConfig);
+        console.log("Connected with Firebase");
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        // Tell the application to render
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
   }
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <StatusBar style="auto" />
-        <AppNavigator />
-      </PersistGate>
-    </Provider>
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <StatusBar style="auto" />
+          <AppNavigator />
+        </PersistGate>
+      </Provider>
+    </View>
   );
 }
