@@ -14,7 +14,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
-import * as languageActions from "../store/actions/language";
+import { updateLanguage } from "../store/slices/language";
 import i18n from "../utils/i18n";
 import { signInAccount } from "../auth/firebase";
 
@@ -67,6 +67,7 @@ const SignInScreen = (props) => {
   // Update language setting when redux store is loaded
   useEffect(() => {
     setValue(language);
+    i18n.locale = language;
   }, [language]);
 
   // Show alert when error occurs
@@ -205,7 +206,7 @@ const SignInScreen = (props) => {
           onChangeValue={(value) => {
             i18n.locale = value;
             try {
-              dispatch(languageActions.updateLanguage(value));
+              dispatch(updateLanguage(value));
             } catch (err) {
               console.log(err);
               setError(err.message);

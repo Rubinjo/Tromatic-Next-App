@@ -3,19 +3,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
-import ReduxThunk from "redux-thunk";
-import { persistStore, persistReducer } from "redux-persist";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PersistGate } from "redux-persist/integration/react";
 import { initializeApp } from "firebase/app";
 
 import AppNavigator from "./navigation/AppNavigator";
-import machineReducer from "./store/reducers/machine";
-import userReducer from "./store/reducers/user";
-import languageReducer from "./store/reducers/language";
-import graphReducer from "./store/reducers/graph";
+import { store, persistor } from "./store/store";
 import apiKeys from "./assets/config/keys";
 
 // Fetch custom font-family
@@ -25,29 +18,6 @@ const fetchFonts = async () => {
     "noto-sans-jp-bold": require("./assets/fonts/NotoSansJP-Bold.otf"),
   });
 };
-
-// Create root reducer
-const rootReducer = combineReducers({
-  machine: machineReducer,
-  user: userReducer,
-  language: languageReducer,
-  graph: graphReducer,
-});
-
-// Redux persist settings
-// Persist the language & graph store
-const persistConfig = {
-  key: "root",
-  storage: AsyncStorage,
-  whitelist: ["language", "graph"],
-};
-
-// Apply Redux Persist settings to root reducer
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-// Create store with Redux Thunk middleware and persistant reducer
-const store = createStore(persistedReducer, applyMiddleware(ReduxThunk));
-const persistor = persistStore(store);
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -82,13 +52,13 @@ export default function App() {
   }
 
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
           <StatusBar style="auto" />
           <AppNavigator />
-        </PersistGate>
-      </Provider>
-    </View>
+        </View>
+      </PersistGate>
+    </Provider>
   );
 }

@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Config from "../utils/config";
-import * as graphActions from "../store/actions/graph";
+import { updateGraph } from "../store/slices/graph";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -22,7 +22,7 @@ const GraphSelectorScreen = (props) => {
 
   const onChangeGraph = (par) => {
     try {
-      dispatch(graphActions.updateGraph(par));
+      dispatch(updateGraph(par));
       setSelected(par);
     } catch (e) {
       console.log(e);
