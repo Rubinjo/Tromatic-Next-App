@@ -18,11 +18,11 @@ const folder = "./folder";
  * @param {string} email - Email of concerned user
  * @param {string} password - Password of concerned user
  */
-async function setupFirebase(firebaseConfig, email, password) {
+function setupFirebase(firebaseConfig, email, password) {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    signInWithEmailAndPassword(auth, email, password);
   } catch (e) {
     console.error(e.message);
   }
@@ -42,6 +42,7 @@ let md5Previous = null;
  * @type {boolean}
  */
 let fsWait = false;
+let jsonData, jsonString, md5Current
 
 const db = setupFirebase(firebaseConfig, EMAIL, PASSWORD);
 
@@ -62,17 +63,51 @@ fs.watch(folder, (event, filename) => {
     }, 100);
     // Use MD5 hash for checksum
     // Extra protection against a file triggering multiple times for a single action
-    const md5Current = md5(fs.readFileSync(folder + "/" + filename));
+    md5Current = md5(fs.readFileSync(folder + "/" + filename));
     if (md5Current === md5Previous) {
       return;
     }
     md5Previous = md5Current;
     console.log(`${filename} file recorded`);
     try {
-      const jsonData = require(folder + "/" + filename);
-      update(ref(db, "machines/" + jsonData.drychamber_id), {
-        timestamp: jsonData.datetime_message,
-        status: jsonData.drychamber_status,
+      jsonString = fs.readFileSync(folder + "/" + filename);
+      jsonData = JSON.parse(jsonString)
+      update(ref(db, "machines/" + jsonData.DryChamberID), {
+        Timestamp: jsonData.DateTimeMessage,
+        Status: jsonData.Status,
+        CurrentTemp: jsonData.CurrentTemp,
+        SetPointTemp: jsonData.SetPointTemp,
+        CurrentHum : jsonData.CurrentHum,
+        SetPointHum : jsonData.SetPointHum,
+        RemaingTime : jsonData.RemaingTime,
+        NumOfWmPProbes : jsonData.NumOfWmPProbes,
+        WMValue_1 : jsonData.WMValue_1,
+        WMValue_2 : jsonData.WMValue_2,
+        WMValue_3 : jsonData.WMValue_3,
+        WMValue_4 : jsonData.WMValue_4,
+        WMValue_5 : jsonData.WMValue_5,
+        WMValue_6 : jsonData.WMValue_6,
+        WMValue_7 : jsonData.WMValue_7,
+        WMValue_8 : jsonData.WMValue_8,
+        WMValue_9 : jsonData.WMValue_9,
+        WMValue_10 : jsonData.WMValue_10,
+        HeatingValvePos : jsonData.HeatingValvePos,
+        DamperPos : jsonData.DamperPos,
+        SprayPos : jsonData.SprayPos,
+        RPM : jsonData.RPM,
+        FanDirection : jsonData.FanDirection,
+        TempOffest : jsonData.TempOffest,
+        EMCOffset : jsonData.EMCOffset,
+        WM_Active_1 : jsonData.WM_Active_1,
+        WM_Active_2 : jsonData.WM_Active_2,
+        WM_Active_3 : jsonData.WM_Active_3,
+        WM_Active_4 : jsonData.WM_Active_4,
+        WM_Active_5 : jsonData.WM_Active_5,
+        WM_Active_6 : jsonData.WM_Active_6,
+        WM_Active_7 : jsonData.WM_Active_7,
+        WM_Active_8 : jsonData.WM_Active_8,
+        WM_Active_9 : jsonData.WM_Active_9,
+        WM_Active_10 : jsonData.WM_Active_10,
       });
     } catch (e) {
       console.error(e);
