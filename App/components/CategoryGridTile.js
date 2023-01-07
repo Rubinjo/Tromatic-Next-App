@@ -30,7 +30,7 @@ const CategoryGridTile = (props) => {
               marginLeft: 1 + Config.deviceWidth * 0.08,
             }}
           >
-            <Light color={props.color} />
+            <Light color={(props.item.remainingTime > 0) ? "green" : "red"} />
             <View
               style={{ flex: 1, marginLeft: 1 + Config.deviceWidth * 0.02 }}
             >
@@ -41,10 +41,10 @@ const CategoryGridTile = (props) => {
                   color: "black",
                 }}
               >
-                {props.title}
+                {props.item.type}
               </Text>
             </View>
-            {props.color == "red" && (
+            {(props.item.remainingTime != 0) && (
               <View
                 style={{
                   flexDirection: "row",

@@ -45,12 +45,45 @@ const OverviewScreen = (props) => {
                 cid,
                 childData.type,
                 childData.creation,
-                parData.statusLight,
-                parData.temperature
+                parData.CurrentHum,
+                parData.CurrentTemp,
+                parData.DamperPos,
+                parData.EMCOffset,
+                parData.fanDirection,
+                parData.HeatingValvePos,
+                parData.NumOfWmProbes,
+                parData.RMM,
+                parData.RemainingTime,
+                parData.SetPointHum,
+                parData.SetPointTemp,
+                parData.SprayPos,
+                parData.Status,
+                parData.TempOffset,
+                parData.Timestamp,
+                parData.WMValue1,
+                parData.WMValue2,
+                parData.WMValue3,
+                parData.WMValue4,
+                parData.WMValue5,
+                parData.WMValue6,
+                parData.WMValue7,
+                parData.WMValue8,
+                parData.WMValue9,
+                parData.WMValue10,
+                parData.WMActive1,
+                parData.WMActive2,
+                parData.WMActive3,
+                parData.WMActive4,
+                parData.WMActive5,
+                parData.WMActive6,
+                parData.WMActive7,
+                parData.WMActive8,
+                parData.WMActive9,
+                parData.WMActive10,
               )
             );
             setData(
-              fetchedData.reduce(function (filtered, machine) {
+              fetchedData.reverse().reduce(function (filtered, machine) {
                 if (
                   !filtered.some((filMachine) => filMachine.id === machine.id)
                 ) {
@@ -68,8 +101,7 @@ const OverviewScreen = (props) => {
   const renderGridItem = (itemData) => {
     return (
       <CategoryGridTile
-        title={itemData.item.type}
-        color={itemData.item.statusLight}
+        item={itemData.item}
         onSelect={() => {
           props.navigation.navigate("Details", {
             machineId: itemData.item.id,
@@ -85,6 +117,7 @@ const OverviewScreen = (props) => {
         keyExtractor={(item, index) => item.id}
         data={data}
         renderItem={renderGridItem}
+        extraData={data}
       />
     </View>
   );
