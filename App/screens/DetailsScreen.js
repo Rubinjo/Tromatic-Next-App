@@ -47,10 +47,41 @@ const DetailsScreen = (props) => {
       const machine = snapshot.val();
       setData({
         ...data,
-        actualTemperature: machine.actualTemperature,
-        setTemperature: machine.setTemperature,
-        valve: machine.valve,
-        statusLight: machine.statusLight,
+        currentHum: machine.currentHum,
+        currentTemp: machine.currentTemp,
+        damperPos: machine.DamperPos,
+        EMCOffset: machine.EMCOffset,
+        fanDirection: machine.FanDirection,
+        heatingValvePos: machine.HeatingValvePos,
+        numOfWmProbes: machine.NumOfWmProbes,
+        RPM: machine.RPM,
+        remainingTime: machine.RemainingTime,
+        setPointHum: machine.SetPointHum,
+        setPointTemp: machine.SetPointTemp,
+        sprayPos: machine.SprayPos,
+        status: machine.Status,
+        TempOffset: machine.TempOffset,
+        timestamp: machine.Timestamp,
+        WMValue1: machine.WMValue1,
+        WMValue2: machine.WMValue2,
+        WMValue3: machine.WMValue3,
+        WMValue4: machine.WMValue4,
+        WMValue5: machine.WMValue5,
+        WMValue6: machine.WMValue6,
+        WMValue7: machine.WMValue7,
+        WMValue8: machine.WMValue8,
+        WMValue9: machine.WMValue9,
+        WMValue10: machine.WMValue10,
+        WMActive1: machine.WMActive1,
+        WMActive2: machine.WMActive2,
+        WMActive3: machine.WMActive3,
+        WMActive4: machine.WMActive4,
+        WMActive5: machine.WMActive5,
+        WMActive6: machine.WMActive6,
+        WMActive7: machine.WMActive7,
+        WMActive8: machine.WMActive8,
+        WMActive9: machine.WMActive9,
+        WMActive10: machine.WMActive10,
       });
     });
   }, []);
@@ -108,7 +139,7 @@ const DetailsScreen = (props) => {
           <Text>Temperature</Text>
           <Counter
             item={"setTemperature"}
-            actual={data.actualTemperature}
+            actual={data.currentTemp}
             setter={data.setTemperature}
             onChange={onChange}
           />
@@ -135,7 +166,7 @@ const DetailsScreen = (props) => {
           <Text>Humidity</Text>
           <Counter
             item={"setHumidity"}
-            actual={data.actualHumidity}
+            actual={data.currentHum}
             setter={data.setHumidity}
             onChange={onChange}
           />
@@ -180,7 +211,7 @@ const DetailsScreen = (props) => {
           </View>
           <View style={{ alignItems: "center" }}>
             <Text>Auto</Text>
-            <Text>0%</Text>
+            <Text>{data.valve}%</Text>
           </View>
         </View>
         <View style={{ alignItems: "center" }}>
@@ -197,7 +228,7 @@ const DetailsScreen = (props) => {
           </View>
           <View style={{ alignItems: "center" }}>
             <Text>Auto</Text>
-            <Text>0%</Text>
+            <Text>{data.sprayPos}%</Text>
           </View>
         </View>
         <View style={{ alignItems: "center", height: 100 }}>
@@ -214,7 +245,7 @@ const DetailsScreen = (props) => {
           </View>
           <View style={{ alignItems: "center" }}>
             <Text>Auto</Text>
-            <Text>0%</Text>
+            <Text>{data.fanDirection}%</Text>
           </View>
         </View>
       </View>
@@ -323,15 +354,15 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : data.m1Toggle
+                  : data.WMActive1
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, m1Toggle: value })}
-              value={data.m1Toggle}
+              onValueChange={(value) => setData({ ...data, WMActive1: value })}
+              value={data.WMActive1}
               style={
-                data.m1Toggle
+                data.WMActive1
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
@@ -347,15 +378,15 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : data.m2Toggle
+                  : data.WMActive2
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, m2Toggle: value })}
-              value={data.m2Toggle}
+              onValueChange={(value) => setData({ ...data, WMActive2: value })}
+              value={data.WMActive2}
               style={
-                data.m2Toggle
+                data.WMActive2
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
@@ -371,15 +402,15 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : data.m3Toggle
+                  : data.WMActive3
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, m3Toggle: value })}
-              value={data.m3Toggle}
+              onValueChange={(value) => setData({ ...data, WMActive3: value })}
+              value={data.WMActive3}
               style={
-                data.m3Toggle
+                data.WMActive3
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
@@ -395,22 +426,20 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : data.m4Toggle
+                  : data.WMActive4
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, m4Toggle: value })}
-              value={data.m4Toggle}
+              onValueChange={(value) => setData({ ...data, WMActive4: value })}
+              value={data.WMActive4}
               style={
-                data.m4Toggle
+                data.WMActive4
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
             />
           </View>
-        </View>
-        <View style={{ flexDirection: "column", width: "50%" }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text>M5</Text>
             <Switch
@@ -421,20 +450,22 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : data.m5Toggle
+                  : data.WMActive5
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, m5Toggle: value })}
-              value={data.m5Toggle}
+              onValueChange={(value) => setData({ ...data, WMActive5: value })}
+              value={data.WMActive5}
               style={
-                data.m5Toggle
+                data.WMActive5
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
             />
           </View>
+        </View>
+        <View style={{ flexDirection: "column", width: "50%" }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text>M6</Text>
             <Switch
@@ -445,15 +476,15 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : data.m6Toggle
+                  : data.WMActive6
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, m6Toggle: value })}
-              value={data.m6Toggle}
+              onValueChange={(value) => setData({ ...data, WMActive6: value })}
+              value={data.WMActive6}
               style={
-                data.m6Toggle
+                data.WMActive6
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
@@ -469,15 +500,15 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : data.m7Toggle
+                  : data.WMActive7
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, m7Toggle: value })}
-              value={data.m7Toggle}
+              onValueChange={(value) => setData({ ...data, WMActive7: value })}
+              value={data.WMActive7}
               style={
-                data.m7Toggle
+                data.WMActive7
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }
@@ -493,15 +524,63 @@ const DetailsScreen = (props) => {
               thumbColor={
                 Platform.OS == "ios"
                   ? "#FFFFFF"
-                  : data.m8Toggle
+                  : data.WMActive8
                   ? Colors.SecondaryColor
                   : "#ffffff"
               }
               ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, m8Toggle: value })}
-              value={data.m8Toggle}
+              onValueChange={(value) => setData({ ...data, WMActive8: value })}
+              value={data.WMActive8}
               style={
-                data.m8Toggle
+                data.WMActive8
+                  ? styles.switchEnableBorder
+                  : styles.switchDisableBorder
+              }
+            />
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text>M9</Text>
+            <Switch
+              trackColor={{
+                true: Colors.SecondaryColor,
+                false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
+              }}
+              thumbColor={
+                Platform.OS == "ios"
+                  ? "#FFFFFF"
+                  : data.WMActive9
+                  ? Colors.SecondaryColor
+                  : "#ffffff"
+              }
+              ios_backgroundColor="#fbfbfb"
+              onValueChange={(value) => setData({ ...data, WMActive9: value })}
+              value={data.WMActive9}
+              style={
+                data.WMActive9
+                  ? styles.switchEnableBorder
+                  : styles.switchDisableBorder
+              }
+            />
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text>M10</Text>
+            <Switch
+              trackColor={{
+                true: Colors.SecondaryColor,
+                false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
+              }}
+              thumbColor={
+                Platform.OS == "ios"
+                  ? "#FFFFFF"
+                  : data.WMActive10
+                  ? Colors.SecondaryColor
+                  : "#ffffff"
+              }
+              ios_backgroundColor="#fbfbfb"
+              onValueChange={(value) => setData({ ...data, WMActive10: value })}
+              value={data.WMActive10}
+              style={
+                data.WMActive10
                   ? styles.switchEnableBorder
                   : styles.switchDisableBorder
               }

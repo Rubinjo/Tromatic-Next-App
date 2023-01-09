@@ -87,9 +87,9 @@ const CategoryGridTile = (props) => {
                 thumbStyle={styles.thumb}
                 maximumValue={100}
                 step={1}
-                value={value}
-                onValueChange={(value) => setValue(value)}
-                // disabled={true}
+                value={props.item.remainingTime}
+                // onValueChange={(value) => setValue(value)}
+                disabled={true}
                 minimumTrackTintColor={Colors.PrimaryColor}
                 maximumTrackTintColor={Colors.SecondaryColor}
               />
@@ -108,7 +108,7 @@ const CategoryGridTile = (props) => {
                   color: "black",
                 }}
               >
-                Time left: {value}
+                Time left: {props.item.remainingTime}
               </Text>
             </View>
           </View>
@@ -136,9 +136,9 @@ const CategoryGridTile = (props) => {
                 source={require("../assets/icons/thermometer.png")}
               />
               <View>
-                <Text>60 °C</Text>
+                <Text>{props.item.currentTemp} °C</Text>
                 <View style={{ borderBottomWidth: 1 }} />
-                <Text>60 °C</Text>
+                <Text>{props.item.setPointTemp} °C</Text>
               </View>
             </View>
             <View
@@ -158,9 +158,9 @@ const CategoryGridTile = (props) => {
                 source={require("../assets/icons/humidity.png")}
               />
               <View>
-                <Text>60%</Text>
+                <Text>{props.item.currentHum}%</Text>
                 <View style={{ borderBottomWidth: 1 }} />
-                <Text>60%</Text>
+                <Text>{props.item.setPointHum}%</Text>
               </View>
             </View>
             <View
@@ -179,7 +179,7 @@ const CategoryGridTile = (props) => {
                 }}
                 source={require("../assets/icons/fan.png")}
               />
-              <Text>60%</Text>
+              <Text>{props.item.RPM}%</Text>
             </View>
             <View
               style={{
@@ -197,7 +197,7 @@ const CategoryGridTile = (props) => {
                 }}
                 source={require("../assets/icons/atom.png")}
               />
-              <Text>60 °C</Text>
+              <Text>{Math.min(props.item.WMValue1, props.item.WMValue2, props.item.WMValue3, props.item.WMValue4, props.item.WMValue5, props.item.WMValue6, props.item.WMValue7, props.item.WMValue8, props.item.WMValue9, props.item.WMValue10)} °C</Text>
             </View>
           </View>
         </View>
