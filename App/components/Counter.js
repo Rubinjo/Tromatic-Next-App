@@ -33,33 +33,45 @@ const Counter = (props) => {
           {
             height: Config.deviceHeight * 0.08,
             flexDirection: "row",
-            justifyContent: "space-evenly",
+            // justifyContent: "space-evenly",
           },
         ]}
       >
-        <Text
-          style={[
-            styles.text,
-            {
-              fontSize: Config.deviceHeight * 0.045,
-              marginTop: -Config.deviceHeight * 0.0275,
-            },
-          ]}
-        >
-          {props.actual}
-        </Text>
+        <View style={{ height: "100%", width: "50%", backgroundColor: "silver", justifyContent: "center" }}>
+          <Text style={{ position: "absolute", top: "0%", right: "0%" }}>
+            A
+          </Text>
+          <Text
+            style={[
+              styles.text,
+              {
+                fontSize: Config.deviceHeight * 0.045,
+                alignSelf: "center",
+              },
+            ]}
+          >
+            {props.actual}
+          </Text>
+        </View>
+
         <View style={{ height: "100%", borderLeftWidth: 1 }} />
-        <Text
-          style={[
-            styles.text,
-            {
-              fontSize: Config.deviceHeight * 0.045,
-              marginTop: -Config.deviceHeight * 0.0275,
-            },
-          ]}
-        >
-          {props.setter}
-        </Text>
+        <View style={{ height: "100%", width: "50%", justifyContent: "center" }}>
+          <Text style={{ position: "absolute", top: "0%", right: "0%" }}>
+            S
+          </Text>
+          <Text
+            style={[
+              styles.text,
+              {
+                fontSize: Config.deviceHeight * 0.045,
+                alignSelf: "center",
+              },
+            ]}
+          >
+            {props.setter}
+          </Text>
+        </View>
+
       </View>
       <TouchableOpacity
         onPress={() => props.onChange(props.item, props.setter - 1)}
