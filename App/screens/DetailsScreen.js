@@ -92,6 +92,13 @@ const DetailsScreen = (props) => {
     });
   }, [areChanges, data]);
 
+  const onWMChange = (id, value, active) => {
+    const newArray = [...data.WMs]
+    newArray.splice(id - 1, 1)
+    newArray.splice(id - 1, 0, { id: id, value: value, active: active })
+    onChange("WMs", newArray)
+  }
+
   const onChange = (item, value) => {
     setAreChanges(true);
     setData({ ...data, [item]: value });
@@ -107,30 +114,54 @@ const DetailsScreen = (props) => {
   const sendData = () => {
     const db = getDatabase();
     const updates = {};
-    updates["machines/" + props.route.params.machineId + "/SetPointTemp"] =
-      data.setPointTemp;
-    updates["machines/" + props.route.params.machineId + "/SetPointHum"] =
-      data.setPointHum;
-    updates["machines/" + props.route.params.machineId + "/WMActive1"] =
-      data.WMs[0].active;
-    updates["machines/" + props.route.params.machineId + "/WMActive2"] =
-      data.WMs[1].active;
-    updates["machines/" + props.route.params.machineId + "/WMActive3"] =
-      data.WMs[2].active;
-    updates["machines/" + props.route.params.machineId + "/WMActive4"] =
-      data.WMs[3].active;
-    updates["machines/" + props.route.params.machineId + "/WMActive5"] =
-      data.WMs[4].active;
-    updates["machines/" + props.route.params.machineId + "/WMActive6"] =
-      data.WMs[5].active;
-    updates["machines/" + props.route.params.machineId + "/WMActive7"] =
-      data.WMs[6].active;
-    updates["machines/" + props.route.params.machineId + "/WMActive8"] =
-      data.WMs[7].active;
-    updates["machines/" + props.route.params.machineId + "/WMActive9"] =
-      data.WMs[8].active;
-    updates["machines/" + props.route.params.machineId + "/WMActive10"] =
-      data.WMs[9].active;
+    if (data.setPointTemp != dataFB.setPointTemp) {
+      updates["machines/" + props.route.params.machineId + "/SetPointTemp"] =
+        data.setPointTemp;
+    }
+    if (data.setPointHum != dataFB.setPointHum) {
+      updates["machines/" + props.route.params.machineId + "/SetPointHum"] =
+        data.setPointHum;
+    }
+    if (data.WMs[0].active != dataFB.WMs[0].active) {
+      updates["machines/" + props.route.params.machineId + "/WMActive1"] =
+        data.WMs[0].active;
+    }
+    if (data.WMs[0].active != dataFB.WMs[0].active) {
+      updates["machines/" + props.route.params.machineId + "/WMActive2"] =
+        data.WMs[1].active;
+    }
+    if (data.WMs[0].active != dataFB.WMs[0].active) {
+      updates["machines/" + props.route.params.machineId + "/WMActive3"] =
+        data.WMs[2].active;
+    }
+    if (data.WMs[0].active != dataFB.WMs[0].active) {
+      updates["machines/" + props.route.params.machineId + "/WMActive4"] =
+        data.WMs[3].active;
+    }
+    if (data.WMs[0].active != dataFB.WMs[0].active) {
+      updates["machines/" + props.route.params.machineId + "/WMActive5"] =
+        data.WMs[4].active;
+    }
+    if (data.WMs[0].active != dataFB.WMs[0].active) {
+      updates["machines/" + props.route.params.machineId + "/WMActive6"] =
+        data.WMs[5].active;
+    }
+    if (data.WMs[0].active != dataFB.WMs[0].active) {
+      updates["machines/" + props.route.params.machineId + "/WMActive7"] =
+        data.WMs[6].active;
+    }
+    if (data.WMs[0].active != dataFB.WMs[0].active) {
+      updates["machines/" + props.route.params.machineId + "/WMActive8"] =
+        data.WMs[7].active;
+    }
+    if (data.WMs[0].active != dataFB.WMs[0].active) {
+      updates["machines/" + props.route.params.machineId + "/WMActive9"] =
+        data.WMs[8].active;
+    }
+    if (data.WMs[0].active != dataFB.WMs[0].active) {
+      updates["machines/" + props.route.params.machineId + "/WMActive10"] =
+        data.WMs[9].active;
+    }
     update(ref(db), updates);
     setAreChanges(false);
   };
@@ -402,7 +433,7 @@ const DetailsScreen = (props) => {
                       : "#ffffff"
                 }
                 ios_backgroundColor="#fbfbfb"
-                onValueChange={(value) => setData({ ...data, WMActive1: value })}
+                onValueChange={(value) => onWMChange(wm.id, wm.value, value)}
                 value={wm.active}
                 style={
                   wm.active
