@@ -8,10 +8,12 @@ import {
   Platform,
   Image,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getDatabase, ref, onValue, update } from "firebase/database";
+import { Slider } from "@miblanchard/react-native-slider";
 
 // import { CHAMBERS } from "../data/dummy-data";
 import Config from "../utils/config";
@@ -22,22 +24,26 @@ import SliderTile from "../components/SliderTile";
 import humidity from "../data/dummy-data-humi";
 
 const DetailsScreen = (props) => {
+  const [refreshing, setRefreshing] = useState(false);
   const [areChanges, setAreChanges] = useState(false);
+  const [dataFB, setDataFB] = useState({})
   const [data, setData] = useState({
-    actualTemperature: 0,
-    setTemperature: 0,
-    actualHumidity: 0,
-    setHumidity: 0,
-    valve: 0,
-    statusLight: null,
-    m1Toggle: false,
-    m2Toggle: false,
-    m3Toggle: false,
-    m4Toggle: false,
-    m5Toggle: false,
-    m6Toggle: false,
-    m7Toggle: false,
-    m8Toggle: false,
+    currentHum: 0,
+    currentTemp: 0,
+    damperPos: 0,
+    EMCOffset: 0,
+    fanDirection: 0,
+    heatingValvePos: 0,
+    numOfWmProbes: 0,
+    RPM: 0,
+    remainingTime: 0,
+    setPointHum: 0,
+    setPointTemp: 0,
+    sprayPos: 0,
+    status: 0,
+    tempOffset: 0,
+    timestamp: "0",
+    WMs: [{ id: 1, value: 0, active: false }, { id: 2, value: 0, active: false }, { id: 3, value: 0, active: false }, { id: 4, value: 0, active: false }, { id: 5, value: 0, active: false }, { id: 6, value: 0, active: false }, { id: 7, value: 0, active: false }, { id: 8, value: 0, active: false }, { id: 9, value: 0, active: false }, { id: 10, value: 0, active: false }],
   });
 
   useEffect(() => {
@@ -45,10 +51,10 @@ const DetailsScreen = (props) => {
     const machineRef = ref(db, "machines/" + props.route.params.machineId);
     onValue(machineRef, (snapshot) => {
       const machine = snapshot.val();
-      setData({
-        ...data,
-        currentHum: machine.currentHum,
-        currentTemp: machine.currentTemp,
+      setDataFB({
+        ...dataFB,
+        currentHum: machine.CurrentHum,
+        currentTemp: machine.CurrentTemp,
         damperPos: machine.DamperPos,
         EMCOffset: machine.EMCOffset,
         fanDirection: machine.FanDirection,
@@ -60,31 +66,18 @@ const DetailsScreen = (props) => {
         setPointTemp: machine.SetPointTemp,
         sprayPos: machine.SprayPos,
         status: machine.Status,
-        TempOffset: machine.TempOffset,
+        tempOffset: machine.TempOffset,
         timestamp: machine.Timestamp,
-        WMValue1: machine.WMValue1,
-        WMValue2: machine.WMValue2,
-        WMValue3: machine.WMValue3,
-        WMValue4: machine.WMValue4,
-        WMValue5: machine.WMValue5,
-        WMValue6: machine.WMValue6,
-        WMValue7: machine.WMValue7,
-        WMValue8: machine.WMValue8,
-        WMValue9: machine.WMValue9,
-        WMValue10: machine.WMValue10,
-        WMActive1: machine.WMActive1,
-        WMActive2: machine.WMActive2,
-        WMActive3: machine.WMActive3,
-        WMActive4: machine.WMActive4,
-        WMActive5: machine.WMActive5,
-        WMActive6: machine.WMActive6,
-        WMActive7: machine.WMActive7,
-        WMActive8: machine.WMActive8,
-        WMActive9: machine.WMActive9,
-        WMActive10: machine.WMActive10,
+        WMs: [{ id: 1, value: machine.WMValue1, active: machine.WMActive1 }, { id: 2, value: machine.WMValue2, active: machine.WMActive2 }, { id: 3, value: machine.WMValue3, active: machine.WMActive3 }, { id: 4, value: machine.WMValue4, active: machine.WMActive4 }, { id: 5, value: machine.WMValue5, active: machine.WMActive5 }, { id: 6, value: machine.WMValue6, active: machine.WMActive6 }, { id: 7, value: machine.WMValue7, active: machine.WMActive7 }, { id: 8, value: machine.WMValue8, active: machine.WMActive8 }, { id: 9, value: machine.WMValue9, active: machine.WMActive9 }, { id: 10, value: machine.WMValue10, active: machine.WMActive10 }]
       });
     });
   }, []);
+
+  useEffect(() => {
+    if (areChanges == false) {
+      setData(dataFB)
+    }
+  }, [dataFB])
 
   useEffect(() => {
     props.navigation.setOptions({
@@ -104,11 +97,40 @@ const DetailsScreen = (props) => {
     setData({ ...data, [item]: value });
   };
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    setData(dataFB)
+    setAreChanges(false);
+    setRefreshing(false);
+  };
+
   const sendData = () => {
     const db = getDatabase();
     const updates = {};
-    updates["machines/" + props.route.params.machineId + "/setTemperature"] =
-      setTemperature;
+    updates["machines/" + props.route.params.machineId + "/SetPointTemp"] =
+      data.setPointTemp;
+    updates["machines/" + props.route.params.machineId + "/SetPointHum"] =
+      data.setPointHum;
+    updates["machines/" + props.route.params.machineId + "/WMActive1"] =
+      data.WMs[0].active;
+    updates["machines/" + props.route.params.machineId + "/WMActive2"] =
+      data.WMs[1].active;
+    updates["machines/" + props.route.params.machineId + "/WMActive3"] =
+      data.WMs[2].active;
+    updates["machines/" + props.route.params.machineId + "/WMActive4"] =
+      data.WMs[3].active;
+    updates["machines/" + props.route.params.machineId + "/WMActive5"] =
+      data.WMs[4].active;
+    updates["machines/" + props.route.params.machineId + "/WMActive6"] =
+      data.WMs[5].active;
+    updates["machines/" + props.route.params.machineId + "/WMActive7"] =
+      data.WMs[6].active;
+    updates["machines/" + props.route.params.machineId + "/WMActive8"] =
+      data.WMs[7].active;
+    updates["machines/" + props.route.params.machineId + "/WMActive9"] =
+      data.WMs[8].active;
+    updates["machines/" + props.route.params.machineId + "/WMActive10"] =
+      data.WMs[9].active;
     update(ref(db), updates);
     setAreChanges(false);
   };
@@ -119,7 +141,27 @@ const DetailsScreen = (props) => {
   // const { chamberId } = props.route.params;
   // const selectedChamber = CHAMBERS.find((chamId) => chamId.id === chamberId);
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      style={styles.container}
+    >
+      <View style={{ marginTop: -8 }}>
+        <Slider
+          trackStyle={styles.track}
+          thumbStyle={styles.thumb}
+          maximumValue={100}
+          step={1}
+          value={data.remainingTime}
+          // onValueChange={(value) => setValue(value)}
+          disabled={true}
+          minimumTrackTintColor={Colors.PrimaryColor}
+          maximumTrackTintColor={Colors.SecondaryColor}
+        />
+        <Text style={{ position: "absolute", alignSelf: "center", top: "30%", color: "white" }}>
+          {data.remainingTime}
+        </Text>
+      </View>
+
       <View
         style={{
           flexDirection: "row",
@@ -138,9 +180,9 @@ const DetailsScreen = (props) => {
           />
           <Text>Temperature</Text>
           <Counter
-            item={"setTemperature"}
+            item={"setPointTemp"}
             actual={data.currentTemp}
-            setter={data.setTemperature}
+            setter={data.setPointTemp}
             onChange={onChange}
           />
         </View>
@@ -165,9 +207,9 @@ const DetailsScreen = (props) => {
           />
           <Text>Humidity</Text>
           <Counter
-            item={"setHumidity"}
+            item={"setPointHum"}
             actual={data.currentHum}
-            setter={data.setHumidity}
+            setter={data.setPointHum}
             onChange={onChange}
           />
         </View>
@@ -342,259 +384,38 @@ const DetailsScreen = (props) => {
       </View>
       <View style={{ borderBottomWidth: 1 }} />
       <View style={{ borderBottomWidth: 1, marginTop: 17 }} />
-      <View style={{ flexDirection: "row", width: "100%" }}>
-        <View style={{ marginLeft: 5, flexDirection: "column", width: "50%" }}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text>M1</Text>
-            <Switch
-              trackColor={{
-                true: Colors.SecondaryColor,
-                false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
-              }}
-              thumbColor={
-                Platform.OS == "ios"
-                  ? "#FFFFFF"
-                  : data.WMActive1
-                  ? Colors.SecondaryColor
-                  : "#ffffff"
-              }
-              ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, WMActive1: value })}
-              value={data.WMActive1}
-              style={
-                data.WMActive1
-                  ? styles.switchEnableBorder
-                  : styles.switchDisableBorder
-              }
-            />
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text>M2</Text>
-            <Switch
-              trackColor={{
-                true: Colors.SecondaryColor,
-                false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
-              }}
-              thumbColor={
-                Platform.OS == "ios"
-                  ? "#FFFFFF"
-                  : data.WMActive2
-                  ? Colors.SecondaryColor
-                  : "#ffffff"
-              }
-              ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, WMActive2: value })}
-              value={data.WMActive2}
-              style={
-                data.WMActive2
-                  ? styles.switchEnableBorder
-                  : styles.switchDisableBorder
-              }
-            />
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text>M3</Text>
-            <Switch
-              trackColor={{
-                true: Colors.SecondaryColor,
-                false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
-              }}
-              thumbColor={
-                Platform.OS == "ios"
-                  ? "#FFFFFF"
-                  : data.WMActive3
-                  ? Colors.SecondaryColor
-                  : "#ffffff"
-              }
-              ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, WMActive3: value })}
-              value={data.WMActive3}
-              style={
-                data.WMActive3
-                  ? styles.switchEnableBorder
-                  : styles.switchDisableBorder
-              }
-            />
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text>M4</Text>
-            <Switch
-              trackColor={{
-                true: Colors.SecondaryColor,
-                false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
-              }}
-              thumbColor={
-                Platform.OS == "ios"
-                  ? "#FFFFFF"
-                  : data.WMActive4
-                  ? Colors.SecondaryColor
-                  : "#ffffff"
-              }
-              ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, WMActive4: value })}
-              value={data.WMActive4}
-              style={
-                data.WMActive4
-                  ? styles.switchEnableBorder
-                  : styles.switchDisableBorder
-              }
-            />
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text>M5</Text>
-            <Switch
-              trackColor={{
-                true: Colors.SecondaryColor,
-                false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
-              }}
-              thumbColor={
-                Platform.OS == "ios"
-                  ? "#FFFFFF"
-                  : data.WMActive5
-                  ? Colors.SecondaryColor
-                  : "#ffffff"
-              }
-              ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, WMActive5: value })}
-              value={data.WMActive5}
-              style={
-                data.WMActive5
-                  ? styles.switchEnableBorder
-                  : styles.switchDisableBorder
-              }
-            />
-          </View>
-        </View>
-        <View style={{ flexDirection: "column", width: "50%" }}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text>M6</Text>
-            <Switch
-              trackColor={{
-                true: Colors.SecondaryColor,
-                false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
-              }}
-              thumbColor={
-                Platform.OS == "ios"
-                  ? "#FFFFFF"
-                  : data.WMActive6
-                  ? Colors.SecondaryColor
-                  : "#ffffff"
-              }
-              ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, WMActive6: value })}
-              value={data.WMActive6}
-              style={
-                data.WMActive6
-                  ? styles.switchEnableBorder
-                  : styles.switchDisableBorder
-              }
-            />
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text>M7</Text>
-            <Switch
-              trackColor={{
-                true: Colors.SecondaryColor,
-                false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
-              }}
-              thumbColor={
-                Platform.OS == "ios"
-                  ? "#FFFFFF"
-                  : data.WMActive7
-                  ? Colors.SecondaryColor
-                  : "#ffffff"
-              }
-              ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, WMActive7: value })}
-              value={data.WMActive7}
-              style={
-                data.WMActive7
-                  ? styles.switchEnableBorder
-                  : styles.switchDisableBorder
-              }
-            />
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text>M8</Text>
-            <Switch
-              trackColor={{
-                true: Colors.SecondaryColor,
-                false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
-              }}
-              thumbColor={
-                Platform.OS == "ios"
-                  ? "#FFFFFF"
-                  : data.WMActive8
-                  ? Colors.SecondaryColor
-                  : "#ffffff"
-              }
-              ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, WMActive8: value })}
-              value={data.WMActive8}
-              style={
-                data.WMActive8
-                  ? styles.switchEnableBorder
-                  : styles.switchDisableBorder
-              }
-            />
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text>M9</Text>
-            <Switch
-              trackColor={{
-                true: Colors.SecondaryColor,
-                false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
-              }}
-              thumbColor={
-                Platform.OS == "ios"
-                  ? "#FFFFFF"
-                  : data.WMActive9
-                  ? Colors.SecondaryColor
-                  : "#ffffff"
-              }
-              ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, WMActive9: value })}
-              value={data.WMActive9}
-              style={
-                data.WMActive9
-                  ? styles.switchEnableBorder
-                  : styles.switchDisableBorder
-              }
-            />
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text>M10</Text>
-            <Switch
-              trackColor={{
-                true: Colors.SecondaryColor,
-                false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
-              }}
-              thumbColor={
-                Platform.OS == "ios"
-                  ? "#FFFFFF"
-                  : data.WMActive10
-                  ? Colors.SecondaryColor
-                  : "#ffffff"
-              }
-              ios_backgroundColor="#fbfbfb"
-              onValueChange={(value) => setData({ ...data, WMActive10: value })}
-              value={data.WMActive10}
-              style={
-                data.WMActive10
-                  ? styles.switchEnableBorder
-                  : styles.switchDisableBorder
-              }
-            />
-          </View>
+      <View style={{ alignItems: "center" }}>
+        <View style={{ width: "60%", flexDirection: "row", flexWrap: "wrap" }}>
+          {data.WMs?.slice(0, data.numOfWmProbes).map((wm) => {
+            return (<View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text>M{wm.id}</Text>
+              <Switch
+                trackColor={{
+                  true: Colors.SecondaryColor,
+                  false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
+                }}
+                thumbColor={
+                  Platform.OS == "ios"
+                    ? "#FFFFFF"
+                    : item[1]
+                      ? Colors.SecondaryColor
+                      : "#ffffff"
+                }
+                ios_backgroundColor="#fbfbfb"
+                onValueChange={(value) => setData({ ...data, WMActive1: value })}
+                value={wm.active}
+                style={
+                  wm.active
+                    ? styles.switchEnableBorder
+                    : styles.switchDisableBorder
+                }
+              />
+              <Text>{wm.value}</Text>
+            </View>
+            )
+          })}
         </View>
       </View>
-
-      {/* <SliderTile
-        title="Valves"
-        stepCount={[...Array(5).keys()]} // Array of steps (step length you want ++)
-        value={valve}
-        onChange={onValveChange}
-      /> */}
       <TouchableOpacity
         onPress={() => {
           props.navigation.navigate("Graph");
@@ -630,6 +451,12 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderRadius: 4,
     elevation: 3,
+  },
+  track: {
+    height: Config.deviceHeight * 0.028,
+  },
+  thumb: {
+    opacity: 0,
   },
 });
 
