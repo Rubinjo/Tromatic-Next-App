@@ -12,6 +12,7 @@ import { Slider } from "@miblanchard/react-native-slider";
 import Light from "./Light";
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
+import Status from "../assets/constants/status";
 
 const CategoryGridTile = (props) => {
   const [value, setValue] = useState(1);
@@ -30,7 +31,7 @@ const CategoryGridTile = (props) => {
               marginLeft: 1 + Config.deviceWidth * 0.08,
             }}
           >
-            <Light color={(props.item.remainingTime > 0) ? "green" : "red"} />
+            <Light color={(props.item.status - 65537 < 12) ? ((props.item.status - 65537 == 0) ? "green" : "yellow") : "red"} />
             <View
               style={{ flex: 1, marginLeft: 1 + Config.deviceWidth * 0.02 }}
             >
@@ -44,7 +45,7 @@ const CategoryGridTile = (props) => {
                 {props.item.type}
               </Text>
             </View>
-            {(props.item.remainingTime != 0) && (
+            {(props.item.status - 65537 >= 12) && (
               <View
                 style={{
                   flexDirection: "row",
@@ -68,7 +69,7 @@ const CategoryGridTile = (props) => {
                       color: "black",
                     }}
                   >
-                    Error 10
+                    {Status[props.item.status - 65537]}
                   </Text>
                 </View>
               </View>
