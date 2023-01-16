@@ -173,7 +173,7 @@ const DetailsScreen = (props) => {
   // const selectedChamber = CHAMBERS.find((chamId) => chamId.id === chamberId);
   return (
     <ScrollView
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      refreshControl={<RefreshControl title={"Last updated: " + data.timestamp} titleColor="black" refreshing={refreshing} onRefresh={onRefresh} />}
       style={styles.container}
     >
       <View style={{ marginTop: -8 }}>
