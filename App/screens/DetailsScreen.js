@@ -420,7 +420,7 @@ const DetailsScreen = (props) => {
       <View style={{ alignItems: "center" }}>
         <View style={{ width: "60%", flexDirection: "row", flexWrap: "wrap" }}>
           {data.WMs?.slice(0, data.numOfWmProbes).map((wm) => {
-            return (<View style={{ flexDirection: "row", alignItems: "center" }}>
+            return (<View key={wm.id} style={{ flexDirection: "row", alignItems: "center" }}>
               <Text>M{wm.id}</Text>
               <Switch
                 trackColor={{
