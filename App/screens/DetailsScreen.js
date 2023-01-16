@@ -42,7 +42,7 @@ const DetailsScreen = (props) => {
     sprayPos: 0,
     status: 0,
     tempOffset: 0,
-    timestamp: "0",
+    timestamp: new Date(),
     WMs: [{ id: 1, value: 0, active: false }, { id: 2, value: 0, active: false }, { id: 3, value: 0, active: false }, { id: 4, value: 0, active: false }, { id: 5, value: 0, active: false }, { id: 6, value: 0, active: false }, { id: 7, value: 0, active: false }, { id: 8, value: 0, active: false }, { id: 9, value: 0, active: false }, { id: 10, value: 0, active: false }],
   });
 
@@ -67,7 +67,7 @@ const DetailsScreen = (props) => {
         sprayPos: machine.SprayPos,
         status: machine.Status,
         tempOffset: machine.TempOffset,
-        timestamp: machine.Timestamp,
+        timestamp: new Date(machine.Timestamp),
         WMs: [{ id: 1, value: machine.WMValue1, active: machine.WMActive1 }, { id: 2, value: machine.WMValue2, active: machine.WMActive2 }, { id: 3, value: machine.WMValue3, active: machine.WMActive3 }, { id: 4, value: machine.WMValue4, active: machine.WMActive4 }, { id: 5, value: machine.WMValue5, active: machine.WMActive5 }, { id: 6, value: machine.WMValue6, active: machine.WMActive6 }, { id: 7, value: machine.WMValue7, active: machine.WMActive7 }, { id: 8, value: machine.WMValue8, active: machine.WMActive8 }, { id: 9, value: machine.WMValue9, active: machine.WMActive9 }, { id: 10, value: machine.WMValue10, active: machine.WMActive10 }]
       });
     });
@@ -162,6 +162,8 @@ const DetailsScreen = (props) => {
       updates["machines/" + props.route.params.machineId + "/WMActive10"] =
         data.WMs[9].active;
     }
+    updates["machines/" + props.route.params.machineId + "/Timestamp"] =
+      new Date().toISOString();
     update(ref(db), updates);
     setAreChanges(false);
   };
@@ -173,7 +175,7 @@ const DetailsScreen = (props) => {
   // const selectedChamber = CHAMBERS.find((chamId) => chamId.id === chamberId);
   return (
     <ScrollView
-      refreshControl={<RefreshControl title={"Last updated: " + data.timestamp} titleColor="black" refreshing={refreshing} onRefresh={onRefresh} />}
+      refreshControl={<RefreshControl title={data.timestamp ? ("Last updated: " + (data.timestamp.toLocaleDateString() === new Date().toLocaleDateString() ? "Today" : data.timestamp.toLocaleDateString()) + " " + data.timestamp.toLocaleTimeString()) : ""} titleColor="black" refreshing={refreshing} onRefresh={onRefresh} />}
       style={styles.container}
     >
       <View style={{ marginTop: -8 }}>

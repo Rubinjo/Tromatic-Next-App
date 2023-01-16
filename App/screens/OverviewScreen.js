@@ -59,7 +59,7 @@ const OverviewScreen = (props) => {
                 parData.SprayPos,
                 parData.Status,
                 parData.TempOffset,
-                parData.Timestamp,
+                new Date(parData.Timestamp),
                 parData.WMValue1,
                 parData.WMValue2,
                 parData.WMValue3,
