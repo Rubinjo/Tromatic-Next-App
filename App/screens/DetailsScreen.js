@@ -94,7 +94,7 @@ const DetailsScreen = (props) => {
   }, [areChanges, data]);
 
   useEffect(() => {
-    setTimer(data.remainingTime)
+    setTimer(dataFB.remainingTime)
     const scheduler = () => {
       setTimer((timer) => {
         if (timer > 0) {
