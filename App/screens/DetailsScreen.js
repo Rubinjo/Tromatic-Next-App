@@ -123,9 +123,11 @@ const DetailsScreen = (props) => {
 
   const onRefresh = () => {
     setRefreshing(true);
-    setData(dataFB)
-    setAreChanges(false);
-    setRefreshing(false);
+    setTimeout(() => {
+      setData(dataFB)
+      setAreChanges(false);
+      setRefreshing(false);
+    }, 1000)
   };
 
   const sendData = () => {
