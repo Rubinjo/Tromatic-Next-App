@@ -450,7 +450,7 @@ const DetailsScreen = (props) => {
                 thumbColor={
                   Platform.OS == "ios"
                     ? "#FFFFFF"
-                    : item[1]
+                    : wm.active
                       ? Colors.SecondaryColor
                       : "#ffffff"
                 }
