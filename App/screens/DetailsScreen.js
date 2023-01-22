@@ -17,6 +17,7 @@ import { Slider } from "@miblanchard/react-native-slider";
 
 // import { CHAMBERS } from "../data/dummy-data";
 import Config from "../utils/config";
+import fancyTimeFormat from "../utils/helper";
 import Colors from "../assets/constants/colors";
 
 import Counter from "../components/Counter";
@@ -210,7 +211,7 @@ const DetailsScreen = (props) => {
           maximumTrackTintColor={Colors.SecondaryColor}
         />
         <Text style={{ position: "absolute", alignSelf: "center", top: "30%", color: "white" }}>
-          {timer}
+          {fancyTimeFormat(timer)}
         </Text>
       </View>
 

@@ -11,6 +11,7 @@ import { Slider } from "@miblanchard/react-native-slider";
 
 import Light from "./Light";
 import Config from "../utils/config";
+import fancyTimeFormat from "../utils/helper"
 import Colors from "../assets/constants/colors";
 import Status from "../assets/constants/status";
 
@@ -127,7 +128,7 @@ const CategoryGridTile = (props) => {
                   color: "black",
                 }}
               >
-                Time left: {timer}
+                Time left: {fancyTimeFormat(timer)}
               </Text>
             </View>
           </View>
