@@ -107,7 +107,7 @@ const DetailsScreen = (props) => {
     }
     const interval = setInterval(scheduler, 1000)
     return () => clearInterval(interval)
-  }, [data])
+  }, [dataFB])
 
   const onWMChange = (id, value, active) => {
     const newArray = [...data.WMs]
