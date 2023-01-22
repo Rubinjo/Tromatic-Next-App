@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TouchableOpacity,
   View,
@@ -15,7 +15,25 @@ import Colors from "../assets/constants/colors";
 import Status from "../assets/constants/status";
 
 const CategoryGridTile = (props) => {
-  const [value, setValue] = useState(1);
+  // const [value, setValue] = useState(1);
+  const [timer, setTimer] = useState(0)
+
+  useEffect(() => {
+    setTimer(props.item.remainingTime)
+    const scheduler = () => {
+      setTimer((timer) => {
+        if (timer > 0) {
+          return timer - 1
+        } else {
+          clearInterval(interval)
+          return timer
+        }
+      })
+    }
+    const interval = setInterval(scheduler, 1000)
+    return () => clearInterval(interval)
+  }, [props.item])
+
   return (
     <View style={styles.gridItem}>
       <TouchableNativeFeedback onPress={props.onSelect}>
@@ -88,7 +106,7 @@ const CategoryGridTile = (props) => {
                 thumbStyle={styles.thumb}
                 maximumValue={100}
                 step={1}
-                value={props.item.remainingTime}
+                value={timer}
                 // onValueChange={(value) => setValue(value)}
                 disabled={true}
                 minimumTrackTintColor={Colors.PrimaryColor}
@@ -109,7 +127,7 @@ const CategoryGridTile = (props) => {
                   color: "black",
                 }}
               >
-                Time left: {props.item.remainingTime}
+                Time left: {timer}
               </Text>
             </View>
           </View>

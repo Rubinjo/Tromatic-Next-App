@@ -26,6 +26,7 @@ import humidity from "../data/dummy-data-humi";
 const DetailsScreen = (props) => {
   const [refreshing, setRefreshing] = useState(false);
   const [areChanges, setAreChanges] = useState(false);
+  const [timer, setTimer] = useState(0)
   const [dataFB, setDataFB] = useState({})
   const [data, setData] = useState({
     currentHum: 0,
@@ -91,6 +92,22 @@ const DetailsScreen = (props) => {
         ),
     });
   }, [areChanges, data]);
+
+  useEffect(() => {
+    setTimer(data.remainingTime)
+    const scheduler = () => {
+      setTimer((timer) => {
+        if (timer > 0) {
+          return timer - 1
+        } else {
+          clearInterval(interval)
+          return timer
+        }
+      })
+    }
+    const interval = setInterval(scheduler, 1000)
+    return () => clearInterval(interval)
+  }, [data])
 
   const onWMChange = (id, value, active) => {
     const newArray = [...data.WMs]
@@ -184,14 +201,14 @@ const DetailsScreen = (props) => {
           thumbStyle={styles.thumb}
           maximumValue={100}
           step={1}
-          value={data.remainingTime}
+          value={timer}
           // onValueChange={(value) => setValue(value)}
           disabled={true}
           minimumTrackTintColor={Colors.PrimaryColor}
           maximumTrackTintColor={Colors.SecondaryColor}
         />
         <Text style={{ position: "absolute", alignSelf: "center", top: "30%", color: "white" }}>
-          {data.remainingTime}
+          {timer}
         </Text>
       </View>
 
