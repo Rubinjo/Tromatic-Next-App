@@ -22,6 +22,7 @@ import Colors from "../assets/constants/colors";
 
 import Counter from "../components/Counter";
 import SliderTile from "../components/SliderTile";
+import Fan from "../components/Fan"
 import humidity from "../data/dummy-data-humi";
 
 const DetailsScreen = (props) => {
@@ -240,13 +241,9 @@ const DetailsScreen = (props) => {
           />
         </View>
         <View>
-          <Image
-            style={{
-              height: 24 + Config.deviceHeight * 0.15,
-              width: 24 + Config.deviceHeight * 0.15,
-              resizeMode: "contain",
-            }}
-            source={require("../assets/icons/fan.png")}
+          <Fan
+            rpm={data.RPM}
+            direction={data.fanDirection}
           />
         </View>
         <View style={{ alignItems: "center" }}>
