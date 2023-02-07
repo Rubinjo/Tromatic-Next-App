@@ -143,6 +143,7 @@ const SignInScreen = (props) => {
             textContentType="emailAddress"
             value={email}
             onChangeText={(email) => setEmail(email)}
+            importantForAutofill="yes"
           />
           <TextInput
             style={styles.input}
@@ -155,6 +156,7 @@ const SignInScreen = (props) => {
             textContentType="password"
             value={password}
             onChangeText={(password) => setPassword(password)}
+            importantForAutofill="yes"
           />
         </View>
         <View
