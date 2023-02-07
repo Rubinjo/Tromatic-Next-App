@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useCallback, useEffect, useState } from "react";
+import Constants from "expo-constants";
 import { View } from "react-native";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -9,7 +10,6 @@ import { initializeApp } from "firebase/app";
 
 import AppNavigator from "./navigation/AppNavigator";
 import { store, persistor } from "./store/store";
-import apiKeys from "./assets/config/keys";
 
 // Fetch custom font-family
 const fetchFonts = async () => {
@@ -28,7 +28,15 @@ export default function App() {
         await fetchFonts();
         console.log("Loaded fonts");
 
-        initializeApp(apiKeys.firebaseConfig);
+        initializeApp({
+          apiKey: Constants.expoConfig.extra.apiKey,
+          authDomain: Constants.expoConfig.extra.authDomain,
+          databaseURL: Constants.expoConfig.extra.databaseURL,
+          projectId: Constants.expoConfig.extra.projectId,
+          storageBucket: Constants.expoConfig.extra.storageBucket,
+          messagingSenderId: Constants.expoConfig.extra.messagingSenderId,
+          appId: Constants.expoConfig.extra.appId,
+        });
         console.log("Connected with Firebase");
       } catch (e) {
         console.warn(e);
