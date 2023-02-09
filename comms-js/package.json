@@ -1,8 +1,9 @@
 {
-  "name": "comms",
-  "version": "1.0.0",
+  "name": "comms-js",
+  "version": "1.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "sender.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "firebase": "^9.1.3",
-    "log-timestamp": "^0.3.0",
     "md5": "^2.3.0"
   }
 }

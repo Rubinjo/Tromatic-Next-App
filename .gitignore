@@ -16,14 +16,8 @@ App/web-build/
 # macOS
 */.DS_Store
 
-# Firebase SDK
+# Environment variables
 *.env
-comms-python/helper/key.py
-comms-js/helper/key.js
-
-# Sender credentials
-comms-python/helper/login.py
-comms-js/helper/login.js
 
 # testing
 web/coverage

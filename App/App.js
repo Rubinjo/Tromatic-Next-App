@@ -29,13 +29,13 @@ export default function App() {
         console.log("Loaded fonts");
 
         initializeApp({
-          apiKey: Constants.expoConfig.extra.apiKey,
-          authDomain: Constants.expoConfig.extra.authDomain,
-          databaseURL: Constants.expoConfig.extra.databaseURL,
-          projectId: Constants.expoConfig.extra.projectId,
-          storageBucket: Constants.expoConfig.extra.storageBucket,
-          messagingSenderId: Constants.expoConfig.extra.messagingSenderId,
-          appId: Constants.expoConfig.extra.appId,
+          apiKey: Constants.expoConfig.extra.APIKEY,
+          authDomain: Constants.expoConfig.extra.AUTHDOMAIN,
+          databaseURL: Constants.expoConfig.extra.DATABASEURL,
+          projectId: Constants.expoConfig.extra.PROJECTID,
+          storageBucket: Constants.expoConfig.extra.STORAGEBUCKET,
+          messagingSenderId: Constants.expoConfig.extra.MESSAGINGSENDERID,
+          appId: Constants.expoConfig.extra.APPID,
         });
         console.log("Connected with Firebase");
       } catch (e) {

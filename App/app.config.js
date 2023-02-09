@@ -1,12 +1,12 @@
 import "dotenv/config";
 
-const apiKey = process.env.apiKey
-const authDomain = process.env.authDomain
-const databaseURL = process.env.databaseURL
-const projectId = process.env.projectId
-const storageBucket = process.env.storageBucket
-const messagingSenderId = process.env.messagingSenderId
-const appId = process.env.appId
+const apiKey = process.env.APIKEY
+const authDomain = process.env.AUTHDOMAIN
+const databaseURL = process.env.DATABASEURL
+const projectId = process.env.PROJECTID
+const storageBucket = process.env.STROAGEBUCKET
+const messagingSenderId = process.env.MESSAGINGSENDERID
+const appId = process.env.APPID
 
 export default {
   name: "DryChamber",
