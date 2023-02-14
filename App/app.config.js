@@ -36,13 +36,13 @@ export default {
     }
   },
   extra: {
-    apiKey: apiKey,
-    authDomain: authDomain,
-    databaseURL: databaseURL,
-    projectId: projectId,
-    storageBucket: storageBucket,
-    messagingSenderId: messagingSenderId,
-    appId: appId,
+    APIKEY: apiKey,
+    AUTHDOMAIN: authDomain,
+    DATABASEURL: databaseURL,
+    PROJECTID: projectId,
+    STROAGEBUCKET: storageBucket,
+    MESSAGINGSENDERID: messagingSenderId,
+    APPID: appId,
     eas: {
       projectId: "00000000-0000-4000-8000-000000000000"
     }
