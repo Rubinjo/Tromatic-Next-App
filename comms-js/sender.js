@@ -100,7 +100,7 @@ fs.watch(FOLDER, (event, filename) => {
         WMActive8: jsonData.WMActive8,
         WMActive9: jsonData.WMActive9,
         WMActive10: jsonData.WMActive10,
-        LastEditor: jsonData.DryChamberID
+        LastEditor: "m_" + jsonData.DryChamberID
       });
     } catch (e) {
       console.error(e);

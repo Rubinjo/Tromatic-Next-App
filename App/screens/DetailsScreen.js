@@ -11,6 +11,7 @@ import {
   RefreshControl,
 } from "react-native";
 
+import { getAuth } from "firebase/auth";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getDatabase, ref, onValue, update } from "firebase/database";
 import { Slider } from "@miblanchard/react-native-slider";
@@ -185,6 +186,9 @@ const DetailsScreen = (props) => {
     }
     updates["machines/" + props.route.params.machineId + "/Timestamp"] =
       new Date().toISOString();
+    const auth = getAuth();
+    updates["machines/" + props.route.params.machineId + "/LastEditor"] =
+      "u_" + auth.currentUser.uid;
     update(ref(db), updates);
     setAreChanges(false);
   };
