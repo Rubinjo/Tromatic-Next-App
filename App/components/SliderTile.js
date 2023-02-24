@@ -6,6 +6,7 @@ import Colors from "../assets/constants/colors";
 
 import { Slider } from "@miblanchard/react-native-slider";
 
+// DEPRECATED
 const SliderTile = (props) => {
   return (
     <View style={styles.container}>
@@ -42,8 +43,8 @@ const SliderTile = (props) => {
                   item == props.value
                     ? styles.sliderSelectedText
                     : {
-                        fontSize: Config.deviceHeight * 0.018,
-                      },
+                      fontSize: Config.deviceHeight * 0.018,
+                    },
                 ]}
               >
                 {item}

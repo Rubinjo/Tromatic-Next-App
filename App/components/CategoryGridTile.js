@@ -1,40 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
-  TouchableOpacity,
   View,
   Text,
   StyleSheet,
   TouchableNativeFeedback,
   Image,
 } from "react-native";
-import { Slider } from "@miblanchard/react-native-slider";
+import FullSlider from "./FullSlider";
 
 import Light from "./Light";
 import Config from "../utils/config";
-import fancyTimeFormat from "../utils/helper"
-import Colors from "../assets/constants/colors";
 import Status from "../assets/constants/status";
 
 const CategoryGridTile = (props) => {
-  // const [value, setValue] = useState(1);
-  const [timer, setTimer] = useState(0)
-
-  useEffect(() => {
-    setTimer(props.item.remainingTime)
-    const scheduler = () => {
-      setTimer((timer) => {
-        if (timer > 0) {
-          return timer - 1
-        } else {
-          clearInterval(interval)
-          return timer
-        }
-      })
-    }
-    const interval = setInterval(scheduler, 1000)
-    return () => clearInterval(interval)
-  }, [props.item])
-
   return (
     <View style={styles.gridItem}>
       <TouchableNativeFeedback onPress={props.onSelect}>
@@ -101,37 +79,9 @@ const CategoryGridTile = (props) => {
               marginTop: Config.deviceHeight * 0.01,
             }}
           >
-            <View style={styles.sliderContainer}>
-              <Slider
-                trackStyle={styles.track}
-                thumbStyle={styles.thumb}
-                maximumValue={100}
-                step={1}
-                value={timer}
-                // onValueChange={(value) => setValue(value)}
-                disabled={true}
-                minimumTrackTintColor={Colors.PrimaryColor}
-                maximumTrackTintColor={Colors.SecondaryColor}
-              />
-            </View>
-            <View
-              style={{
-                flex: 1,
-                marginLeft: "auto",
-                marginRight: 4 + Config.deviceWidth * 0.02,
-                marginTop: -1 - Config.deviceHeight * 0.02,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: "noto-sans-jp-regular",
-                  color: "black",
-                }}
-              >
-                Time left: {fancyTimeFormat(timer)}
-              </Text>
-            </View>
+            <FullSlider remainingTime={props.item.remainingTime} totalTime={100} />
           </View>
+
           <View
             style={{
               flex: 1,
@@ -243,29 +193,6 @@ const styles = StyleSheet.create({
     borderColor: "grey",
     justifyContent: "center",
     alignItems: "center",
-  },
-  sliderContainer: {
-    flex: 1,
-    width: Config.deviceWidth * 0.85,
-    alignItems: "stretch",
-    justifyContent: "center",
-    marginLeft: Config.deviceWidth * 0.02, // Fix unaccurate track bug
-  },
-  track: {
-    height: Config.deviceHeight * 0.028,
-    borderRadius: 6,
-    shadowColor: "black",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    elevation: 2,
-    marginRight: Config.deviceWidth * 0.02, // Fix unaccurate track bug
-  },
-  thumb: {
-    opacity: 0,
   },
 });
 
