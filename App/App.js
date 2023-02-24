@@ -7,6 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { initializeApp } from "firebase/app";
+import * as Notifications from 'expo-notifications';
 
 import AppNavigator from "./navigation/AppNavigator";
 import { store, persistor } from "./store/store";
@@ -38,6 +39,16 @@ export default function App() {
           appId: Constants.expoConfig.extra.APPID,
         });
         console.log("Connected with Firebase");
+
+        // Initialize local notification
+        Notifications.setNotificationHandler({
+          handleNotification: async () => ({
+            shouldShowAlert: true,
+            shouldPlaySound: true,
+            shouldSetBadge: true,
+          }),
+        });
+        console.log("Initialized notification service")
       } catch (e) {
         console.warn(e);
       } finally {

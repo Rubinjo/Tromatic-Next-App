@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,23 +13,21 @@ import {
 
 import { getAuth } from "firebase/auth";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Notifications from 'expo-notifications';
 import { getDatabase, ref, onValue, update } from "firebase/database";
-import { Slider } from "@miblanchard/react-native-slider";
 
 // import { CHAMBERS } from "../data/dummy-data";
 import Config from "../utils/config";
-import fancyTimeFormat from "../utils/helper";
 import Colors from "../assets/constants/colors";
+import CompactSlider from "../components/CompactSlider"
 
 import Counter from "../components/Counter";
-import SliderTile from "../components/SliderTile";
 import Fan from "../components/Fan"
 import humidity from "../data/dummy-data-humi";
 
 const DetailsScreen = (props) => {
   const [refreshing, setRefreshing] = useState(false);
   const [areChanges, setAreChanges] = useState(false);
-  const [timer, setTimer] = useState(0)
   const [dataFB, setDataFB] = useState({})
   const [data, setData] = useState({
     currentHum: 0,
@@ -96,22 +94,6 @@ const DetailsScreen = (props) => {
     });
   }, [areChanges, data]);
 
-  useEffect(() => {
-    setTimer(dataFB.remainingTime)
-    const scheduler = () => {
-      setTimer((timer) => {
-        if (timer > 0) {
-          return timer - 1
-        } else {
-          clearInterval(interval)
-          return timer
-        }
-      })
-    }
-    const interval = setInterval(scheduler, 1000)
-    return () => clearInterval(interval)
-  }, [dataFB])
-
   const onWMChange = (id, value, active) => {
     const newArray = [...data.WMs]
     newArray.splice(id - 1, 1)
@@ -148,39 +130,39 @@ const DetailsScreen = (props) => {
       updates["machines/" + props.route.params.machineId + "/WMActive1"] =
         data.WMs[0].active;
     }
-    if (data.WMs[0].active != dataFB.WMs[0].active) {
+    if (data.WMs[1].active != dataFB.WMs[1].active) {
       updates["machines/" + props.route.params.machineId + "/WMActive2"] =
         data.WMs[1].active;
     }
-    if (data.WMs[0].active != dataFB.WMs[0].active) {
+    if (data.WMs[2].active != dataFB.WMs[2].active) {
       updates["machines/" + props.route.params.machineId + "/WMActive3"] =
         data.WMs[2].active;
     }
-    if (data.WMs[0].active != dataFB.WMs[0].active) {
+    if (data.WMs[3].active != dataFB.WMs[3].active) {
       updates["machines/" + props.route.params.machineId + "/WMActive4"] =
         data.WMs[3].active;
     }
-    if (data.WMs[0].active != dataFB.WMs[0].active) {
+    if (data.WMs[4].active != dataFB.WMs[4].active) {
       updates["machines/" + props.route.params.machineId + "/WMActive5"] =
         data.WMs[4].active;
     }
-    if (data.WMs[0].active != dataFB.WMs[0].active) {
+    if (data.WMs[5].active != dataFB.WMs[5].active) {
       updates["machines/" + props.route.params.machineId + "/WMActive6"] =
         data.WMs[5].active;
     }
-    if (data.WMs[0].active != dataFB.WMs[0].active) {
+    if (data.WMs[6].active != dataFB.WMs[6].active) {
       updates["machines/" + props.route.params.machineId + "/WMActive7"] =
         data.WMs[6].active;
     }
-    if (data.WMs[0].active != dataFB.WMs[0].active) {
+    if (data.WMs[7].active != dataFB.WMs[7].active) {
       updates["machines/" + props.route.params.machineId + "/WMActive8"] =
         data.WMs[7].active;
     }
-    if (data.WMs[0].active != dataFB.WMs[0].active) {
+    if (data.WMs[8].active != dataFB.WMs[8].active) {
       updates["machines/" + props.route.params.machineId + "/WMActive9"] =
         data.WMs[8].active;
     }
-    if (data.WMs[0].active != dataFB.WMs[0].active) {
+    if (data.WMs[9].active != dataFB.WMs[9].active) {
       updates["machines/" + props.route.params.machineId + "/WMActive10"] =
         data.WMs[9].active;
     }
@@ -204,20 +186,7 @@ const DetailsScreen = (props) => {
       style={styles.container}
     >
       <View style={{ marginTop: -8 }}>
-        <Slider
-          trackStyle={styles.track}
-          thumbStyle={styles.thumb}
-          maximumValue={100}
-          step={1}
-          value={timer}
-          // onValueChange={(value) => setValue(value)}
-          disabled={true}
-          minimumTrackTintColor={Colors.PrimaryColor}
-          maximumTrackTintColor={Colors.SecondaryColor}
-        />
-        <Text style={{ position: "absolute", alignSelf: "center", top: "30%", color: "white" }}>
-          {fancyTimeFormat(timer)}
-        </Text>
+        <CompactSlider remainingTime={dataFB.remainingTime} totalTime={100} />
       </View>
 
       <View
@@ -505,13 +474,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderRadius: 4,
     elevation: 3,
-  },
-  track: {
-    height: Config.deviceHeight * 0.028,
-  },
-  thumb: {
-    opacity: 0,
-  },
+  }
 });
 
 export default DetailsScreen;
