@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Config from "../utils/config";
+import i18n from "../utils/i18n";
+
 import { updateGraph } from "../store/slices/graph";
 
 import { useSelector, useDispatch } from "react-redux";

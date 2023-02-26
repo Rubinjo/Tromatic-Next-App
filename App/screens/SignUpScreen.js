@@ -26,7 +26,8 @@ const SignUpScreen = (props) => {
   // Show alert when error occurs
   useEffect(() => {
     if (error) {
-      Alert.alert("Sign up error", error, [{ text: "OK" }]);
+      Alert.alert(i18n.t("authentication.error.title"), error, [{ text: "OK" }]);
+
     }
   }, [error]);
 
@@ -35,20 +36,20 @@ const SignUpScreen = (props) => {
   const signUp = async () => {
     setError(null);
     if (!companyID) {
-      setError("Company ID is required");
+      setError(i18n.t("authentication.error.companyId"));
     } else if (!fullName) {
-      setError("Full name is required.");
+      setError(i18n.t("authentication.error.name"));
     } else if (!email) {
-      setError("Email is required.");
+      setError(i18n.t("authentication.error.email"));
     } else if (!password) {
-      setError("Password is required.");
+      setError(i18n.t("authentication.error.password"));
     } else if (!confirmPassword) {
       setPassword("");
-      setError("Confirm password is required.");
+      setError(i18n.t("authentication.error.passwordConfirm"));
     } else if (password !== confirmPassword) {
       setPassword("");
       setConfirmPassword("");
-      setError("Password does not match.");
+      setError(i18n.t("authentication.error.passwordMatch"));
     } else {
       setIsLoading(true);
       try {
@@ -72,13 +73,13 @@ const SignUpScreen = (props) => {
         }}
       >
         <Text style={[styles.headText, { fontSize: Config.deviceWidth * 0.1 }]}>
-          {i18n.t("signup.signup")}
+          {i18n.t("authentication.signUp")}
         </Text>
       </View>
       <View style={{ flex: 1 }}>
         <TextInput
           style={styles.input}
-          placeholder={i18n.t("signup.companyid")}
+          placeholder={i18n.t("authentication.companyId")}
           returnKeyType="next"
           blurOnSubmit={false}
           // onSubmitEditing={() => {
@@ -91,7 +92,7 @@ const SignUpScreen = (props) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={i18n.t("signup.name")}
+          placeholder={i18n.t("authentication.name")}
           autoCompleteType="name"
           textContentType="name"
           returnKeyType="next"
@@ -109,7 +110,7 @@ const SignUpScreen = (props) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={i18n.t("signup.email")}
+          placeholder={i18n.t("authentication.email")}
           autoCompleteType="email"
           keyboardType="email-address"
           textContentType="emailAddress"
@@ -126,7 +127,7 @@ const SignUpScreen = (props) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={i18n.t("signup.password")}
+          placeholder={i18n.t("authentication.password")}
           textContentType="newPassword"
           returnKeyType="next"
           blurOnSubmit={false}
@@ -141,7 +142,7 @@ const SignUpScreen = (props) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={i18n.t("signup.confirm")}
+          placeholder={i18n.t("authentication.confirm")}
           textContentType="newPassword"
           returnKeyType="done"
           // ref={(input) => {
@@ -158,7 +159,7 @@ const SignUpScreen = (props) => {
             <Text
               style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
             >
-              {i18n.t("signup.signup")}
+              {i18n.t("authentication.signup")}
             </Text>
           </TouchableOpacity>
         )}

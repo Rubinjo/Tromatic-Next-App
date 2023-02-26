@@ -17,8 +17,7 @@ import { getAuth } from "firebase/auth";
 import { getDatabase, ref, onValue } from "firebase/database";
 
 import Colors from "../assets/constants/colors";
-
-import { CHAMBERS } from "../data/dummy-data";
+import i18n from "../utils/i18n";
 import Machine from "../models/machine";
 import CategoryGridTile from "../components/CategoryGridTile";
 

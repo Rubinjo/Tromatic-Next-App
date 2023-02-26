@@ -73,7 +73,7 @@ const SignInScreen = (props) => {
   // Show alert when error occurs
   useEffect(() => {
     if (error) {
-      Alert.alert("Login error", error, [{ text: "OK" }]);
+      Alert.alert(i18n.t("autentication.error.signInError"), error, [{ text: "OK" }]);
     }
   }, [error]);
 
@@ -87,9 +87,9 @@ const SignInScreen = (props) => {
   const signInUser = async () => {
     setError(null);
     if (!email) {
-      setError("Email field is required");
+      setError(i18n.t("authentication.error.email"));
     } else if (!password) {
-      setError("Password field is required");
+      setError("authentication.error.password");
     } else {
       setIsLoading(true);
       try {
@@ -99,7 +99,7 @@ const SignInScreen = (props) => {
         setEmail("");
         setPassword("");
         setIsLoading(false);
-        setError("The entered credentials are wrong");
+        setError(i18n.t("authentication.error.incorrectSignIn"));
       }
     }
   };
@@ -115,7 +115,7 @@ const SignInScreen = (props) => {
         }}
       >
         <Text style={[styles.headText, { fontSize: Config.deviceWidth * 0.1 }]}>
-          {i18n.t("signin.welcome")}
+          {i18n.t("authentication.welcome")}
         </Text>
       </View>
       <View
@@ -133,7 +133,7 @@ const SignInScreen = (props) => {
           <TextInput
             style={styles.input}
             autoCompleteType="email"
-            placeholder={i18n.t("signin.email")}
+            placeholder={i18n.t("authentication.email")}
             keyboardType="email-address"
             returnKeyType="next"
             // onSubmitEditing={() => {
@@ -148,7 +148,7 @@ const SignInScreen = (props) => {
           <TextInput
             style={styles.input}
             autoCompleteType="password"
-            placeholder={i18n.t("signin.password")}
+            placeholder={i18n.t("authentication.password")}
             returnKeyType="done"
             // ref={(input) => {
             //   this.passwordInput = input;
@@ -175,7 +175,7 @@ const SignInScreen = (props) => {
                   { fontSize: Config.deviceWidth * 0.07 },
                 ]}
               >
-                {i18n.t("signin.signin")}
+                {i18n.t("authentication.signin")}
               </Text>
             </TouchableOpacity>
           )}
@@ -184,7 +184,7 @@ const SignInScreen = (props) => {
               props.navigation.navigate("ResetPassword");
             }}
           >
-            <Text style={styles.headText}>{i18n.t("signin.forgot")}</Text>
+            <Text style={styles.headText}>{i18n.t("authentication.forgot")}</Text>
           </TouchableOpacity>
         </View>
         <DropDownPicker
@@ -217,14 +217,14 @@ const SignInScreen = (props) => {
         />
       </View>
       <View style={{ flexDirection: "row", marginTop: "auto" }}>
-        <Text style={styles.text}>{i18n.t("signin.account")}</Text>
+        <Text style={styles.text}>{i18n.t("authentication.account")}</Text>
         <TouchableOpacity
           onPress={() => {
             props.navigation.navigate("SignUp");
           }}
         >
           <Text style={[styles.headText, { color: Colors.PrimaryColor }]}>
-            {i18n.t("signin.signup")}
+            {i18n.t("authentication.signup")}
           </Text>
         </TouchableOpacity>
       </View>

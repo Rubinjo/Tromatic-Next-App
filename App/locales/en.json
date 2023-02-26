@@ -1,21 +1,38 @@
 {
   "en": {
-    "signin": {
-      "welcome": "Welcome",
+    "general": {
       "email": "Email",
       "password": "Password",
-      "signin": "Sign in",
+      "error": "Error",
+      "okAllCaps": "OK",
+      "cancel": "Cancel",
+      "retry": "Something went wrong, please try again later",
+      "lastUpdated": "Last updated",
+      "today": "Today"
+    },
+    "authentication": {
+      "welcome": "Welcome",
+      "signIn": "Sign in",
       "forgot": "Forgot your password?",
       "account": "Don't have an account?",
-      "signup": "SIGN UP"
-    },
-    "signup": {
-      "signup": "Sign up",
-      "companyid": "Company-ID",
+      "signUpAllCaps": "SIGN UP",
+      "signUp": "Sign up",
+      "signOutWarningTitle": "Sign out warning",
+      "signOutWarning": "Sign out warning",
+      "companyId": "Company-ID",
       "name": "Full Name",
-      "email": "Email",
-      "password": "Password",
-      "confirm": "Confirm password"
+      "confirm": "Confirm password",
+      "error": {
+        "signUpTitle": "Sign up error",
+        "signInTitle": "Sign in error",
+        "companyId": "Company ID is required",
+        "name": "Full name is required.",
+        "email": "Email is required.",
+        "password": "Password is required.",
+        "confirmPassword": "Confirm password is required.",
+        "passwordMatch": "Password does not match.",
+        "incorrectSignIn": "The entered credentials are wrong"
+      }
     }
   }
 }

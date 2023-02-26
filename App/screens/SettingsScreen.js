@@ -71,7 +71,7 @@ const SettingsScreen = (props) => {
   // Show alert when error occurs
   useEffect(() => {
     if (error) {
-      Alert.alert("Login error", error, [{ text: "OK" }]);
+      Alert.alert(i18n.t("general.error"), error, [{ text: i18n.t("general.okAllCaps") }]);
     }
   }, [error]);
 
@@ -84,16 +84,16 @@ const SettingsScreen = (props) => {
   // uses Firebase Auth
   const signOutUser = () => {
     Alert.alert(
-      "Logout warning",
-      "You will be logged out from your current account",
+      i18n.t("authentication.signOutWarningTitle"),
+      i18n.t("authentication.signOutWarning"),
       [
         {
-          text: "Cancel",
+          text: i18n.t("general.cancel"),
           onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
         {
-          text: "OK",
+          text: i18n.t("general.okAllCaps"),
           onPress: async () => {
             setError(null);
             setIsLoading(true);
@@ -101,7 +101,7 @@ const SettingsScreen = (props) => {
               await signOutAccount();
             } catch (err) {
               setIsLoading(false);
-              setError("Something went wrong, please try again later");
+              setError(i18n.t("general.retry"));
             }
           },
         },

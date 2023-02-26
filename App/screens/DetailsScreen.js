@@ -18,6 +18,7 @@ import { getDatabase, ref, onValue, update } from "firebase/database";
 
 // import { CHAMBERS } from "../data/dummy-data";
 import Config from "../utils/config";
+import i18n from "../utils/i18n";
 import Colors from "../assets/constants/colors";
 import CompactSlider from "../components/CompactSlider"
 
@@ -182,7 +183,7 @@ const DetailsScreen = (props) => {
   // const selectedChamber = CHAMBERS.find((chamId) => chamId.id === chamberId);
   return (
     <ScrollView
-      refreshControl={<RefreshControl title={data.timestamp ? ("Last updated: " + (data.timestamp.toLocaleDateString() === new Date().toLocaleDateString() ? "Today" : data.timestamp.toLocaleDateString()) + " " + data.timestamp.toLocaleTimeString()) : ""} titleColor="black" refreshing={refreshing} onRefresh={onRefresh} />}
+      refreshControl={<RefreshControl title={data.timestamp ? (i18n.t("general.lastUpdated") + ": " + (data.timestamp.toLocaleDateString() === new Date().toLocaleDateString() ? i18n.t("general.today") : data.timestamp.toLocaleDateString()) + " " + data.timestamp.toLocaleTimeString()) : ""} titleColor="black" refreshing={refreshing} onRefresh={onRefresh} />}
       style={styles.container}
     >
       <View style={{ marginTop: -8 }}>

@@ -10,8 +10,9 @@ import {
 
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
-import { useSelector } from "react-redux";
 import { resetPasswordAccount } from "../auth/firebase";
+import i18n from "../utils/i18n";
+
 
 const ResetPasswordScreen = (props) => {
   const [email, setEmail] = useState("");
@@ -20,17 +21,14 @@ const ResetPasswordScreen = (props) => {
   // Show alert when error occurs
   useEffect(() => {
     if (error) {
-      Alert.alert("Error", error, [{ text: "OK" }]);
+      Alert.alert(i18n.t("general.error"), error, [{ text: i18n.t("general.okAllCaps") }]);
     }
   }, [error]);
-
-  // Load language from the redux store
-  const language = useSelector((state) => state.language.language);
 
   const resetPasswordEmail = async () => {
     setError(null);
     if (!email) {
-      setError("Email field is required");
+      setError(i18n.t("authentication.error.email"));
     } else {
       try {
         await resetPasswordAccount(email, language);
@@ -56,7 +54,7 @@ const ResetPasswordScreen = (props) => {
         <TextInput
           style={styles.input}
           autoCompleteType="email"
-          placeholder="Email"
+          placeholder={i18n.t("general.email")}
           keyboardType="email-address"
           returnKeyType="done"
           textContentType="emailAddress"
