@@ -11,7 +11,7 @@ dotenv.config()
  * Location of folder that will be scanned.
  * @type {string}
  */
-const FOLDER = "./folder";
+const FOLDER = "../sender";
 
 console.log(`Watching for file changes on ${FOLDER}`);
 
@@ -64,7 +64,8 @@ fs.watch(FOLDER, (event, filename) => {
     try {
       jsonString = fs.readFileSync(FOLDER + "/" + filename);
       jsonData = JSON.parse(jsonString)
-      update(ref(db, "machines/" + jsonData.DryChamberID), {
+      const updates = {};
+      updates["machines/" + jsonData.DryChamberID] = {
         Timestamp: jsonData.DateTimeMessage,
         Status: jsonData.Status,
         CurrentTemp: jsonData.CurrentTemp,
@@ -73,35 +74,20 @@ fs.watch(FOLDER, (event, filename) => {
         SetPointHum: jsonData.SetPointHum,
         RemainingTime: jsonData.RemainingTime,
         NumOfWmProbes: jsonData.NumOfWmProbes,
-        WMValue1: jsonData.WMValue1,
-        WMValue2: jsonData.WMValue2,
-        WMValue3: jsonData.WMValue3,
-        WMValue4: jsonData.WMValue4,
-        WMValue5: jsonData.WMValue5,
-        WMValue6: jsonData.WMValue6,
-        WMValue7: jsonData.WMValue7,
-        WMValue8: jsonData.WMValue8,
-        WMValue9: jsonData.WMValue9,
-        WMValue10: jsonData.WMValue10,
         HeatingValvePos: jsonData.HeatingValvePos,
         DamperPos: jsonData.DamperPos,
         SprayPos: jsonData.SprayPos,
         RPM: jsonData.RPM,
         FanDirection: jsonData.FanDirection,
-        TempOffest: jsonData.TempOffest,
+        TempOffset: jsonData.TempOffset,
         EMCOffset: jsonData.EMCOffset,
-        WMActive1: jsonData.WMActive1,
-        WMActive2: jsonData.WMActive2,
-        WMActive3: jsonData.WMActive3,
-        WMActive4: jsonData.WMActive4,
-        WMActive5: jsonData.WMActive5,
-        WMActive6: jsonData.WMActive6,
-        WMActive7: jsonData.WMActive7,
-        WMActive8: jsonData.WMActive8,
-        WMActive9: jsonData.WMActive9,
-        WMActive10: jsonData.WMActive10,
         LastEditor: "m_" + jsonData.DryChamberID
-      });
+      }
+      for (let i = 1; i <= jsonData.NumOfWmProbes; i++) {
+        updates["machines/" + jsonData.DryChamberID]["WMValue" + i] = jsonData["WMValue" + i];
+        updates["machines/" + jsonData.DryChamberID]["WMActive" + i] = jsonData["WMActive" + i];
+      }
+      update(ref(db), updates);
     } catch (e) {
       console.error(e);
     }
