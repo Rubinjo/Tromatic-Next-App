@@ -159,7 +159,7 @@ const SignUpScreen = (props) => {
             <Text
               style={[styles.headText, { fontSize: Config.deviceWidth * 0.07 }]}
             >
-              {i18n.t("authentication.signup")}
+              {i18n.t("authentication.signUp")}
             </Text>
           </TouchableOpacity>
         )}

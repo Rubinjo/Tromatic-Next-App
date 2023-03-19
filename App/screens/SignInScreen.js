@@ -133,7 +133,7 @@ const SignInScreen = (props) => {
           <TextInput
             style={styles.input}
             autoCompleteType="email"
-            placeholder={i18n.t("authentication.email")}
+            placeholder={i18n.t("general.email")}
             keyboardType="email-address"
             returnKeyType="next"
             // onSubmitEditing={() => {
@@ -148,7 +148,7 @@ const SignInScreen = (props) => {
           <TextInput
             style={styles.input}
             autoCompleteType="password"
-            placeholder={i18n.t("authentication.password")}
+            placeholder={i18n.t("general.password")}
             returnKeyType="done"
             // ref={(input) => {
             //   this.passwordInput = input;
@@ -175,7 +175,7 @@ const SignInScreen = (props) => {
                   { fontSize: Config.deviceWidth * 0.07 },
                 ]}
               >
-                {i18n.t("authentication.signin")}
+                {i18n.t("authentication.signIn")}
               </Text>
             </TouchableOpacity>
           )}
@@ -224,7 +224,7 @@ const SignInScreen = (props) => {
           }}
         >
           <Text style={[styles.headText, { color: Colors.PrimaryColor }]}>
-            {i18n.t("authentication.signup")}
+            {i18n.t("authentication.signUp")}
           </Text>
         </TouchableOpacity>
       </View>

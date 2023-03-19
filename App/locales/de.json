@@ -1,21 +1,38 @@
 {
   "de": {
-    "signin": {
-      "welcome": "Willkommen",
+    "general": {
       "email": "Email",
       "password": "Passwort",
-      "signin": "Einloggen",
+      "error": "Fehler",
+      "okAllCaps": "OK",
+      "cancel": "stornieren",
+      "retry": "Etwas ist schief gelaufen, bitte versuchen Sie es später erneut",
+      "lastUpdated": "Letzte Aktualisierung",
+      "today": "Heute"
+    },
+    "authentication": {
+      "welcome": "Willkommen",
+      "signIn": "Einloggen",
       "forgot": "Passwort vergessen?",
       "account": "Sie haben kein Konto?",
-      "signup": "ANMELDUNG"
-    },
-    "signup": {
-      "signup": "Anmeldung",
-      "companyid": "Firmen-ID",
+      "signUpAllCaps": "ANMELDUNG",
+      "signUp": "Anmeldung",
+      "signOutWarningTitle": "Abmeldewarnung",
+      "signOutWarning": "Abmeldewarnung",
+      "companyId": "Firmen-ID",
       "name": "Vor-und Nachname",
-      "email": "Email",
-      "password": "Passwort",
-      "confirm": "Passwort bestätigen"
+      "confirm": "Passwort bestätigen",
+      "error": {
+        "signUpTitle": "Anmeldefehler",
+        "signInTitle": "Anmeldefehler",
+        "companyId": "Firmen-ID ist erforderlich",
+        "name": "Vor-und Nachname ist erforderlich.",
+        "email": "Email ist erforderlich.",
+        "password": "Passwort ist erforderlich.",
+        "confirmPassword": "Passwort bestätigen ist erforderlich.",
+        "passwordMatch": "Passwort stimmt nicht überein.",
+        "incorrectSignIn": "Die eingegebenen Anmeldedaten sind falsch"
+      }
     }
   }
 }
