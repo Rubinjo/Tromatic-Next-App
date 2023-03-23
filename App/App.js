@@ -2,8 +2,8 @@ import { StatusBar } from "expo-status-bar";
 import React, { useCallback, useEffect, useState } from "react";
 import Constants from "expo-constants";
 import { View } from "react-native";
-import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import * as Font from 'expo-font';
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { initializeApp } from "firebase/app";
@@ -11,6 +11,9 @@ import * as Notifications from 'expo-notifications';
 
 import AppNavigator from "./navigation/AppNavigator";
 import { store, persistor } from "./store/store";
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
 
 // Fetch custom font-family
 const fetchFonts = async () => {
@@ -41,14 +44,14 @@ export default function App() {
         console.log("Connected with Firebase");
 
         // Initialize local notification
-        Notifications.setNotificationHandler({
-          handleNotification: async () => ({
-            shouldShowAlert: true,
-            shouldPlaySound: true,
-            shouldSetBadge: true,
-          }),
-        });
-        console.log("Initialized notification service")
+        // Notifications.setNotificationHandler({
+        //   handleNotification: async () => ({
+        //     shouldShowAlert: true,
+        //     shouldPlaySound: true,
+        //     shouldSetBadge: true,
+        //   }),
+        // });
+        // console.log("Initialized notification service")
       } catch (e) {
         console.warn(e);
       } finally {
