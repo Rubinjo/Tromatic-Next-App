@@ -14,14 +14,15 @@ const CID = "cid";
 
 let mids
 
-function sendData(mid, dateTime, changeItem, changeValue) {
+function sendData(mid, dateTime, lastEditor, changeItem, changeValue) {
     const machineData = {
         DryChamberID: mid,
         DateTimeMessage: dateTime.toISOString(),
+        LastEditor: lastEditor,
     }
     machineData[changeItem] = changeValue
     const jsonString = JSON.stringify(machineData)
-    fs.writeFile("./folder/" + mid + "_" + dateTime.toJSON().slice(0, 19).replaceAll(":", "-") + ".json", jsonString, function (e) {
+    fs.writeFile("../receiver/" + mid + "_" + dateTime.toJSON().slice(0, 19).replaceAll(":", "-") + ".json", jsonString, function (e) {
         if (e) {
             throw e
         } else {
@@ -30,7 +31,7 @@ function sendData(mid, dateTime, changeItem, changeValue) {
     })
 }
 
-const db = await setupFirebase({
+const [db, auth] = await setupFirebase({
     apiKey: process.env.APIKEY,
     authDomain: process.env.AUTHDOMAIN,
     databaseURL: process.env.DATABASEURL,
@@ -51,7 +52,7 @@ try {
                     const changeValue = snapshot.val();
                     const lastEditor = (await get(ref(db, "machines/" + mid + "/LastEditor"))).val()
                     if (lastEditor.startsWith("u_")) {
-                        sendData(mid, new Date(), changeItem, changeValue)
+                        sendData(mid, new Date(), lastEditor, changeItem, changeValue)
                     } else {
                         console.log("no user")
                     }

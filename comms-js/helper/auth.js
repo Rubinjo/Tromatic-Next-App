@@ -15,7 +15,7 @@ async function setupFirebase(firebaseConfig, email, password) {
     } catch (e) {
         console.error(e.message);
     }
-    return getDatabase(app);
+    return [getDatabase(app), auth];
 }
 
 export default setupFirebase

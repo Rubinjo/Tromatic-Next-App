@@ -28,7 +28,7 @@ let md5Previous = null;
 let fsWait = false;
 let jsonData, jsonString, md5Current
 
-const db = await setupFirebase({
+const [db, auth] = await setupFirebase({
   apiKey: process.env.APIKEY,
   authDomain: process.env.AUTHDOMAIN,
   databaseURL: process.env.DATABASEURL,
@@ -65,7 +65,7 @@ fs.watch(FOLDER, (event, filename) => {
       jsonString = fs.readFileSync(FOLDER + "/" + filename);
       jsonData = JSON.parse(jsonString)
       const updates = {};
-      updates["machines/" + jsonData.DryChamberID] = {
+      updates["machines/m" + auth.currentUser.uid + "_" + jsonData.DryChamberID] = {
         Timestamp: jsonData.DateTimeMessage,
         Status: jsonData.Status,
         CurrentTemp: jsonData.CurrentTemp,
@@ -81,11 +81,11 @@ fs.watch(FOLDER, (event, filename) => {
         FanDirection: jsonData.FanDirection,
         TempOffset: jsonData.TempOffset,
         EMCOffset: jsonData.EMCOffset,
-        LastEditor: "m_" + jsonData.DryChamberID
+        LastEditor: "m" + auth.currentUser.uid + "_" + jsonData.DryChamberID
       }
       for (let i = 1; i <= jsonData.NumOfWmProbes; i++) {
-        updates["machines/" + jsonData.DryChamberID]["WMValue" + i] = jsonData["WMValue" + i];
-        updates["machines/" + jsonData.DryChamberID]["WMActive" + i] = jsonData["WMActive" + i];
+        updates["machines/m" + auth.currentUser.uid + "_" + jsonData.DryChamberID]["WMValue" + i] = jsonData["WMValue" + i];
+        updates["machines/m" + auth.currentUser.uid + "_" + jsonData.DryChamberID]["WMActive" + i] = jsonData["WMActive" + i];
       }
       update(ref(db), updates);
     } catch (e) {

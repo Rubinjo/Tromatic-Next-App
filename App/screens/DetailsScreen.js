@@ -171,7 +171,7 @@ const DetailsScreen = (props) => {
       new Date().toISOString();
     const auth = getAuth();
     updates["machines/" + props.route.params.machineId + "/LastEditor"] =
-      "u_" + auth.currentUser.uid;
+      "u" + auth.currentUser.uid;
     update(ref(db), updates);
     setAreChanges(false);
   };
