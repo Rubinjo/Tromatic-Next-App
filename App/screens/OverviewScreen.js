@@ -81,16 +81,16 @@ const OverviewScreen = (props) => {
                 parData.WMActive10,
               )
             );
-            setData(
-              fetchedData.reverse().reduce(function (filtered, machine) {
-                if (
-                  !filtered.some((filMachine) => filMachine.id === machine.id)
-                ) {
-                  filtered.push(machine);
-                }
-                return filtered;
-              }, [])
-            );
+            const new_data = fetchedData.reverse().reduce(function (filtered, machine) {
+              if (
+                !filtered.some((filMachine) => filMachine.id === machine.id)
+              ) {
+                filtered.push(machine);
+              }
+              return filtered;
+            }, [])
+            const sorted_data = new_data.sort(function (a, b) { return a.id.split("_").at(-1) - b.id.split("_").at(-1) })
+            setData(sorted_data);
           });
         });
       });
