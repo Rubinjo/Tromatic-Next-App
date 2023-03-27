@@ -1,16 +1,14 @@
 function fancyTimeFormat(duration) {
-    const hrs = ~~(duration / 3600);
-    const mins = ~~((duration % 3600) / 60);
-    const secs = ~~duration % 60;
+    const days = ~~(duration / 24);
+    const hrs = ~~(duration % 24);
 
     let ret = "";
 
-    if (hrs > 0) {
-        ret += hrs + ":" + (mins < 10 ? "0" : "");
+    if (days > 0) {
+        ret += days + " days ";
     }
 
-    ret += mins + ":" + (secs < 10 ? "0" : "");
-    ret += secs;
+    ret += hrs + " hours";
     return ret;
 }
 

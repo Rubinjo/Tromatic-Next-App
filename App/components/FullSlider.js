@@ -12,23 +12,24 @@ import fancyTimeFormat from "../utils/helper"
 import { Slider } from "@miblanchard/react-native-slider";
 
 const FullSlider = (props) => {
-    const [timer, setTimer] = useState(0)
+    // const [timer, setTimer] = useState(0)
 
-    useEffect(() => {
-        setTimer(props.remainingTime)
-        const scheduler = () => {
-            setTimer((timer) => {
-                if (timer > 0) {
-                    return timer - 1
-                } else {
-                    clearInterval(interval)
-                    return timer
-                }
-            })
-        }
-        const interval = setInterval(scheduler, 1000)
-        return () => clearInterval(interval)
-    }, [props.remainingTime])
+
+    // useEffect(() => {
+    //     setTimer(props.remainingTime)
+    //     const scheduler = () => {
+    //         setTimer((timer) => {
+    //             if (timer > 0) {
+    //                 return timer - 1
+    //             } else {
+    //                 clearInterval(interval)
+    //                 return timer
+    //             }
+    //         })
+    //     }
+    //     const interval = setInterval(scheduler, 1000)
+    //     return () => clearInterval(interval)
+    // }, [props.remainingTime])
 
     return (
         <View>
@@ -38,7 +39,7 @@ const FullSlider = (props) => {
                     thumbStyle={styles.thumb}
                     maximumValue={props.totalTime}
                     step={1}
-                    value={timer}
+                    value={props.remainingTime}
                     // onValueChange={(value) => setValue(value)}
                     disabled={true}
                     minimumTrackTintColor={Colors.PrimaryColor}
@@ -59,7 +60,7 @@ const FullSlider = (props) => {
                         color: "black",
                     }}
                 >
-                    Time left: {fancyTimeFormat(timer)}
+                    Time left: {fancyTimeFormat(props.remainingTime)}
                 </Text>
             </View>
         </View>
