@@ -79,7 +79,7 @@ const CategoryGridTile = (props) => {
               marginTop: Config.deviceHeight * 0.01,
             }}
           >
-            <FullSlider remainingTime={props.item.remainingTime} totalTime={100} />
+            <FullSlider remainingTime={props.item.remainingTime} totalTime={props.item.totalTime} />
           </View>
 
           <View

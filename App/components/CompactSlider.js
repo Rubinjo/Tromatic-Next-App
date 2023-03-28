@@ -35,7 +35,7 @@ const FullSlider = (props) => {
             <Slider
                 trackStyle={styles.track}
                 thumbStyle={styles.thumb}
-                maximumValue={100}
+                maximumValue={props.totalTime}
                 step={1}
                 value={props.remainingTime}
                 // onValueChange={(value) => setValue(value)}

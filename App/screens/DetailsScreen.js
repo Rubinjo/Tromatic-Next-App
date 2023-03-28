@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,7 +13,6 @@ import {
 
 import { getAuth } from "firebase/auth";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as Notifications from 'expo-notifications';
 import { getDatabase, ref, onValue, update } from "firebase/database";
 
 // import { CHAMBERS } from "../data/dummy-data";
@@ -45,6 +44,11 @@ const DetailsScreen = (props) => {
     sprayPos: 0,
     status: 0,
     tempOffset: 0,
+    numOfCTProbes: 0,
+    damperOpMode: 0,
+    heaterOpMode: 0,
+    sprayOpMode: 0,
+    fansOpMode: 0,
     timestamp: new Date(),
     WMs: [{ id: 1, value: 0, active: false }, { id: 2, value: 0, active: false }, { id: 3, value: 0, active: false }, { id: 4, value: 0, active: false }, { id: 5, value: 0, active: false }, { id: 6, value: 0, active: false }, { id: 7, value: 0, active: false }, { id: 8, value: 0, active: false }, { id: 9, value: 0, active: false }, { id: 10, value: 0, active: false }],
   });
@@ -65,11 +69,17 @@ const DetailsScreen = (props) => {
         numOfWmProbes: machine.NumOfWmProbes,
         RPM: machine.RPM,
         remainingTime: machine.RemainingTime,
+        totalTime: machine.TotalTime,
         setPointHum: machine.SetPointHum,
         setPointTemp: machine.SetPointTemp,
         sprayPos: machine.SprayPos,
         status: machine.Status,
         tempOffset: machine.TempOffset,
+        numOfCTProbes: machine.NumOfCTProbes,
+        damperOpMode: machine.DamperOpMode,
+        heaterOpMode: machine.HeaterOpMode,
+        sprayOpMode: machine.SprayOpMode,
+        fansOpMode: machine.FansOpMode,
         timestamp: new Date(machine.Timestamp),
         WMs: [{ id: 1, value: machine.WMValue1, active: machine.WMActive1 }, { id: 2, value: machine.WMValue2, active: machine.WMActive2 }, { id: 3, value: machine.WMValue3, active: machine.WMActive3 }, { id: 4, value: machine.WMValue4, active: machine.WMActive4 }, { id: 5, value: machine.WMValue5, active: machine.WMActive5 }, { id: 6, value: machine.WMValue6, active: machine.WMActive6 }, { id: 7, value: machine.WMValue7, active: machine.WMActive7 }, { id: 8, value: machine.WMValue8, active: machine.WMActive8 }, { id: 9, value: machine.WMValue9, active: machine.WMActive9 }, { id: 10, value: machine.WMValue10, active: machine.WMActive10 }]
       });
@@ -187,7 +197,7 @@ const DetailsScreen = (props) => {
       style={styles.container}
     >
       <View style={{ marginTop: -8 }}>
-        <CompactSlider remainingTime={dataFB.remainingTime} totalTime={100} />
+        <CompactSlider remainingTime={dataFB.remainingTime} totalTime={dataFB.totalTime} />
       </View>
 
       <View
@@ -259,8 +269,8 @@ const DetailsScreen = (props) => {
             <Text>Valve</Text>
           </View>
           <View style={{ alignItems: "center", marginTop: 2 }}>
-            <Text>Auto</Text>
-            <Text>0%</Text>
+            <Text>{data.damperOpMode}</Text>
+            <Text>{data.damperPos}</Text>
           </View>
         </View>
         <View style={{ alignItems: "center" }}>
@@ -276,8 +286,8 @@ const DetailsScreen = (props) => {
             <Text>Heating</Text>
           </View>
           <View style={{ alignItems: "center" }}>
-            <Text>Auto</Text>
-            <Text>{data.valve}%</Text>
+            <Text>{data.heaterOpMode}</Text>
+            <Text>{data.heatingValvePos}%</Text>
           </View>
         </View>
         <View style={{ alignItems: "center" }}>
@@ -293,7 +303,7 @@ const DetailsScreen = (props) => {
             <Text>Sprayer</Text>
           </View>
           <View style={{ alignItems: "center" }}>
-            <Text>Auto</Text>
+            <Text>{data.sprayOpMode}</Text>
             <Text>{data.sprayPos}%</Text>
           </View>
         </View>
@@ -310,7 +320,7 @@ const DetailsScreen = (props) => {
             <Text>Direction</Text>
           </View>
           <View style={{ alignItems: "center" }}>
-            <Text>Auto</Text>
+            <Text>{data.fansOpMode}</Text>
             <Text>{data.fanDirection}%</Text>
           </View>
         </View>

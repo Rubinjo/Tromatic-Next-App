@@ -66,13 +66,14 @@ fs.watch(FOLDER, (event, filename) => {
       jsonData = JSON.parse(jsonString)
       const updates = {};
       updates["machines/m" + auth.currentUser.uid + "_" + jsonData.DryChamberID] = {
-        Timestamp: jsonData.DateTimeMessage,
+        DateTimeMessage: jsonData.DateTimeMessage,
         Status: jsonData.Status,
         CurrentTemp: jsonData.CurrentTemp,
         SetPointTemp: jsonData.SetPointTemp,
         CurrentHum: jsonData.CurrentHum,
         SetPointHum: jsonData.SetPointHum,
         RemainingTime: jsonData.RemainingTime,
+        TotalTime: jsonData.TotalTime,
         NumOfWmProbes: jsonData.NumOfWmProbes,
         HeatingValvePos: jsonData.HeatingValvePos,
         DamperPos: jsonData.DamperPos,
@@ -81,6 +82,11 @@ fs.watch(FOLDER, (event, filename) => {
         FanDirection: jsonData.FanDirection,
         TempOffset: jsonData.TempOffset,
         EMCOffset: jsonData.EMCOffset,
+        NumOfCTProbes: jsonData.NumOfCTProbes,
+        DamperOpMode: jsonData.DamperOpMode,
+        HeaterOpMode: jsonData.HeaterOpMode,
+        SprayOpMode: jsonData.SprayOpMode,
+        FansOpMode: jsonData.FansOpMode,
         LastEditor: "m" + auth.currentUser.uid + "_" + jsonData.DryChamberID
       }
       for (let i = 1; i <= jsonData.NumOfWmProbes; i++) {
