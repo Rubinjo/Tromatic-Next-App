@@ -50,7 +50,7 @@ const Counter = (props) => {
               },
             ]}
           >
-            {props.actual}
+            {typeof props.actual !== "undefined" ? props.actual.toFixed(1) : props.actual}
           </Text>
         </View>
 
@@ -68,7 +68,7 @@ const Counter = (props) => {
               },
             ]}
           >
-            {props.setter}
+            {typeof props.setter !== "undefined" ? props.setter.toFixed(1) : props.setter}
           </Text>
         </View>
 
