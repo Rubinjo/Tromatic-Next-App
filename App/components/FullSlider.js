@@ -7,7 +7,7 @@ import {
 
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
-import fancyTimeFormat from "../utils/helper"
+import { fancyTimeFormat } from "../utils/helper"
 
 import { Slider } from "@miblanchard/react-native-slider";
 

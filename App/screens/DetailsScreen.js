@@ -24,6 +24,9 @@ import CompactSlider from "../components/CompactSlider"
 import Counter from "../components/Counter";
 import Fan from "../components/Fan"
 import humidity from "../data/dummy-data-humi";
+import { directionTitle, directionValue } from "../utils/helper";
+
+
 
 const DetailsScreen = (props) => {
   const [refreshing, setRefreshing] = useState(false);
@@ -227,7 +230,7 @@ const DetailsScreen = (props) => {
         <View>
           <Fan
             rpm={data.RPM}
-            direction={data.fanDirection}
+            direction={directionValue(data.fanDirection)}
           />
         </View>
         <View style={{ alignItems: "center" }}>
@@ -321,7 +324,7 @@ const DetailsScreen = (props) => {
           </View>
           <View style={{ alignItems: "center" }}>
             <Text>{data.fansOpMode}</Text>
-            <Text>{data.fanDirection}%</Text>
+            <Text>{directionTitle(data.fanDirection)}</Text>
           </View>
         </View>
       </View>

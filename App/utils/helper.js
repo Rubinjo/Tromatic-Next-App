@@ -12,4 +12,26 @@ function fancyTimeFormat(duration) {
     return ret;
 }
 
-export default fancyTimeFormat
+function directionTitle(direction) {
+    if (direction == 96) {
+        return "Unknown"
+    } else if (direction == 64) {
+        return "←"
+    } else if (direction == 32) {
+        return "→"
+    } else {
+        return "Error"
+    }
+}
+
+function directionValue(direction) {
+    if (direction == 64) {
+        return 1
+    } else if (direction == 32) {
+        return 0
+    } else {
+        return 0.5
+    }
+}
+
+export { fancyTimeFormat, directionTitle, directionValue }

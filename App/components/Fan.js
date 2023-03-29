@@ -3,17 +3,19 @@ import { View, StyleSheet, Text, TouchableOpacity, Image, Animated, Easing } fro
 import Config from "../utils/config";
 
 const Fan = (props) => {
-    const [rotateValue, setRotateValue] = useState(new Animated.Value(0));
+    const [rotateValue] = useState(new Animated.Value(props.direction));
 
     useEffect(() => {
+        rotateValue.setValue(props.direction)
+        console.log(rotateValue)
         Animated.loop(
             Animated.timing(rotateValue, {
-                toValue: 1,
+                toValue: Math.abs(props.direction - 1),
                 duration: 5000,
                 easing: Easing.linear,
-                useNativeDriver: false
+                useNativeDriver: true
             })).start()
-    }, [])
+    }, [props.direction])
 
     const interpolateRotation = rotateValue.interpolate({
         inputRange: [-1, 1],
