@@ -87,11 +87,15 @@ fs.watch(FOLDER, (event, filename) => {
         HeaterOpMode: jsonData.HeaterOpMode,
         SprayOpMode: jsonData.SprayOpMode,
         FansOpMode: jsonData.FansOpMode,
-        LastEditor: "m" + auth.currentUser.uid + "_" + jsonData.DryChamberID
+        LastEditor: "m" + auth.currentUser.uid + "_" + jsonData.DryChamberID,
+        DeviceName: jsonData.DeviceName
       }
       for (let i = 1; i <= jsonData.NumOfWmProbes; i++) {
         updates["machines/m" + auth.currentUser.uid + "_" + jsonData.DryChamberID]["WMValue" + i] = jsonData["WMValue" + i];
         updates["machines/m" + auth.currentUser.uid + "_" + jsonData.DryChamberID]["WMActive" + i] = jsonData["WMActive" + i];
+      }
+      for (let i = 1; i <= jsonData.NumOfCTProbes; i++) {
+        updates["machines/m" + auth.currentUser.uid + "_" + jsonData.DryChamberID]["CTValue" + i] = jsonData["CTValue" + i];
       }
       update(ref(db), updates);
     } catch (e) {
