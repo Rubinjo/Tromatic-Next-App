@@ -24,7 +24,7 @@ import CompactSlider from "../components/CompactSlider"
 import Counter from "../components/Counter";
 import Fan from "../components/Fan"
 import humidity from "../data/dummy-data-humi";
-import { directionTitle, directionValue } from "../utils/helper";
+import { directionTitle, directionValue, opModeTitle, opModeFanTitle } from "../utils/helper";
 
 
 
@@ -272,7 +272,7 @@ const DetailsScreen = (props) => {
             <Text>Valve</Text>
           </View>
           <View style={{ alignItems: "center", marginTop: 2 }}>
-            <Text>{data.damperOpMode}</Text>
+            <Text>{opModeTitle(data.damperOpMode)}</Text>
             <Text>{data.damperPos}</Text>
           </View>
         </View>
@@ -289,7 +289,7 @@ const DetailsScreen = (props) => {
             <Text>Heating</Text>
           </View>
           <View style={{ alignItems: "center" }}>
-            <Text>{data.heaterOpMode}</Text>
+            <Text>{opModeTitle(data.heaterOpMode)}</Text>
             <Text>{data.heatingValvePos}%</Text>
           </View>
         </View>
@@ -306,7 +306,7 @@ const DetailsScreen = (props) => {
             <Text>Sprayer</Text>
           </View>
           <View style={{ alignItems: "center" }}>
-            <Text>{data.sprayOpMode}</Text>
+            <Text>{opModeTitle(data.sprayOpMode)}</Text>
             <Text>{data.sprayPos}%</Text>
           </View>
         </View>
@@ -323,7 +323,7 @@ const DetailsScreen = (props) => {
             <Text>Direction</Text>
           </View>
           <View style={{ alignItems: "center" }}>
-            <Text>{data.fansOpMode}</Text>
+            <Text>{opModeFanTitle(data.fansOpMode)}</Text>
             <Text>{directionTitle(data.fanDirection)}</Text>
           </View>
         </View>
