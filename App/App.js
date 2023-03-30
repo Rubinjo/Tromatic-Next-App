@@ -7,6 +7,9 @@ import * as Font from 'expo-font';
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { initializeApp } from "firebase/app";
+import { initializeAuth } from "firebase/auth"
+import { getReactNativePersistence } from "firebase/auth/react-native"
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from 'expo-notifications';
 
 import AppNavigator from "./navigation/AppNavigator";
@@ -32,7 +35,7 @@ export default function App() {
         await fetchFonts();
         console.log("Loaded fonts");
 
-        initializeApp({
+        const app = initializeApp({
           apiKey: Constants.expoConfig.extra.APIKEY,
           authDomain: Constants.expoConfig.extra.AUTHDOMAIN,
           databaseURL: Constants.expoConfig.extra.DATABASEURL,
@@ -40,6 +43,9 @@ export default function App() {
           storageBucket: Constants.expoConfig.extra.STORAGEBUCKET,
           messagingSenderId: Constants.expoConfig.extra.MESSAGINGSENDERID,
           appId: Constants.expoConfig.extra.APPID,
+        });
+        initializeAuth(app, {
+          persistence: getReactNativePersistence(AsyncStorage)
         });
         console.log("Connected with Firebase");
 
