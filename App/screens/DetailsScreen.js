@@ -53,6 +53,7 @@ const DetailsScreen = (props) => {
     sprayOpMode: 0,
     fansOpMode: 0,
     timestamp: new Date(),
+    CTs: [{ id: 1, value: 0 }, { id: 2, value: 0 }, { id: 3, value: 0 }, { id: 4, value: 0 }, { id: 5, value: 0 }, { id: 6, value: 0 }, { id: 7, value: 0 }, { id: 8, value: 0 }, { id: 9, value: 0 }, { id: 10, value: 0 }, { id: 11, value: 0 }, { id: 12, value: 0 }],
     WMs: [{ id: 1, value: 0, active: false }, { id: 2, value: 0, active: false }, { id: 3, value: 0, active: false }, { id: 4, value: 0, active: false }, { id: 5, value: 0, active: false }, { id: 6, value: 0, active: false }, { id: 7, value: 0, active: false }, { id: 8, value: 0, active: false }, { id: 9, value: 0, active: false }, { id: 10, value: 0, active: false }],
   });
 
@@ -84,6 +85,7 @@ const DetailsScreen = (props) => {
         sprayOpMode: machine.SprayOpMode,
         fansOpMode: machine.FansOpMode,
         timestamp: new Date(machine.Timestamp),
+        CTs: [{ id: 1, value: machine.CTValue1 }, { id: 2, value: machine.CTValue2 }, { id: 3, value: machine.CTValue3 }, { id: 4, value: machine.CTValue4 }, { id: 5, value: machine.CTValue5 }, { id: 6, value: machine.CTValue6 }, { id: 7, value: machine.CTValue7 }, { id: 8, value: machine.CTValue8 }, { id: 9, value: machine.CTValue9 }, { id: 10, value: machine.CTValue10 }, { id: 11, value: machine.CTValue11 }, { id: 12, value: machine.CTValue12 }],
         WMs: [{ id: 1, value: machine.WMValue1, active: machine.WMActive1 }, { id: 2, value: machine.WMValue2, active: machine.WMActive2 }, { id: 3, value: machine.WMValue3, active: machine.WMActive3 }, { id: 4, value: machine.WMValue4, active: machine.WMActive4 }, { id: 5, value: machine.WMValue5, active: machine.WMActive5 }, { id: 6, value: machine.WMValue6, active: machine.WMActive6 }, { id: 7, value: machine.WMValue7, active: machine.WMActive7 }, { id: 8, value: machine.WMValue8, active: machine.WMActive8 }, { id: 9, value: machine.WMValue9, active: machine.WMActive9 }, { id: 10, value: machine.WMValue10, active: machine.WMActive10 }]
       });
     });
@@ -335,89 +337,29 @@ const DetailsScreen = (props) => {
         style={{
           flexDirection: "row",
           justifyContent: "space-evenly",
-          marginBottom: -44,
+          // marginBottom: -44,
         }}
       >
-        <View style={{ alignItems: "center" }}>
-          <View style={{ alignItems: "center" }}>
-            <Image
-              style={{
-                height: 5 + Config.deviceHeight * 0.04,
-                width: 5 + Config.deviceHeight * 0.04,
-                resizeMode: "contain",
-              }}
-              source={require("../assets/icons/atom.png")}
-            />
-            <Text>Core T1</Text>
-          </View>
-          <View style={{ alignItems: "center", marginTop: 2 }}>
-            <Text>23.7</Text>
-          </View>
-        </View>
-        <View style={{ alignItems: "center" }}>
-          <View style={{ alignItems: "center" }}>
-            <Image
-              style={{
-                height: 5 + Config.deviceHeight * 0.04,
-                width: 5 + Config.deviceHeight * 0.04,
-                resizeMode: "contain",
-              }}
-              source={require("../assets/icons/atom.png")}
-            />
-            <Text>Core T2</Text>
-          </View>
-          <View style={{ alignItems: "center" }}>
-            <Text>10.6</Text>
-          </View>
-        </View>
-        <View style={{ alignItems: "center" }}>
-          <View style={{ alignItems: "center" }}>
-            <Image
-              style={{
-                height: 5 + Config.deviceHeight * 0.04,
-                width: 5 + Config.deviceHeight * 0.04,
-                resizeMode: "contain",
-              }}
-              source={require("../assets/icons/atom.png")}
-            />
-            <Text>Core T3</Text>
-          </View>
-          <View style={{ alignItems: "center" }}>
-            <Text>15.7</Text>
-          </View>
-        </View>
-        <View style={{ alignItems: "center", height: 100 }}>
-          <View style={{ alignItems: "center" }}>
-            <Image
-              style={{
-                height: 5 + Config.deviceHeight * 0.04,
-                width: 5 + Config.deviceHeight * 0.04,
-                resizeMode: "contain",
-              }}
-              source={require("../assets/icons/atom.png")}
-            />
-            <Text>Core T4</Text>
-          </View>
-          <View style={{ alignItems: "center" }}>
-            <Text>44.0</Text>
-          </View>
-        </View>
-        <View style={{ alignItems: "center", height: 100 }}>
-          <View style={{ alignItems: "center" }}>
-            <Image
-              style={{
-                height: 5 + Config.deviceHeight * 0.04,
-                width: 5 + Config.deviceHeight * 0.04,
-                resizeMode: "contain",
-              }}
-              source={require("../assets/icons/atom.png")}
-            />
-            <Text>5.6</Text>
-          </View>
-          <View style={{ alignItems: "center" }}>
-            <Text>Auto</Text>
-          </View>
-        </View>
+        {data.CTs?.slice(0, data.numOfCTProbes).map((ct) => {
+          return (
+            <View key={ct.id} style={{ alignItems: "center" }}>
+              <View style={{ alignItems: "center" }}>
+                <Image
+                  style={{
+                    height: 5 + Config.deviceHeight * 0.04,
+                    width: 5 + Config.deviceHeight * 0.04,
+                    resizeMode: "contain",
+                  }}
+                  source={require("../assets/icons/atom.png")}
+                />
+                <Text>Core T{ct.id}</Text>
+              </View>
+              <View style={{ alignItems: "center" }}>
+                <Text>{ct.value}</Text>
+              </View>
+            </View>
+          )
+        })}
       </View>
       <View style={{ borderBottomWidth: 1 }} />
       <View style={{ borderBottomWidth: 1, marginTop: 17 }} />
