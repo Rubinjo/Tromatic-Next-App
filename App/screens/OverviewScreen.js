@@ -42,7 +42,7 @@ const OverviewScreen = (props) => {
               new Machine(
                 childKey,
                 cid,
-                childData.Type,
+                parData.DeviceName,
                 childData.Creation,
                 parData.CurrentHum,
                 parData.CurrentTemp,
@@ -53,6 +53,7 @@ const OverviewScreen = (props) => {
                 parData.NumOfWmProbes,
                 parData.RPM,
                 parData.RemainingTime,
+                parData.TotalTime,
                 parData.SetPointHum,
                 parData.SetPointTemp,
                 parData.SprayPos,
