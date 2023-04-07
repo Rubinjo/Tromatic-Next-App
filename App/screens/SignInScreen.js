@@ -11,12 +11,15 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import DropDownPicker from "react-native-dropdown-picker";
+import { MaterialIcons } from '@expo/vector-icons';
 
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import { updateLanguage } from "../store/slices/language";
 import i18n from "../utils/i18n";
 import { signInAccount } from "../auth/firebase";
+import TromaticNextLogo from "../assets/logos/Tromatic_Next";
+import BesBollmannLogo from "../assets/logos/Bes_Bollmann";
 
 const SignInScreen = (props) => {
   const [open, setOpen] = useState(false);
@@ -106,17 +109,13 @@ const SignInScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.backgroundSquare}></View>
-      <View style={styles.backgroundTriangle}></View>
       <View
         style={{
           marginBottom: "auto",
           marginTop: 20 + Config.deviceHeight * 0.06,
         }}
       >
-        <Text style={[styles.headText, { fontSize: Config.deviceWidth * 0.1 }]}>
-          {i18n.t("authentication.welcome")}
-        </Text>
+        <TromaticNextLogo width={Config.deviceWidth * 0.6} height={Config.deviceWidth * 0.6 * 0.3636} viewBox={"0 0 " + Config.deviceWidth * 0.7 + " " + Config.deviceWidth * 0.6 * 0.5} />
       </View>
       <View
         style={{
@@ -130,34 +129,42 @@ const SignInScreen = (props) => {
             marginBottom: Config.deviceWidth * 0.1,
           }}
         >
-          <TextInput
-            style={styles.input}
-            autoCompleteType="email"
-            placeholder={i18n.t("general.email")}
-            keyboardType="email-address"
-            returnKeyType="next"
-            // onSubmitEditing={() => {
-            //   this.passwordInput.focus();
-            // }}
-            blurOnSubmit={false}
-            textContentType="emailAddress"
-            value={email}
-            onChangeText={(email) => setEmail(email)}
-            importantForAutofill="yes"
-          />
-          <TextInput
-            style={styles.input}
-            autoCompleteType="password"
-            placeholder={i18n.t("general.password")}
-            returnKeyType="done"
-            // ref={(input) => {
-            //   this.passwordInput = input;
-            // }}
-            textContentType="password"
-            value={password}
-            onChangeText={(password) => setPassword(password)}
-            importantForAutofill="yes"
-          />
+          <View style={styles.textInputBox}>
+            <View style={styles.textInputIconBox}>
+              <MaterialIcons name="alternate-email" size={Config.deviceWidth * 0.075} color={Colors.PrimaryForeground} />
+            </View>
+            <TextInput
+              style={styles.textInput}
+              autoCompleteType="email"
+              placeholder={i18n.t("general.email")}
+              keyboardType="email-address"
+              returnKeyType="next"
+              // onSubmitEditing={() => {
+              //   this.passwordInput.focus();
+              // }}
+              blurOnSubmit={false}
+              textContentType="emailAddress"
+              value={email}
+              onChangeText={(email) => setEmail(email)}
+              importantForAutofill="yes"
+            /></View>
+          <View style={styles.textInputBox}>
+            <View style={styles.textInputIconBox}>
+              <MaterialIcons name="lock-outline" size={Config.deviceWidth * 0.075} color={Colors.PrimaryForeground} />
+            </View>
+            <TextInput
+              style={styles.textInput}
+              autoCompleteType="password"
+              placeholder={i18n.t("general.password")}
+              returnKeyType="done"
+              // ref={(input) => {
+              //   this.passwordInput = input;
+              // }}
+              textContentType="password"
+              value={password}
+              onChangeText={(password) => setPassword(password)}
+              importantForAutofill="yes"
+            /></View>
         </View>
         <View
           style={{
@@ -241,32 +248,42 @@ export const stackOptions = (navData) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.PrimaryBackground,
+  },
+  textInputBox: {
+    height: Config.deviceHeight * 0.075,
+    flexDirection: "row",
+  },
+  textInputIconBox: {
+    width: Config.deviceWidth * 0.15,
+    height: "100%",
+    backgroundColor: Colors.DetailsLight,
+    borderTopLeftRadius: 6,
+    borderBottomLeftRadius: 6,
     alignItems: "center",
     justifyContent: "center",
   },
-  backgroundSquare: {
-    width: Config.deviceWidth,
-    height: Config.deviceHeight * 0.75,
-    backgroundColor: Colors.PrimaryColor,
-    position: "absolute",
-    top: 0,
-  },
-  backgroundTriangle: {
-    width: 0,
-    height: 0,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderTopWidth: 90,
-    borderRightWidth: Config.deviceWidth * 0.3,
-    borderBottomWidth: 0,
-    borderLeftWidth: Config.deviceWidth * 0.7,
-    borderTopColor: Colors.PrimaryColor,
-    borderRightColor: "transparent",
-    borderBottomColor: "transparent",
-    borderLeftColor: "transparent",
-    position: "absolute",
-    top: Config.deviceHeight * 0.75,
+  textInput: {
+    width: Config.deviceWidth * 0.65,
+    height: "100%",
+    backgroundColor: "white",
+    borderColor: "darkgray",
+    borderWidth: 0.5,
+    borderTopRightRadius: 6,
+    borderBottomRightRadius: 6,
+    paddingHorizontal: Config.deviceWidth * 0.04,
+    // paddingVertical: Config.deviceHeight * 0.01,
+    fontSize: Config.deviceWidth * 0.05,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
+    // marginTop: 6 + Config.deviceHeight * 0.02,
   },
   headText: {
     fontFamily: "noto-sans-jp-bold",
@@ -277,24 +294,7 @@ const styles = StyleSheet.create({
     color: "darkgrey",
     marginRight: 6,
   },
-  input: {
-    width: Config.deviceWidth * 0.8,
-    backgroundColor: "white",
-    borderColor: "darkgray",
-    borderWidth: 0.5,
-    borderRadius: 3,
-    paddingHorizontal: Config.deviceWidth * 0.04,
-    paddingVertical: Config.deviceHeight * 0.01,
-    fontSize: Config.deviceWidth * 0.05,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4,
-    marginTop: 6 + Config.deviceHeight * 0.02,
-  },
+
   button: {
     backgroundColor: Colors.SecondaryColor,
     borderRadius: 32,
