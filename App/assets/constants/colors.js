@@ -1,4 +1,8 @@
 export default {
-  PrimaryColor: "#97DFFF",
-  SecondaryColor: "#1AA3FF",
+  PrimaryBackground: "#0F7BCA",
+  PrimaryForeground: "#1AA3FF",
+  Active: "#00CC63",
+  NotActive: "#FF1755",
+  DetailsDark: "#707070",
+  DetailsLight: "#E4E4E4",
 };
