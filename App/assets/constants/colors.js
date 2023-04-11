@@ -5,4 +5,6 @@ export default {
   NotActive: "#FF1755",
   DetailsDark: "#707070",
   DetailsLight: "#E4E4E4",
+  TextLight: "#FFFFFF",
+  TextDark: "#707070"
 };

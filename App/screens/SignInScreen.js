@@ -8,6 +8,8 @@ import {
   Image,
   ActivityIndicator,
   Alert,
+  Platform,
+  SafeAreaView,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -108,7 +110,7 @@ const SignInScreen = (props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View
         style={{
           marginBottom: "auto",
@@ -121,13 +123,10 @@ const SignInScreen = (props) => {
         style={{
           alignItems: "center",
           flex: 1,
-          marginTop: Config.deviceHeight * 0.02,
         }}
       >
         <View
-          style={{
-            marginBottom: Config.deviceWidth * 0.1,
-          }}
+          style={styles.textInputContainer}
         >
           <View style={styles.textInputBox}>
             <View style={styles.textInputIconBox}>
@@ -137,11 +136,12 @@ const SignInScreen = (props) => {
               style={styles.textInput}
               autoCompleteType="email"
               placeholder={i18n.t("general.email")}
+              placeholderTextColor={Colors.TextDark}
               keyboardType="email-address"
               returnKeyType="next"
-              // onSubmitEditing={() => {
-              //   this.passwordInput.focus();
-              // }}
+              onSubmitEditing={() => {
+                this.passwordInput.focus();
+              }}
               blurOnSubmit={false}
               textContentType="emailAddress"
               value={email}
@@ -156,10 +156,11 @@ const SignInScreen = (props) => {
               style={styles.textInput}
               autoCompleteType="password"
               placeholder={i18n.t("general.password")}
+              placeholderTextColor={Colors.TextDark}
               returnKeyType="done"
-              // ref={(input) => {
-              //   this.passwordInput = input;
-              // }}
+              ref={(input) => {
+                this.passwordInput = input;
+              }}
               textContentType="password"
               value={password}
               onChangeText={(password) => setPassword(password)}
@@ -169,7 +170,6 @@ const SignInScreen = (props) => {
         <View
           style={{
             alignItems: "center",
-            marginTop: Config.deviceHeight * 0.02,
           }}
         >
           {isLoading ? (
@@ -223,6 +223,13 @@ const SignInScreen = (props) => {
           }}
         />
       </View>
+      <View
+        style={{
+          marginBottom: Config.deviceHeight * 0.02
+        }}
+      >
+        <BesBollmannLogo width={Config.deviceWidth * 0.4} height={Config.deviceWidth * 0.4 * 0.1818} viewBox={"0 0 " + Config.deviceWidth * 0.4 + " " + Config.deviceWidth * 0.4 * 0.1818} />
+      </View>
       <View style={{ flexDirection: "row", marginTop: "auto" }}>
         <Text style={styles.text}>{i18n.t("authentication.account")}</Text>
         <TouchableOpacity
@@ -230,12 +237,12 @@ const SignInScreen = (props) => {
             props.navigation.navigate("SignUp");
           }}
         >
-          <Text style={[styles.headText, { color: Colors.PrimaryColor }]}>
+          <Text style={[styles.headText, { color: Colors.TextLight }]}>
             {i18n.t("authentication.signUp")}
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -252,13 +259,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: Colors.PrimaryBackground,
   },
+  textInputContainer: {
+    height: Config.deviceHeight * 0.225,
+    marginTop: Config.deviceHeight * 0.04,
+    marginBottom: Config.deviceWidth * 0.1,
+  },
   textInputBox: {
-    height: Config.deviceHeight * 0.075,
+    flex: 1,
     flexDirection: "row",
   },
   textInputIconBox: {
     width: Config.deviceWidth * 0.15,
-    height: "100%",
+    height: "80%",
     backgroundColor: Colors.DetailsLight,
     borderTopLeftRadius: 6,
     borderBottomLeftRadius: 6,
@@ -267,12 +279,12 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: Config.deviceWidth * 0.65,
-    height: "100%",
+    height: "80%",
     backgroundColor: "white",
     borderColor: "darkgray",
     borderWidth: 0.5,
-    borderTopRightRadius: 6,
-    borderBottomRightRadius: 6,
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
     paddingHorizontal: Config.deviceWidth * 0.04,
     // paddingVertical: Config.deviceHeight * 0.01,
     fontSize: Config.deviceWidth * 0.05,
@@ -287,18 +299,19 @@ const styles = StyleSheet.create({
   },
   headText: {
     fontFamily: "noto-sans-jp-bold",
-    color: "white",
+    color: Colors.TextLight,
   },
   text: {
     fontFamily: "noto-sans-jp-regular",
-    color: "darkgrey",
+    color: Colors.TextLight,
     marginRight: 6,
   },
 
   button: {
-    backgroundColor: Colors.SecondaryColor,
-    borderRadius: 32,
+    backgroundColor: Colors.PrimaryForeground,
+    borderRadius: 8,
     paddingHorizontal: Config.deviceWidth * 0.2,
+    paddingVertical: Platform.OS == "ios" ? Config.deviceHeight * 0.015 : 0,
   },
   icon: {
     width: 25,

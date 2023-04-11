@@ -33,7 +33,8 @@ export default {
     adaptiveIcon: {
       foregroundImage: "./assets/adaptive-icon.png",
       backgroundColor: "#FFFFFF"
-    }
+    },
+    softwareKeyboardLayoutMode: "pan"
   },
   extra: {
     APIKEY: apiKey,
