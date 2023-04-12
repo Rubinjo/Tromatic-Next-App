@@ -8,11 +8,15 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import i18n from "../utils/i18n";
 import { registration } from "../auth/firebase";
+import TromaticNextLogo from "../assets/logos/Tromatic_Next";
+import BesBollmannLogo from "../assets/logos/Bes_Bollmann";
 
 const SignUpScreen = (props) => {
   const [companyID, setCompanyID] = useState("");
@@ -64,94 +68,127 @@ const SignUpScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.backgroundSquare}></View>
-      <View style={styles.backgroundTriangle}></View>
       <View
         style={{
           marginBottom: "auto",
           marginTop: 20 + Config.deviceHeight * 0.06,
         }}
       >
-        <Text style={[styles.headText, { fontSize: Config.deviceWidth * 0.1 }]}>
-          {i18n.t("authentication.signUp")}
-        </Text>
+        <TromaticNextLogo width={Config.deviceWidth * 0.6} height={Config.deviceWidth * 0.6 * 0.3636} viewBox={"0 0 " + Config.deviceWidth * 0.7 + " " + Config.deviceWidth * 0.6 * 0.5} />
       </View>
-      <View style={{ flex: 1 }}>
-        <TextInput
-          style={styles.input}
-          placeholder={i18n.t("authentication.companyId")}
-          returnKeyType="next"
-          blurOnSubmit={false}
-          // onSubmitEditing={() => {
-          //   this.nameInput.focus();
-          // }}
-          value={companyID}
-          onChangeText={(id) => {
-            setCompanyID(id);
-          }}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder={i18n.t("authentication.name")}
-          autoCompleteType="name"
-          textContentType="name"
-          returnKeyType="next"
-          blurOnSubmit={false}
-          // ref={(input) => {
-          //   this.nameInput = input;
-          // }}
-          // onSubmitEditing={() => {
-          //   this.emailInput.focus();
-          // }}
-          value={fullName}
-          onChangeText={(name) => {
-            setFullName(name);
-          }}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder={i18n.t("authentication.email")}
-          autoCompleteType="email"
-          keyboardType="email-address"
-          textContentType="emailAddress"
-          returnKeyType="next"
-          blurOnSubmit={false}
-          // ref={(input) => {
-          //   this.emailInput = input;
-          // }}
-          // onSubmitEditing={() => {
-          //   this.passwordInput.focus();
-          // }}
-          value={email}
-          onChangeText={(email) => setEmail(email)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder={i18n.t("authentication.password")}
-          textContentType="newPassword"
-          returnKeyType="next"
-          blurOnSubmit={false}
-          // ref={(input) => {
-          //   this.passwordInput = input;
-          // }}
-          // onSubmitEditing={() => {
-          //   this.confirmPasswordInput.focus();
-          // }}
-          value={password}
-          onChangeText={(password) => setPassword(password)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder={i18n.t("authentication.confirm")}
-          textContentType="newPassword"
-          returnKeyType="done"
-          // ref={(input) => {
-          //   this.confirmPasswordInput = input;
-          // }}
-          value={confirmPassword}
-          onChangeText={(password2) => setConfirmPassword(password2)}
-        />
-
+      <View
+        style={{
+          alignItems: "center",
+          flex: 1,
+        }}
+      >
+        <View
+          style={styles.textInputContainer}
+        >
+          <View style={styles.textInputBox}>
+            <View style={styles.textInputIconBox}>
+              <Ionicons name="ios-business-outline" size={Config.deviceWidth * 0.075} color={Colors.PrimaryForeground} />
+            </View>
+            <TextInput
+              style={styles.textInput}
+              placeholder={i18n.t("authentication.companyId")}
+              placeholderTextColor={Colors.TextDark}
+              returnKeyType="next"
+              blurOnSubmit={false}
+              onSubmitEditing={() => {
+                this.nameInput.focus();
+              }}
+              textContentType="organizationName"
+              value={companyID}
+              onChangeText={(id) => {
+                setCompanyID(id);
+              }}
+            />
+          </View>
+          <View style={styles.textInputBox}>
+            <View style={styles.textInputIconBox}>
+              <Ionicons name="person-outline" size={Config.deviceWidth * 0.075} color={Colors.PrimaryForeground} />
+            </View>
+            <TextInput
+              style={styles.textInput}
+              placeholder={i18n.t("authentication.name")}
+              placeholderTextColor={Colors.TextDark}
+              returnKeyType="next"
+              blurOnSubmit={false}
+              ref={(input) => {
+                this.nameInput = input;
+              }}
+              onSubmitEditing={() => {
+                this.emailInput.focus();
+              }}
+              textContentType="name"
+              value={fullName}
+              onChangeText={(name) => {
+                setFullName(name);
+              }}
+            />
+          </View>
+          <View style={styles.textInputBox}>
+            <View style={styles.textInputIconBox}>
+              <MaterialIcons name="alternate-email" size={Config.deviceWidth * 0.075} color={Colors.PrimaryForeground} />
+            </View>
+            <TextInput
+              style={styles.textInput}
+              placeholder={i18n.t("authentication.email")}
+              placeholderTextColor={Colors.TextDark}
+              returnKeyType="next"
+              keyboardType="email-address"
+              blurOnSubmit={false}
+              ref={(input) => {
+                this.emailInput = input;
+              }}
+              onSubmitEditing={() => {
+                this.passwordInput.focus();
+              }}
+              textContentType="emailAddress"
+              value={email}
+              onChangeText={(email) => setEmail(email)}
+            />
+          </View>
+          <View style={styles.textInputBox}>
+            <View style={styles.textInputIconBox}>
+              <MaterialIcons name="lock-outline" size={Config.deviceWidth * 0.075} color={Colors.PrimaryForeground} />
+            </View>
+            <TextInput
+              style={styles.textInput}
+              placeholder={i18n.t("authentication.password")}
+              placeholderTextColor={Colors.TextDark}
+              returnKeyType="next"
+              blurOnSubmit={false}
+              ref={(input) => {
+                this.passwordInput = input;
+              }}
+              onSubmitEditing={() => {
+                this.confirmPasswordInput.focus();
+              }}
+              textContentType="newPassword"
+              value={password}
+              onChangeText={(password) => setPassword(password)}
+            />
+          </View>
+          <View style={styles.textInputBox}>
+            <View style={styles.textInputIconBox}>
+              <MaterialIcons name="lock-outline" size={Config.deviceWidth * 0.075} color={Colors.PrimaryForeground} />
+            </View>
+            <TextInput
+              style={styles.textInput}
+              placeholder={i18n.t("authentication.confirm")}
+              placeholderTextColor={Colors.TextDark}
+              returnKeyType="done"
+              ref={(input) => {
+                this.confirmPasswordInput = input;
+              }}
+              textContentType="newPassword"
+              value={confirmPassword}
+              onChangeText={(password2) => setConfirmPassword(password2)}
+            />
+          </View>
+        </View>
         {isLoading ? (
           <ActivityIndicator size="large" color="white" />
         ) : (
@@ -163,6 +200,13 @@ const SignUpScreen = (props) => {
             </Text>
           </TouchableOpacity>
         )}
+      </View>
+      <View
+        style={{
+          marginBottom: Config.deviceHeight * 0.02
+        }}
+      >
+        <BesBollmannLogo width={Config.deviceWidth * 0.4} height={Config.deviceWidth * 0.4 * 0.1818} viewBox={"0 0 " + Config.deviceWidth * 0.4 + " " + Config.deviceWidth * 0.4 * 0.1818} />
       </View>
     </View>
   );
@@ -177,60 +221,46 @@ export const stackOptions = (navData) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.PrimaryBackground,
+  },
+  textInputContainer: {
+    height: Config.deviceHeight * 0.55,
+    marginTop: Config.deviceHeight * 0.04,
+    marginBottom: Config.deviceWidth * 0.1,
+  },
+  textInputBox: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  textInputIconBox: {
+    width: Config.deviceWidth * 0.15,
+    height: "80%",
+    backgroundColor: Colors.DetailsLight,
+    borderTopLeftRadius: 6,
+    borderBottomLeftRadius: 6,
     alignItems: "center",
     justifyContent: "center",
   },
-  backgroundSquare: {
-    width: Config.deviceWidth,
-    height: Config.deviceHeight * 0.9,
-    backgroundColor: Colors.PrimaryColor,
-    position: "absolute",
-    top: 0,
-  },
-  backgroundTriangle: {
-    width: 0,
-    height: 0,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderTopWidth: 90,
-    borderRightWidth: Config.deviceWidth * 0.3,
-    borderBottomWidth: 0,
-    borderLeftWidth: Config.deviceWidth * 0.7,
-    borderTopColor: Colors.PrimaryColor,
-    borderRightColor: "transparent",
-    borderBottomColor: "transparent",
-    borderLeftColor: "transparent",
-    position: "absolute",
-    top: Config.deviceHeight * 0.9,
+  textInput: {
+    width: Config.deviceWidth * 0.65,
+    height: "80%",
+    backgroundColor: "white",
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+    paddingHorizontal: Config.deviceWidth * 0.04,
+    fontSize: Config.deviceWidth * 0.05,
   },
   headText: {
     fontFamily: "noto-sans-jp-bold",
     color: "white",
   },
-  input: {
-    width: Config.deviceWidth * 0.8,
-    backgroundColor: "white",
-    borderColor: "darkgray",
-    borderWidth: 0.5,
-    borderRadius: 3,
-    paddingHorizontal: Config.deviceWidth * 0.04,
-    paddingVertical: Config.deviceHeight * 0.01,
-    fontSize: Config.deviceWidth * 0.05,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4,
-    marginTop: 6 + Config.deviceHeight * 0.03,
-  },
   button: {
-    backgroundColor: Colors.SecondaryColor,
-    borderRadius: 32,
+    backgroundColor: Colors.PrimaryForeground,
+    borderRadius: 8,
     paddingHorizontal: Config.deviceWidth * 0.2,
-    marginTop: 6 + Config.deviceHeight * 0.04,
+    paddingVertical: Platform.OS == "ios" ? Config.deviceHeight * 0.015 : 0,
   },
 });
 
