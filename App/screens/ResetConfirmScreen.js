@@ -20,7 +20,7 @@ const ResetConfirmScreen = (props) => {
             <View
                 style={{
                     marginBottom: "auto",
-                    marginTop: 20 + Config.deviceHeight * 0.06,
+                    marginTop: Platform.OS == "ios" ? Config.deviceHeight * 0.02 : 20 + Config.deviceHeight * 0.06,
                 }}
             >
                 <TromaticNextLogo width={Config.deviceWidth * 0.6} height={Config.deviceWidth * 0.6 * 0.3636} viewBox={"0 0 " + Config.deviceWidth * 0.7 + " " + Config.deviceWidth * 0.6 * 0.5} />
@@ -54,7 +54,7 @@ const ResetConfirmScreen = (props) => {
 
             <View
                 style={{
-                    marginBottom: Config.deviceHeight * 0.02
+                    marginBottom: Platform.OS == "android" ? Config.deviceHeight * 0.02 : 0,
                 }}
             >
                 <BesBollmannLogo width={Config.deviceWidth * 0.4} height={Config.deviceWidth * 0.4 * 0.1818} viewBox={"0 0 " + Config.deviceWidth * 0.4 + " " + Config.deviceWidth * 0.4 * 0.1818} />

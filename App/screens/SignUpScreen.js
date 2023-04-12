@@ -7,6 +7,7 @@ import {
   View,
   Alert,
   ActivityIndicator,
+  SafeAreaView,
 } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
@@ -67,11 +68,11 @@ const SignUpScreen = (props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View
         style={{
           marginBottom: "auto",
-          marginTop: 20 + Config.deviceHeight * 0.06,
+          marginTop: Platform.OS == "ios" ? Config.deviceHeight * 0.02 : 20 + Config.deviceHeight * 0.06,
         }}
       >
         <TromaticNextLogo width={Config.deviceWidth * 0.6} height={Config.deviceWidth * 0.6 * 0.3636} viewBox={"0 0 " + Config.deviceWidth * 0.7 + " " + Config.deviceWidth * 0.6 * 0.5} />
@@ -203,12 +204,12 @@ const SignUpScreen = (props) => {
       </View>
       <View
         style={{
-          marginBottom: Config.deviceHeight * 0.02
+          marginBottom: Platform.OS == "android" ? Config.deviceHeight * 0.02 : 0,
         }}
       >
         <BesBollmannLogo width={Config.deviceWidth * 0.4} height={Config.deviceWidth * 0.4 * 0.1818} viewBox={"0 0 " + Config.deviceWidth * 0.4 + " " + Config.deviceWidth * 0.4 * 0.1818} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -226,9 +227,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.PrimaryBackground,
   },
   textInputContainer: {
-    height: Config.deviceHeight * 0.55,
+    height: Config.deviceHeight * 0.54,
     marginTop: Config.deviceHeight * 0.04,
-    marginBottom: Config.deviceWidth * 0.1,
+    marginBottom: Config.deviceWidth * 0.075,
   },
   textInputBox: {
     flex: 1,
