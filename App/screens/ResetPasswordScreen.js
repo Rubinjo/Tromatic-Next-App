@@ -6,17 +6,23 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  ActivityIndicator,
+  SafeAreaView
 } from "react-native";
+import { MaterialIcons } from '@expo/vector-icons';
 
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import { resetPasswordAccount } from "../auth/firebase";
 import i18n from "../utils/i18n";
+import TromaticNextLogo from "../assets/logos/Tromatic_Next";
+import BesBollmannLogo from "../assets/logos/Bes_Bollmann";
 
 
 const ResetPasswordScreen = (props) => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Show alert when error occurs
   useEffect(() => {
@@ -30,54 +36,76 @@ const ResetPasswordScreen = (props) => {
     if (!email) {
       setError(i18n.t("authentication.error.email"));
     } else {
+      setIsLoading(true);
       try {
         await resetPasswordAccount(email, language);
-        setEmail("");
+        props.navigation.navigate("ResetConfirm")
+        setIsLoading(false);
       } catch (err) {
         console.log(err.message);
-        setEmail("");
+        setIsLoading(false);
+        setEmail(err);
       }
     }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.backgroundSquare}></View>
-      <View style={styles.backgroundTriangle}></View>
+    <SafeAreaView style={styles.container}>
+      <View
+        style={{
+          marginBottom: "auto",
+          marginTop: 20 + Config.deviceHeight * 0.06,
+        }}
+      >
+        <TromaticNextLogo width={Config.deviceWidth * 0.6} height={Config.deviceWidth * 0.6 * 0.3636} viewBox={"0 0 " + Config.deviceWidth * 0.7 + " " + Config.deviceWidth * 0.6 * 0.5} />
+      </View>
+
       <View
         style={{
           alignItems: "center",
-          marginBottom: "auto",
-          marginTop: 22 + Config.deviceHeight * 0.08,
+          flex: 1,
         }}
       >
-        <TextInput
-          style={styles.input}
-          autoCompleteType="email"
-          placeholder={i18n.t("general.email")}
-          keyboardType="email-address"
-          returnKeyType="done"
-          textContentType="emailAddress"
-          value={email}
-          onChangeText={(email) => setEmail(email)}
-        />
-        <View style={{ width: "70%", marginTop: Config.deviceHeight * 0.005 }}>
-          <Text
-            style={{
-              fontFamily: "noto-sans-jp-bold",
-              fontSize: 2 + Config.deviceWidth * 0.035,
-              color: "white",
-            }}
-          >
-            Reset link will be send to you by mail if your email address is
-            known by us.
-          </Text>
+        <View
+          style={styles.textInputContainer}
+        >
+          <View style={styles.textInputBox}>
+            <View style={styles.textInputIconBox}>
+              <MaterialIcons name="alternate-email" size={Config.deviceWidth * 0.075} color={Colors.PrimaryForeground} />
+            </View>
+            <TextInput
+              style={styles.textInput}
+              autoCompleteType="email"
+              placeholder={i18n.t("general.email")}
+              placeholderTextColor={Colors.TextDark}
+              keyboardType="email-address"
+              returnKeyType="done"
+              textContentType="emailAddress"
+              value={email}
+              onChangeText={(email) => setEmail(email)}
+            />
+          </View>
         </View>
-        <TouchableOpacity onPress={resetPasswordEmail} style={styles.button}>
-          <Text style={styles.text}>Reset</Text>
-        </TouchableOpacity>
+        {isLoading ? (
+          <ActivityIndicator size="large" color="white" />
+        ) : (
+          <TouchableOpacity style={styles.button} onPress={resetPasswordEmail}>
+            <Text
+              style={styles.headText}
+            >
+              {i18n.t("authentication.reset")}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
-    </View>
+      <View
+        style={{
+          marginBottom: Config.deviceHeight * 0.02
+        }}
+      >
+        <BesBollmannLogo width={Config.deviceWidth * 0.4} height={Config.deviceWidth * 0.4 * 0.1818} viewBox={"0 0 " + Config.deviceWidth * 0.4 + " " + Config.deviceWidth * 0.4 * 0.1818} />
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -90,61 +118,46 @@ export const stackOptions = (navData) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.PrimaryBackground,
+    alignItems: "center",
+  },
+  textInputContainer: {
+    height: Config.deviceHeight * 0.12,
+    marginTop: Config.deviceHeight * 0.04,
+    marginBottom: Config.deviceWidth * 0.1,
+  },
+  textInputBox: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  textInputIconBox: {
+    width: Config.deviceWidth * 0.15,
+    height: "80%",
+    backgroundColor: Colors.DetailsLight,
+    borderTopLeftRadius: 6,
+    borderBottomLeftRadius: 6,
     alignItems: "center",
     justifyContent: "center",
   },
-  backgroundSquare: {
-    width: Config.deviceWidth,
-    height: Config.deviceHeight * 0.47,
-    backgroundColor: Colors.PrimaryColor,
-    position: "absolute",
-    top: 0,
-  },
-  backgroundTriangle: {
-    width: 0,
-    height: 0,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderTopWidth: 90,
-    borderRightWidth: Config.deviceWidth * 0.3,
-    borderBottomWidth: 0,
-    borderLeftWidth: Config.deviceWidth * 0.7,
-    borderTopColor: Colors.PrimaryColor,
-    borderRightColor: "transparent",
-    borderBottomColor: "transparent",
-    borderLeftColor: "transparent",
-    position: "absolute",
-    top: Config.deviceHeight * 0.47,
-  },
-  input: {
-    width: Config.deviceWidth * 0.8,
+  textInput: {
+    width: Config.deviceWidth * 0.65,
+    height: "80%",
     backgroundColor: "white",
-    borderColor: "darkgray",
-    borderWidth: 0.5,
-    borderRadius: 3,
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
     paddingHorizontal: Config.deviceWidth * 0.04,
-    paddingVertical: Config.deviceHeight * 0.01,
     fontSize: Config.deviceWidth * 0.05,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4,
-    marginTop: 6 + Config.deviceHeight * 0.02,
   },
-  button: {
-    backgroundColor: Colors.SecondaryColor,
-    borderRadius: 32,
-    paddingHorizontal: Config.deviceWidth * 0.2,
-    marginTop: Config.deviceHeight * 0.02,
-  },
-  text: {
+  headText: {
     fontFamily: "noto-sans-jp-bold",
     color: "white",
     fontSize: Config.deviceWidth * 0.07,
+  },
+  button: {
+    backgroundColor: Colors.PrimaryForeground,
+    borderRadius: 8,
+    paddingHorizontal: Config.deviceWidth * 0.2,
+    paddingVertical: Platform.OS == "ios" ? Config.deviceHeight * 0.015 : 0,
   },
 });
 

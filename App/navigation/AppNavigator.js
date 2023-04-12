@@ -10,6 +10,9 @@ import OverviewScreen, {
 } from "../screens/OverviewScreen";
 import GraphScreen from "../screens/GraphScreen";
 import GraphSelectorScreen from "../screens/GraphSelectorScreen";
+import ResetConfirmScreen, {
+  stackOptions as resetConfirmStackOptions,
+} from "../screens/ResetConfirmScreen";
 import ResetPasswordScreen, {
   stackOptions as resetPasswordStackOptions,
 } from "../screens/ResetPasswordScreen";
@@ -101,6 +104,11 @@ const AppNavigator = (props) => {
             name="ResetPassword"
             component={ResetPasswordScreen}
             options={resetPasswordStackOptions}
+          />
+          <LoginStack.Screen
+            name="ResetConfirm"
+            component={ResetConfirmScreen}
+            options={resetConfirmStackOptions}
           />
         </LoginStack.Navigator>
       )}
