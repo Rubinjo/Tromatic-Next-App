@@ -1,11 +1,14 @@
-import * as dotenv from "dotenv"
-import fs from "fs"
-import md5 from "md5"
-import { ref, update } from "firebase/database"
+import * as dotenv from "dotenv";
+import fs from "fs";
+import md5 from "md5";
+import { ref, update } from "firebase/database";
+import { EventLogger } from "node-windows";
 
-import setupFirebase from "./helper/auth.js"
+import setupFirebase from "./helper/auth.js";
 
-dotenv.config()
+dotenv.config();
+
+const log = new EventLogger("Tromatic Next Sender");
 
 /**
  * Location of folder that will be scanned.
@@ -13,7 +16,7 @@ dotenv.config()
  */
 const FOLDER = "../sender";
 
-console.log(`Watching for file changes on ${FOLDER}`);
+log.info(`Watching for file changes on ${FOLDER}`, 0);
 
 /**
  * MD5 hash of previous found params in .txt file.
@@ -26,7 +29,7 @@ let md5Previous = null;
  * @type {boolean}
  */
 let fsWait = false;
-let jsonData, jsonString, md5Current
+let jsonData, jsonString, md5Current;
 
 const [db, auth] = await setupFirebase({
   apiKey: process.env.APIKEY,
@@ -60,7 +63,7 @@ fs.watch(FOLDER, (event, filename) => {
       return;
     }
     md5Previous = md5Current;
-    console.log(`${filename} file recorded`);
+    log.info(`${filename} file recorded`, 0)
     try {
       jsonString = fs.readFileSync(FOLDER + "/" + filename);
       jsonData = JSON.parse(jsonString)
@@ -99,9 +102,9 @@ fs.watch(FOLDER, (event, filename) => {
       }
       update(ref(db), updates);
     } catch (e) {
-      console.error(e);
+      log.error(e, 58)
     }
   } else {
-    console.log(`${filename} file has no .json extension and is ignored`);
+    log.warn(`${filename} file has no .json extension and is ignored`, 1630);
   }
 });

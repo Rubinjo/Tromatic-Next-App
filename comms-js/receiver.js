@@ -1,10 +1,13 @@
 import * as dotenv from "dotenv"
 import fs from "fs"
 import { ref, onValue, get } from "firebase/database"
+import { EventLogger } from "node-windows"
 
 import setupFirebase from "./helper/auth.js"
 
 dotenv.config()
+
+const log = new EventLogger("Tromatic Next Receiver");
 
 /**
  * Machine ids to retrieve updates for.
@@ -24,9 +27,9 @@ function sendData(mid, dateTime, lastEditor, changeItem, changeValue) {
     const jsonString = JSON.stringify(machineData)
     fs.writeFile("../receiver/" + mid + "_" + dateTime.toJSON().slice(0, 19).replaceAll(":", "-") + ".json", jsonString, function (e) {
         if (e) {
-            throw e
+            log.error(e, 82)
         } else {
-            console.log(mid + ".json was added/updated")
+            log.info(mid + ".json was added/updated", 0)
         }
     })
 }
@@ -54,7 +57,7 @@ try {
                     if (lastEditor.startsWith("u_")) {
                         sendData(mid, new Date(), lastEditor, changeItem, changeValue)
                     } else {
-                        console.log("no user")
+                        log.info("Registered update was not from user", 0)
                     }
                 })
             }
@@ -63,5 +66,5 @@ try {
     })
 
 } catch (e) {
-    console.error(e)
+    log.error(e, 58)
 }
