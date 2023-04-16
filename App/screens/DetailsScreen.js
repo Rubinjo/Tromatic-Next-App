@@ -22,7 +22,7 @@ import Colors from "../assets/constants/colors";
 import CompactSlider from "../components/CompactSlider"
 
 import Counter from "../components/Counter";
-import Fan from "../components/Fan"
+import AnimatedFan from "../components/AnimatedFan"
 import humidity from "../data/dummy-data-humi";
 import { directionTitle, directionValue, opModeTitle, opModeFanTitle } from "../utils/helper";
 
@@ -230,7 +230,7 @@ const DetailsScreen = (props) => {
           />
         </View>
         <View>
-          <Fan
+          <AnimatedFan
             rpm={data.RPM}
             direction={directionValue(data.fanDirection)}
           />

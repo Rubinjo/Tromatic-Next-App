@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image, Animated, Easing } from "react-native";
 import Config from "../utils/config";
+import Fan from "../assets/icons/Fan";
+import Colors from "../assets/constants/colors";
 
-const Fan = (props) => {
+const AnimatedFan = (props) => {
     const [rotateValue] = useState(new Animated.Value(props.direction));
+
+    const AnimatedObject = Animated.createAnimatedComponent(Fan)
 
     useEffect(() => {
         rotateValue.setValue(props.direction)
@@ -23,14 +27,14 @@ const Fan = (props) => {
     })
     return (
         <View>
-            <Animated.Image
+            <AnimatedObject
+                color={Colors.PrimaryBackground}
                 style={{
                     height: 24 + Config.deviceHeight * 0.15,
                     width: 24 + Config.deviceHeight * 0.15,
                     resizeMode: "contain",
                     transform: [{ rotate: interpolateRotation }]
                 }}
-                source={require("../assets/icons/fan.png")}
             />
             <Text style={{ position: "absolute", alignSelf: "center", top: "45%", color: "black" }}>{props.rpm}</Text>
         </View>
@@ -50,4 +54,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Fan;
+export default AnimatedFan;
