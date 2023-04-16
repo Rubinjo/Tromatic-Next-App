@@ -33,6 +33,8 @@ const defaultStackOptions = {
   headerTitle: "",
 };
 const defaultTabOptions = {
+  headerStyle: { backgroundColor: Colors.PrimaryBackground },
+  headerTitle: "",
   tabBarStyle: { backgroundColor: Colors.PrimaryBackground + "4d" }, // opacity of 0.3
 };
 
