@@ -9,10 +9,12 @@ const messagingSenderId = process.env.MESSAGINGSENDERID
 const appId = process.env.APPID
 
 export default {
-  name: "DryChamber",
-  slug: "DryChamber",
+  name: "Tromatic Next",
+  slug: "Tromatic-Next",
   version: "1.0.0",
+  platforms: ["ios", "android"],
   orientation: "portrait",
+  primaryColor: "#0F7BCA",
   icon: "./assets/icon.png",
   splash: {
     image: "./assets/splash.png",
