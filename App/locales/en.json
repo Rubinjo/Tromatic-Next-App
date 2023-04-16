@@ -37,6 +37,33 @@
         "passwordMatch": "Password does not match.",
         "incorrectSignIn": "The entered credentials are wrong"
       }
+    },
+    "status": {
+      "ready": "Ready",
+      "halted": "Halted",
+      "running": "Running",
+      "waitPreconditions": "Waiting for pre-conditions",
+      "ended": "Program ended",
+      "stopped": "Program stopped by error",
+      "equalizing": "Equalizing phase",
+      "manual": "Manual mode active",
+      "newProcess": "Program new process data",
+      "delay": "Start delay",
+      "highTempA": "High temperature alarm",
+      "lowTempA": "Low temperature alarm",
+      "highHumA": "High humidity alarm",
+      "lowHumA": "Low humidity alarm",
+      "externalA": "External alarm",
+      "diffTempA": "Temperature difference alarm",
+      "diffHumA": "Humidity difference alarm",
+      "purge": "Purge active",
+      "boiler": "Boiler protection",
+      "highTempE": "High temperature error",
+      "lowHumE": "Low humidty error",
+      "voltage": "Reference voltage error",
+      "externalE": "External error",
+      "diffTempE": "Temperature difference error",
+      "diffHumE": "Humidity difference error"
     }
   }
 }

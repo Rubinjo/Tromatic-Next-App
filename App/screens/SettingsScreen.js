@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 import DropDownPicker from "react-native-dropdown-picker";
 
 import Colors from "../assets/constants/colors";
@@ -161,10 +161,10 @@ const SettingsScreen = (props) => {
 export const tabOptions = (navData) => {
   return {
     tabBarIcon: (props) => {
-      let iconName;
-      iconName = props.focused ? "cog" : "cog-outline";
+      let iconColor;
+      iconColor = props.focused ? Colors.PrimaryBackground : Colors.TextDarkest;
       return (
-        <MaterialCommunityIcons name={iconName} size={34} color={"white"} />
+        <Ionicons name="options-outline" size={34} color={iconColor} />
       );
     },
   };

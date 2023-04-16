@@ -10,26 +10,9 @@ import Colors from "../assets/constants/colors";
 import { fancyTimeFormat } from "../utils/helper"
 
 import { Slider } from "@miblanchard/react-native-slider";
+import Stopwatch from "../assets/icons/Stopwatch"
 
 const FullSlider = (props) => {
-    // const [timer, setTimer] = useState(0)
-
-
-    // useEffect(() => {
-    //     setTimer(props.remainingTime)
-    //     const scheduler = () => {
-    //         setTimer((timer) => {
-    //             if (timer > 0) {
-    //                 return timer - 1
-    //             } else {
-    //                 clearInterval(interval)
-    //                 return timer
-    //             }
-    //         })
-    //     }
-    //     const interval = setInterval(scheduler, 1000)
-    //     return () => clearInterval(interval)
-    // }, [props.remainingTime])
 
     return (
         <View>
@@ -38,29 +21,39 @@ const FullSlider = (props) => {
                     trackStyle={styles.track}
                     thumbStyle={styles.thumb}
                     maximumValue={props.totalTime}
+                    minimumValue={-props.totalTime * 0.08} // Ensure track border radius stays intact
                     step={1}
                     value={props.remainingTime}
-                    // onValueChange={(value) => setValue(value)}
-                    disabled={true}
-                    minimumTrackTintColor={Colors.PrimaryColor}
-                    maximumTrackTintColor={Colors.SecondaryColor}
+                    // disabled={true}
+                    minimumTrackTintColor={Colors.PrimaryForeground}
+                    maximumTrackTintColor={Colors.PrimaryBackground}
                 />
             </View>
             <View
                 style={{
-                    flex: 1,
-                    marginLeft: "auto",
-                    marginRight: 4 + Config.deviceWidth * 0.02,
-                    marginTop: -1 - Config.deviceHeight * 0.02,
+                    position: "absolute",
+                    flexDirection: "row",
+                    alignSelf: "center",
                 }}
             >
-                <Text
-                    style={{
-                        fontFamily: "noto-sans-jp-regular",
-                        color: "black",
-                    }}
-                >
-                    Time left: {fancyTimeFormat(props.remainingTime)}
+                <View style={{ flexDirection: "row", paddingHorizontal: 3 + Config.deviceWidth * 0.03 }}>
+                    <Stopwatch style={{ alignSelf: "center", paddingHorizontal: Config.deviceWidth * 0.02 }} />
+                    <Text
+                        style={{
+                            fontFamily: "noto-sans-jp-regular",
+                            color: Colors.TextLight,
+                            paddingHorizontal: Config.deviceWidth * 0.02,
+                        }}
+                    >
+                        Time remaining
+                    </Text>
+                </View>
+                <Text style={{
+                    fontFamily: "noto-sans-jp-bold",
+                    color: Colors.TextLight,
+                    paddingHorizontal: 3 + Config.deviceWidth * 0.03
+                }}>
+                    {fancyTimeFormat(props.remainingTime)}
                 </Text>
             </View>
         </View>
@@ -69,23 +62,15 @@ const FullSlider = (props) => {
 
 const styles = StyleSheet.create({
     sliderContainer: {
-        flex: 1,
-        width: Config.deviceWidth * 0.85,
+        // flex: 1,
+        width: Config.deviceWidth * 0.84,
         alignItems: "stretch",
         justifyContent: "center",
         marginLeft: Config.deviceWidth * 0.02, // Fix unaccurate track bug
     },
     track: {
-        height: Config.deviceHeight * 0.028,
-        borderRadius: 6,
-        shadowColor: "black",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 1,
-        elevation: 2,
+        height: Config.deviceHeight * 0.045,
+        borderRadius: 24,
         marginRight: Config.deviceWidth * 0.02, // Fix unaccurate track bug
     },
     thumb: {

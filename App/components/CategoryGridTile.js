@@ -8,9 +8,13 @@ import {
 } from "react-native";
 import FullSlider from "./FullSlider";
 
-import Light from "./Light";
+import Colors from "../assets/constants/colors";
 import Config from "../utils/config";
+import Thermometer from "../assets/icons/Thermometer";
+import Humidity from "../assets/icons/Humidity"
 import Status from "../assets/constants/status";
+import Fan from "../assets/icons/Fan";
+import Warning from "../assets/icons/Warning"
 
 const CategoryGridTile = (props) => {
   return (
@@ -22,27 +26,27 @@ const CategoryGridTile = (props) => {
               flex: 1,
               flexDirection: "row",
               alignItems: "center",
-              marginBottom: "auto",
-              marginRight: "auto",
-              marginTop: 1 + Config.deviceHeight * 0.005,
-              marginLeft: 1 + Config.deviceWidth * 0.08,
+              // marginBottom: "auto",
+              // marginRight: "auto",
+              // marginTop: 1 + Config.deviceHeight * 0.001,
+              marginLeft: 1 + Config.deviceWidth * 0.04,
             }}
           >
-            <Light color={(props.item.status - 65537 < 12) ? ((props.item.status - 65537 == 0) ? "green" : "yellow") : "red"} />
+            <View style={{ width: Config.deviceWidth * 0.06, height: Config.deviceWidth * 0.06, borderRadius: Config.deviceWidth * 0.03, backgroundColor: (props.item.status - 65537 < 12) ? ((props.item.status - 65537 == 0) ? Colors.Active : "yellow") : Colors.NotActive }} />
             <View
               style={{ flex: 1, marginLeft: 1 + Config.deviceWidth * 0.02 }}
             >
               <Text
                 style={{
                   fontFamily: "noto-sans-jp-bold",
-                  fontSize: 5 + Config.deviceHeight * 0.02,
+                  fontSize: 5 + Config.deviceHeight * 0.015,
                   color: "black",
                 }}
               >
                 {props.item.type}
               </Text>
             </View>
-            {(props.item.status - 65537 >= 12) && (
+            {(props.item.status >= 12) && (
               <View
                 style={{
                   flexDirection: "row",
@@ -50,14 +54,7 @@ const CategoryGridTile = (props) => {
                   marginRight: Config.deviceWidth * 0.08,
                 }}
               >
-                <Image
-                  style={{
-                    height: 5 + Config.deviceHeight * 0.04,
-                    width: 5 + Config.deviceHeight * 0.04,
-                    resizeMode: "contain",
-                  }}
-                  source={require("../assets/icons/warning.png")}
-                />
+                <Warning />
                 <View style={{ marginLeft: 1 + Config.deviceWidth * 0.02 }}>
                   <Text
                     style={{
@@ -66,7 +63,7 @@ const CategoryGridTile = (props) => {
                       color: "black",
                     }}
                   >
-                    {Status[props.item.status - 65537]}
+                    {Status[props.item.status]}
                   </Text>
                 </View>
               </View>
@@ -84,79 +81,54 @@ const CategoryGridTile = (props) => {
 
           <View
             style={{
-              flex: 1,
+              flex: 1.5,
               flexDirection: "row",
-              justifyContent: "space-around",
+              // justifyContent: "center",
+              marginBottom: Config.deviceHeight * 0.02
             }}
           >
             <View
               style={{
                 flex: 1,
-                flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "space-evenly",
               }}
             >
-              <Image
-                style={{
-                  height: 5 + Config.deviceHeight * 0.04,
-                  width: 5 + Config.deviceHeight * 0.04,
-                  resizeMode: "contain",
-                }}
-                source={require("../assets/icons/thermometer.png")}
-              />
-              <View>
-                <Text>{props.item.currentTemp} °C</Text>
-                <View style={{ borderBottomWidth: 1 }} />
-                <Text>{props.item.setPointTemp} °C</Text>
-              </View>
+              <Thermometer style={{ alignSelf: "center" }} />
+              <Text style={{ marginBottom: -Config.deviceHeight * 0.007, fontFamily: "noto-sans-jp-regular" }}>{props.item.currentTemp} °C</Text>
+              <Text style={{ margin: -Config.deviceHeight * 0.007, fontFamily: "noto-sans-jp-regular" }}>{props.item.setPointTemp} °C</Text>
             </View>
+            <View style={{ borderRightWidth: 2, borderRightColor: Colors.DetailsLight }} />
             <View
               style={{
                 flex: 1,
-                flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "space-evenly",
               }}
             >
-              <Image
-                style={{
-                  height: 5 + Config.deviceHeight * 0.04,
-                  width: 5 + Config.deviceHeight * 0.04,
-                  resizeMode: "contain",
-                }}
-                source={require("../assets/icons/humidity.png")}
-              />
-              <View>
-                <Text>{props.item.currentHum}%</Text>
-                <View style={{ borderBottomWidth: 1 }} />
-                <Text>{props.item.setPointHum}%</Text>
-              </View>
+              <Fan color={Colors.PrimaryForeground} />
+              <Text>{props.item.currentHum}%</Text>
+              <Text>{props.item.setPointHum}%</Text>
             </View>
+            <View style={{ borderRightWidth: 2, borderRightColor: Colors.DetailsLight }} />
+
             <View
               style={{
                 flex: 1,
-                flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "space-evenly",
               }}
             >
-              <Image
-                style={{
-                  height: 5 + Config.deviceHeight * 0.04,
-                  width: 5 + Config.deviceHeight * 0.04,
-                  resizeMode: "contain",
-                }}
-                source={require("../assets/icons/fan.png")}
-              />
+              <Humidity />
               <Text>{props.item.RPM}%</Text>
             </View>
+            <View style={{ borderRightWidth: 2, borderRightColor: Colors.DetailsLight }} />
+
             <View
               style={{
                 flex: 1,
-                flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "space-evenly",
               }}
             >
               <Image
@@ -179,19 +151,16 @@ const CategoryGridTile = (props) => {
 const styles = StyleSheet.create({
   gridItem: {
     flex: 1,
-    height: Config.deviceHeight * 0.25,
+    width: "92%",
+    height: Config.deviceHeight * 0.3,
+    alignSelf: "center",
+    backgroundColor: Colors.TextLight,
+    borderRadius: 12,
+    marginVertical: Config.deviceHeight * 0.01
   },
   container: {
     flex: 1,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    elevation: 1,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: "grey",
-    justifyContent: "center",
+    // justifyContent: "flex-end",
     alignItems: "center",
   },
 });

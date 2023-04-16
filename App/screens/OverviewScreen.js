@@ -12,10 +12,12 @@ import {
   CommonActions,
   useNavigation,
 } from "@react-navigation/native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Entypo } from '@expo/vector-icons';
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, onValue } from "firebase/database";
 
+import Gauge from "../assets/icons/Gauge";
+import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import i18n from "../utils/i18n";
 import Machine from "../models/machine";
@@ -122,7 +124,8 @@ const OverviewScreen = (props) => {
         keyExtractor={(item, index) => item.id}
         data={data}
         renderItem={renderGridItem}
-        extraData={data}
+        // extraData={data}
+        contentContainerStyle={{ paddingVertical: Config.deviceHeight * 0.01 }}
       />
     </View>
   );
@@ -131,10 +134,10 @@ const OverviewScreen = (props) => {
 export const tabOptions = (navData) => {
   return {
     tabBarIcon: (props) => {
-      let iconName;
-      iconName = props.focused ? "engine" : "engine-outline";
+      let iconColor;
+      iconColor = props.focused ? Colors.PrimaryBackground : Colors.TextDarkest;
       return (
-        <MaterialCommunityIcons name={iconName} size={34} color={"white"} />
+        <Gauge color={iconColor} />
       );
     },
     tabBarLabel: "Overview",
@@ -147,7 +150,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "stretch",
     justifyContent: "center",
-    backgroundColor: "white",
+    backgroundColor: Colors.PrimaryBackground + "1a", // opacity of 0.1
   },
 });
 

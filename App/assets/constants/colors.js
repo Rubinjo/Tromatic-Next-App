@@ -6,5 +6,6 @@ export default {
   DetailsDark: "#707070",
   DetailsLight: "#E4E4E4",
   TextLight: "#FFFFFF",
-  TextDark: "#707070"
+  TextDark: "#707070",
+  TextDarkest: "#000000",
 };

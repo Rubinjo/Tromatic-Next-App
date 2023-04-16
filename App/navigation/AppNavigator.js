@@ -29,16 +29,11 @@ import SignUpScreen, {
 import Colors from "../assets/constants/colors";
 
 const defaultStackOptions = {
-  headerStyle: { backgroundColor: Colors.PrimaryColor },
+  headerStyle: { backgroundColor: Colors.PrimaryBackground },
   headerTitle: "",
-  headerTintColor: "white",
 };
 const defaultTabOptions = {
-  tabBarActiveTintColor: "white",
-  tabBarInactiveTintColor: "white",
-  tabBarStyle: { backgroundColor: Colors.PrimaryColor },
-  headerStyle: { backgroundColor: Colors.PrimaryColor },
-  headerTitle: "",
+  tabBarStyle: { backgroundColor: Colors.PrimaryBackground + "4d" }, // opacity of 0.3
 };
 
 const LoginStack = createStackNavigator();
