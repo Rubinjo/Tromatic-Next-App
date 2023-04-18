@@ -31,11 +31,12 @@ import Colors from "../assets/constants/colors";
 const defaultStackOptions = {
   headerStyle: { backgroundColor: Colors.PrimaryBackground },
   headerTitle: "",
+  headerTintColor: Colors.TextLight,
 };
 const defaultTabOptions = {
   headerStyle: { backgroundColor: Colors.PrimaryBackground },
   headerTitle: "",
-  tabBarStyle: { backgroundColor: Colors.PrimaryBackground + "4d" }, // opacity of 0.3
+  tabBarStyle: { backgroundColor: Colors.PrimaryBackground + "4d", elevation: 0 }, // opacity of 0.3, remove hidden shadow
 };
 
 const LoginStack = createStackNavigator();
