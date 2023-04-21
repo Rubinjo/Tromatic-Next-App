@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     height: Config.deviceHeight * 0.3,
     alignSelf: "center",
     backgroundColor: Colors.TextLight,
-    borderRadius: 12,
+    borderRadius: Config.deviceWidth * 0.03,
     marginVertical: Config.deviceHeight * 0.01
   },
   container: {

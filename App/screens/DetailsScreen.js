@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,32 +14,37 @@ import {
 import { getAuth } from "firebase/auth";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getDatabase, ref, onValue, update } from "firebase/database";
+import { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 // import { CHAMBERS } from "../data/dummy-data";
 import Config from "../utils/config";
 import i18n from "../utils/i18n";
 import Colors from "../assets/constants/colors";
 import CompactSlider from "../components/CompactSlider"
-
+import Thermometer from "../assets/icons/Thermometer"
 import Counter from "../components/Counter";
 import AnimatedFan from "../components/AnimatedFan"
-import humidity from "../data/dummy-data-humi";
 import { directionTitle, directionValue, opModeTitle, opModeFanTitle } from "../utils/helper";
-
-
+import Humidity from "../assets/icons/Humidity";
+import Wood from "../assets/icons/Wood"
+import Valve from "../assets/icons/Valve"
+import Heating from "../assets/icons/Heating"
+import Sprayer from "../assets/icons/Sprayer"
+import FanDirection from "../assets/icons/FanDirection"
 
 const DetailsScreen = (props) => {
   const [refreshing, setRefreshing] = useState(false);
   const [areChanges, setAreChanges] = useState(false);
   const [dataFB, setDataFB] = useState({})
   const [data, setData] = useState({
+    deviceName: "",
     currentHum: 0,
     currentTemp: 0,
     damperPos: 0,
     EMCOffset: 0,
     fanDirection: 0,
     heatingValvePos: 0,
-    numOfWmProbes: 0,
+    numOfWmProbes: 5,
     RPM: 0,
     remainingTime: 0,
     setPointHum: 0,
@@ -47,7 +52,7 @@ const DetailsScreen = (props) => {
     sprayPos: 0,
     status: 0,
     tempOffset: 0,
-    numOfCTProbes: 0,
+    numOfCTProbes: 5,
     damperOpMode: 0,
     heaterOpMode: 0,
     sprayOpMode: 0,
@@ -56,6 +61,10 @@ const DetailsScreen = (props) => {
     CTs: [{ id: 1, value: 0 }, { id: 2, value: 0 }, { id: 3, value: 0 }, { id: 4, value: 0 }, { id: 5, value: 0 }, { id: 6, value: 0 }, { id: 7, value: 0 }, { id: 8, value: 0 }, { id: 9, value: 0 }, { id: 10, value: 0 }, { id: 11, value: 0 }, { id: 12, value: 0 }],
     WMs: [{ id: 1, value: 0, active: false }, { id: 2, value: 0, active: false }, { id: 3, value: 0, active: false }, { id: 4, value: 0, active: false }, { id: 5, value: 0, active: false }, { id: 6, value: 0, active: false }, { id: 7, value: 0, active: false }, { id: 8, value: 0, active: false }, { id: 9, value: 0, active: false }, { id: 10, value: 0, active: false }],
   });
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const bottomSheetCTModalRef = useRef(null);
+  const bottomSheetWMModalRef = useRef(null);
 
   useEffect(() => {
     const db = getDatabase();
@@ -64,6 +73,7 @@ const DetailsScreen = (props) => {
       const machine = snapshot.val();
       setDataFB({
         ...dataFB,
+        deviceName: machine.DeviceName,
         currentHum: machine.CurrentHum,
         currentTemp: machine.CurrentTemp,
         damperPos: machine.DamperPos,
@@ -109,6 +119,12 @@ const DetailsScreen = (props) => {
         ),
     });
   }, [areChanges, data]);
+
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerTitle: data.deviceName
+    });
+  }, [data.deviceName]);
 
   const onWMChange = (id, value, active) => {
     const newArray = [...data.WMs]
@@ -191,227 +207,225 @@ const DetailsScreen = (props) => {
     setAreChanges(false);
   };
 
+  function handleCTModal() {
+    bottomSheetCTModalRef.current?.present();
+    setModalOpen(true);
+  }
+  function handleWMModal() {
+    bottomSheetWMModalRef.current?.present();
+    setModalOpen(true);
+  }
+
   // const navigation = useNavigation();
   // const route = useRoute();
   // const { itemId, otherParam } = route.params;
   // const { chamberId } = props.route.params;
   // const selectedChamber = CHAMBERS.find((chamId) => chamId.id === chamberId);
   return (
-    <ScrollView
-      refreshControl={<RefreshControl title={data.timestamp ? (i18n.t("general.lastUpdated") + ": " + (data.timestamp.toLocaleDateString() === new Date().toLocaleDateString() ? i18n.t("general.today") : data.timestamp.toLocaleDateString()) + " " + data.timestamp.toLocaleTimeString()) : ""} titleColor="black" refreshing={refreshing} onRefresh={onRefresh} />}
-      style={styles.container}
-    >
-      <View style={{ marginTop: -8 }}>
-        <CompactSlider remainingTime={dataFB.remainingTime} totalTime={dataFB.totalTime} />
-      </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          height: Config.deviceHeight * 0.35,
-        }}
+    <BottomSheetModalProvider>
+      <ScrollView
+        refreshControl={<RefreshControl title={data.timestamp ? (i18n.t("general.lastUpdated") + ": " + (data.timestamp.toLocaleDateString() === new Date().toLocaleDateString() ? i18n.t("general.today") : data.timestamp.toLocaleDateString()) + " " + data.timestamp.toLocaleTimeString()) : ""} titleColor="black" refreshing={refreshing} onRefresh={onRefresh} />}
+        style={styles.container}
       >
-        <View style={{ alignItems: "center" }}>
-          <Image
-            style={{
-              height: 5 + Config.deviceHeight * 0.04,
-              width: 5 + Config.deviceHeight * 0.04,
-              resizeMode: "contain",
-            }}
-            source={require("../assets/icons/thermometer.png")}
-          />
-          <Text>Temperature</Text>
-          <Counter
-            item={"setPointTemp"}
-            actual={data.currentTemp}
-            setter={data.setPointTemp}
-            onChange={onChange}
-          />
-        </View>
-        <View>
-          <AnimatedFan
-            rpm={data.RPM}
-            direction={directionValue(data.fanDirection)}
-          />
-        </View>
-        <View style={{ alignItems: "center" }}>
-          <Image
-            style={{
-              height: 5 + Config.deviceHeight * 0.04,
-              width: 5 + Config.deviceHeight * 0.04,
-              resizeMode: "contain",
-            }}
-            source={require("../assets/icons/humidity.png")}
-          />
-          <Text>Humidity</Text>
-          <Counter
-            item={"setPointHum"}
-            actual={data.currentHum}
-            setter={data.setPointHum}
-            onChange={onChange}
-          />
-        </View>
-      </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          marginBottom: -42,
-        }}
-      >
-        <View style={{ alignItems: "center" }}>
+        {data.remainingTime > 0 &&
+          <View style={{ marginTop: -8, marginBottom: 8, height: Config.deviceHeight * 0.04 }}>
+            <CompactSlider remainingTime={dataFB.remainingTime} totalTime={dataFB.totalTime} />
+          </View>
+        }
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignContent: "center",
+            alignSelf: "center",
+            height: Config.deviceHeight * 0.35,
+            width: "90%"
+          }}
+        >
           <View style={{ alignItems: "center" }}>
-            <Image
-              style={{
-                height: 5 + Config.deviceHeight * 0.04,
-                width: 5 + Config.deviceHeight * 0.04,
-                resizeMode: "contain",
-              }}
-              source={require("../assets/icons/valve.png")}
+            <Thermometer />
+            <Text style={{ fontFamily: "noto-sans-jp-regular" }}>Temperature</Text>
+            <Counter
+              item={"setPointTemp"}
+              actual={data.currentTemp}
+              setter={data.setPointTemp}
+              onChange={onChange}
             />
-            <Text>Valve</Text>
           </View>
-          <View style={{ alignItems: "center", marginTop: 2 }}>
-            <Text>{opModeTitle(data.damperOpMode)}</Text>
-            <Text>{data.damperPos}</Text>
-          </View>
-        </View>
-        <View style={{ alignItems: "center" }}>
           <View style={{ alignItems: "center" }}>
-            <Image
-              style={{
-                height: 5 + Config.deviceHeight * 0.04,
-                width: 5 + Config.deviceHeight * 0.04,
-                resizeMode: "contain",
-              }}
-              source={require("../assets/icons/heating.png")}
+            <AnimatedFan
+              direction={directionValue(data.fanDirection)}
             />
-            <Text>Heating</Text>
-          </View>
-          <View style={{ alignItems: "center" }}>
-            <Text>{opModeTitle(data.heaterOpMode)}</Text>
-            <Text>{data.heatingValvePos}%</Text>
-          </View>
-        </View>
-        <View style={{ alignItems: "center" }}>
-          <View style={{ alignItems: "center" }}>
-            <Image
-              style={{
-                height: 5 + Config.deviceHeight * 0.04,
-                width: 5 + Config.deviceHeight * 0.04,
-                resizeMode: "contain",
-              }}
-              source={require("../assets/icons/sprinkler.png")}
-            />
-            <Text>Sprayer</Text>
-          </View>
-          <View style={{ alignItems: "center" }}>
-            <Text>{opModeTitle(data.sprayOpMode)}</Text>
-            <Text>{data.sprayPos}%</Text>
-          </View>
-        </View>
-        <View style={{ alignItems: "center", height: 100 }}>
-          <View style={{ alignItems: "center" }}>
-            <Image
-              style={{
-                height: 5 + Config.deviceHeight * 0.04,
-                width: 5 + Config.deviceHeight * 0.04,
-                resizeMode: "contain",
-              }}
-              source={require("../assets/icons/directions.png")}
-            />
-            <Text>Direction</Text>
-          </View>
-          <View style={{ alignItems: "center" }}>
-            <Text>{opModeFanTitle(data.fansOpMode)}</Text>
-            <Text>{directionTitle(data.fanDirection)}</Text>
-          </View>
-        </View>
-      </View>
-      <View style={{ borderBottomWidth: 1 }} />
-      <View style={{ borderBottomWidth: 1, marginTop: 38 }} />
-
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          // marginBottom: -44,
-        }}
-      >
-        {data.CTs?.slice(0, data.numOfCTProbes).map((ct) => {
-          return (
-            <View key={ct.id} style={{ alignItems: "center" }}>
-              <View style={{ alignItems: "center" }}>
-                <Image
-                  style={{
-                    height: 5 + Config.deviceHeight * 0.04,
-                    width: 5 + Config.deviceHeight * 0.04,
-                    resizeMode: "contain",
-                  }}
-                  source={require("../assets/icons/atom.png")}
-                />
-                <Text>Core T{ct.id}</Text>
-              </View>
-              <View style={{ alignItems: "center" }}>
-                <Text>{ct.value}</Text>
-              </View>
+            <Text style={{ fontFamily: "noto-sans-jp-regular" }}>RPM</Text>
+            <View style={{ alignItems: "center", backgroundColor: Colors.TextLight, width: Config.deviceWidth * 0.2, borderRadius: Config.deviceWidth * 0.02 }}>
+              <Text style={{ fontFamily: "noto-sans-jp-regular" }}>{data.RPM}</Text>
             </View>
-          )
-        })}
-      </View>
-      <View style={{ borderBottomWidth: 1 }} />
-      <View style={{ borderBottomWidth: 1, marginTop: 17 }} />
-      <View style={{ alignItems: "center" }}>
-        <View style={{ width: "60%", flexDirection: "row", flexWrap: "wrap" }}>
-          {data.WMs?.slice(0, data.numOfWmProbes).map((wm) => {
-            return (<View key={wm.id} style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text>M{wm.id}</Text>
-              <Switch
-                trackColor={{
-                  true: Colors.SecondaryColor,
-                  false: Platform.OS == "android" ? "#d3d3d3" : "#fbfbfb",
-                }}
-                thumbColor={
-                  Platform.OS == "ios"
-                    ? "#FFFFFF"
-                    : wm.active
-                      ? Colors.SecondaryColor
-                      : "#ffffff"
-                }
-                ios_backgroundColor="#fbfbfb"
-                onValueChange={(value) => onWMChange(wm.id, wm.value, value)}
-                value={wm.active}
-                style={
-                  wm.active
-                    ? styles.switchEnableBorder
-                    : styles.switchDisableBorder
-                }
-              />
-              <Text>{wm.value}</Text>
+            <Wood />
+            <Text style={{ fontFamily: "noto-sans-jp-regular" }}>Woodmoisture</Text>
+            <View style={{ alignItems: "center", backgroundColor: Colors.TextLight, width: Config.deviceWidth * 0.2, borderRadius: Config.deviceWidth * 0.02 }}>
+              <Text style={{ fontFamily: "noto-sans-jp-regular" }}>?%</Text>
             </View>
+          </View>
+          <View style={{ alignItems: "center" }}>
+            <Humidity />
+            <Text style={{ fontFamily: "noto-sans-jp-regular" }}>Humidity</Text>
+            <Counter
+              item={"setPointHum"}
+              actual={data.currentHum}
+              setter={data.setPointHum}
+              onChange={onChange}
+            />
+          </View>
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignSelf: "center",
+            width: "90%"
+          }}
+        >
+          <View style={{ width: "25%", alignItems: "center", backgroundColor: Colors.TextLight, borderTopLeftRadius: Config.deviceWidth * 0.02, borderBottomLeftRadius: Config.deviceWidth * 0.02 }}>
+            <View style={{ alignItems: "center" }}>
+              <Valve />
+              <Text>Valve</Text>
+            </View>
+            <View style={{ alignItems: "center", marginTop: 2 }}>
+              <Text>{opModeTitle(data.damperOpMode)}</Text>
+              <Text>{data.damperPos}</Text>
+            </View>
+          </View>
+          <View style={{ borderRightWidth: 1.5, borderColor: Colors.DetailsLight }} />
+          <View style={{ width: "25%", alignItems: "center", backgroundColor: Colors.TextLight }}>
+            <View style={{ alignItems: "center" }}>
+              <Heating />
+              <Text>Heating</Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Text>{opModeTitle(data.heaterOpMode)}</Text>
+              <Text>{data.heatingValvePos}%</Text>
+            </View>
+          </View>
+          <View style={{ borderRightWidth: 1.5, borderColor: Colors.DetailsLight }} />
+          <View style={{ width: "25%", alignItems: "center", backgroundColor: Colors.TextLight }}>
+            <View style={{ alignItems: "center" }}>
+              <Sprayer />
+              <Text>Sprayer</Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Text>{opModeTitle(data.sprayOpMode)}</Text>
+              <Text>{data.sprayPos}%</Text>
+            </View>
+          </View>
+          <View style={{ borderRightWidth: 1.5, borderColor: Colors.DetailsLight }} />
+          <View style={{ width: "25%", alignItems: "center", backgroundColor: Colors.TextLight, borderTopRightRadius: Config.deviceWidth * 0.02, borderBottomRightRadius: Config.deviceWidth * 0.02 }}>
+            <View style={{ alignItems: "center" }}>
+              <FanDirection />
+              <Text>Direction</Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Text>{opModeFanTitle(data.fansOpMode)}</Text>
+              <Text>{directionTitle(data.fanDirection)}</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={{
+          alignSelf: "center",
+          width: "90%"
+        }}>
+          <Text style={{ fontFamily: "noto-sans-jp-regular" }}>Information</Text>
+          <TouchableOpacity onPress={handleCTModal}>
+            <Text>Core temperatures</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleWMModal}>
+            <Text>Measurements</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.navigate("Graph",
+              {
+                machineId: props.route.params.machineId,
+              });
+          }}
+        >
+          <View style={styles.graphBox}>
+            <Text>View graph</Text>
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
+      <BottomSheetModal
+        ref={bottomSheetCTModalRef}
+        index={0}
+        snapPoints={["48%"]}
+        backgroundStyle={{
+          borderRadius: Config.deviceWidth * 0.08, elevation: 4
+        }}
+        onDismiss={() => setModalOpen(false)}
+      >
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <Text style={{ fontFamily: "noto-sans-jp-bold" }}>Core temperatures</Text>
+          {data.CTs?.slice(0, data.numOfCTProbes).map((ct) => {
+            return (
+              <View key={ct.id} style={{ width: "90%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <Text style={{ fontFamily: "noto-sans-jp-regular" }}>Core T{ct.id}</Text>
+                <Text style={{ fontFamily: "noto-sans-jp-regular" }}>{ct.value}</Text>
+              </View>
             )
           })}
         </View>
-      </View>
-      <TouchableOpacity
-        onPress={() => {
-          props.navigation.navigate("Graph");
-        }}
+      </BottomSheetModal>
+      <BottomSheetModal
+        ref={bottomSheetWMModalRef}
+        index={0}
+        snapPoints={["48%"]}
+        backgroundStyle={{ borderRadius: Config.deviceWidth * 0.08, elevation: 4 }}
+        onDismiss={() => setModalOpen(false)}
       >
-        <View style={styles.graphBox}>
-          <Text>View graph</Text>
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <Text style={{ fontFamily: "noto-sans-jp-bold" }}>Measurements</Text>
+          {data.WMs?.slice(0, data.numOfWmProbes).map((wm) => {
+            return (
+              <View key={wm.id} style={{ width: "90%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <Text>M{wm.id}</Text>
+                <Text>{wm.value}</Text>
+                <Switch
+                  trackColor={{
+                    true: Colors.PrimaryForeground,
+                    false: Platform.OS == "android" ? Colors.DetailsLight : "#fbfbfb",
+                  }}
+                  thumbColor={
+                    Platform.OS == "ios"
+                      ? "#FFFFFF"
+                      : wm.active
+                        ? Colors.PrimaryForeground
+                        : "#ffffff"
+                  }
+                  ios_backgroundColor="#fbfbfb"
+                  onValueChange={(value) => onWMChange(wm.id, wm.value, value)}
+                  value={wm.active}
+                  style={
+                    wm.active
+                      ? styles.switchEnableBorder
+                      : styles.switchDisableBorder
+                  }
+                />
+
+              </View>
+            )
+          })}
         </View>
-      </TouchableOpacity>
-    </ScrollView>
+      </BottomSheetModal>
+    </BottomSheetModalProvider>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: Colors.PrimaryBackground + "1a", // opacity of 0.1
     // alignItems: "center",
     width: "100%",
   },

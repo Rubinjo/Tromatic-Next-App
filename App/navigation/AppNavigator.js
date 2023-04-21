@@ -5,9 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import DetailsScreen from "../screens/DetailsScreen";
-import OverviewScreen, {
-  tabOptions as overviewTabOptions,
-} from "../screens/OverviewScreen";
+import OverviewScreen, { tabOptions as overviewTabOptions } from "../screens/OverviewScreen";
 import GraphScreen from "../screens/GraphScreen";
 import GraphSelectorScreen from "../screens/GraphSelectorScreen";
 import ResetConfirmScreen, {
@@ -31,6 +29,7 @@ import Colors from "../assets/constants/colors";
 const defaultStackOptions = {
   headerStyle: { backgroundColor: Colors.PrimaryBackground },
   headerTitle: "",
+  headerTitleAlign: "center",
   headerTintColor: Colors.TextLight,
 };
 const defaultTabOptions = {

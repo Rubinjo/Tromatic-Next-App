@@ -9,8 +9,8 @@ const messagingSenderId = process.env.MESSAGINGSENDERID
 const appId = process.env.APPID
 
 export default {
-  name: "Tromatic Next",
-  slug: "Tromatic-Next",
+  name: "Tromatic NEXT",
+  slug: "Tromatic-NEXT",
   version: "1.0.0",
   platforms: ["ios", "android"],
   orientation: "portrait",
@@ -31,7 +31,7 @@ export default {
     supportsTablet: true
   },
   android: {
-    package: "nl.bes_bollmann.tromatic",
+    package: "nl.bes-bollmann.tromatic-next",
     adaptiveIcon: {
       foregroundImage: "./assets/adaptive-icon.png",
       backgroundColor: "#FFFFFF"

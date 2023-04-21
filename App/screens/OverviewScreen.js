@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
-  Text,
-  View,
-  Button,
+  SafeAreaView,
   FlatList,
-  TouchableOpacity,
+  View
 } from "react-native";
 import {
   NavigationContainer,
   CommonActions,
   useNavigation,
 } from "@react-navigation/native";
-import { Entypo } from '@expo/vector-icons';
+import TromaticNextLogo from "../assets/logos/Tromatic_Next";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, onValue } from "firebase/database";
 
@@ -119,7 +117,7 @@ const OverviewScreen = (props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         keyExtractor={(item, index) => item.id}
         data={data}
@@ -127,7 +125,7 @@ const OverviewScreen = (props) => {
         // extraData={data}
         contentContainerStyle={{ paddingVertical: Config.deviceHeight * 0.01 }}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -144,6 +142,16 @@ export const tabOptions = (navData) => {
     headerShown: false,
   };
 };
+
+// export const stackOptions = (navData) => {
+//   return {
+//     headerTitle: (props) => {
+//       return (
+//         <TromaticNextLogo width={Config.deviceWidth * 0.3} height={Config.deviceWidth * 0.3 * 0.3636} viewBox={"0 0 " + Config.deviceWidth * 0.7 + " " + Config.deviceWidth * 0.6 * 0.5} />
+//       )
+//     }
+//   }
+// }
 
 const styles = StyleSheet.create({
   container: {

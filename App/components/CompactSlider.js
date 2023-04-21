@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
     View,
     Text,
@@ -8,51 +8,61 @@ import {
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import { fancyTimeFormat } from "../utils/helper"
+import Stopwatch from "../assets/icons/Stopwatch"
 
 import { Slider } from "@miblanchard/react-native-slider";
 
 const FullSlider = (props) => {
-    // const [timer, setTimer] = useState(0)
-
-    // useEffect(() => {
-    //     setTimer(props.remainingTime)
-    //     const scheduler = () => {
-    //         setTimer((timer) => {
-    //             if (timer > 0) {
-    //                 return timer - 1
-    //             } else {
-    //                 clearInterval(interval)
-    //                 return timer
-    //             }
-    //         })
-    //     }
-    //     const interval = setInterval(scheduler, 1000)
-    //     return () => clearInterval(interval)
-    // }, [props.remainingTime])
 
     return (
-        <View>
+        <View style={{ height: "100%" }}>
             <Slider
                 trackStyle={styles.track}
                 thumbStyle={styles.thumb}
                 maximumValue={props.totalTime}
                 step={1}
                 value={props.remainingTime}
-                // onValueChange={(value) => setValue(value)}
                 disabled={true}
-                minimumTrackTintColor={Colors.PrimaryColor}
-                maximumTrackTintColor={Colors.SecondaryColor}
+                minimumTrackTintColor={Colors.PrimaryForeground}
+                maximumTrackTintColor={Colors.PrimaryBackground}
             />
-            <Text style={{ position: "absolute", alignSelf: "center", top: "30%", color: "white" }}>
-                {fancyTimeFormat(props.remainingTime)}
-            </Text>
+            <View
+                style={{
+                    height: "100%",
+                    position: "absolute",
+                    flexDirection: "row",
+                    alignSelf: "center",
+                }}
+            >
+                <View style={{ height: "100%", flexDirection: "row", paddingHorizontal: 3 + Config.deviceWidth * 0.03 }}>
+                    <Stopwatch style={{ alignSelf: "center", paddingHorizontal: Config.deviceWidth * 0.02, marginTop: Config.deviceHeight * 0.018 }} viewBox={"0 0 " + Config.deviceWidth * 0.06 + " " + Config.deviceWidth * 0.06} />
+                    <Text
+                        style={{
+                            fontFamily: "noto-sans-jp-regular",
+                            color: Colors.TextLight,
+                            paddingHorizontal: Config.deviceWidth * 0.02,
+                            marginTop: Config.deviceHeight * 0.003
+                        }}
+                    >
+                        Time remaining
+                    </Text>
+                </View>
+                <Text style={{
+                    fontFamily: "noto-sans-jp-bold",
+                    color: Colors.TextLight,
+                    paddingHorizontal: 3 + Config.deviceWidth * 0.03,
+                    marginTop: Config.deviceHeight * 0.003
+                }}>
+                    {fancyTimeFormat(props.remainingTime)}
+                </Text>
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     track: {
-        height: Config.deviceHeight * 0.028,
+        height: "100%"
     },
     thumb: {
         opacity: 0,

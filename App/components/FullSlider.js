@@ -25,8 +25,10 @@ const FullSlider = (props) => {
                     step={1}
                     value={props.remainingTime}
                     // disabled={true}
-                    minimumTrackTintColor={Colors.PrimaryForeground}
-                    maximumTrackTintColor={Colors.PrimaryBackground}
+                    minimumTrackStyle={{ backgroundColor: props.remainingTime == 0 ? "transparent" : Colors.PrimaryForeground }}
+                    maximumTrackStyle={{ backgroundColor: props.remainingTime == 0 ? "transparent" : Colors.PrimaryBackground, borderWidth: props.remainingTime == 0 ? Config.deviceWidth * 0.005 : 0, borderColor: props.remainingTime == 0 ? Colors.Active : null }}
+                // minimumTrackTintColor={props.remainingTime == 0 ? "transparent" : Colors.PrimaryForeground}
+                // maximumTrackTintColor={ }
                 />
             </View>
             <View
@@ -37,24 +39,24 @@ const FullSlider = (props) => {
                 }}
             >
                 <View style={{ flexDirection: "row", paddingHorizontal: 3 + Config.deviceWidth * 0.03 }}>
-                    <Stopwatch style={{ alignSelf: "center", paddingHorizontal: Config.deviceWidth * 0.02 }} />
+                    {props.remainingTime > 0 && <Stopwatch style={{ alignSelf: "center", paddingHorizontal: Config.deviceWidth * 0.02 }} />}
                     <Text
                         style={{
-                            fontFamily: "noto-sans-jp-regular",
-                            color: Colors.TextLight,
+                            fontFamily: props.remainingTime == 0 ? "noto-sans-jp-bold" : "noto-sans-jp-regular",
+                            color: props.remainingTime == 0 ? Colors.Active : Colors.TextLight,
                             paddingHorizontal: Config.deviceWidth * 0.02,
                         }}
                     >
-                        Time remaining
+                        {props.remainingTime == 0 ? "Ready for operation" : "Time remainin"}
                     </Text>
                 </View>
-                <Text style={{
+                {props.remainingTime > 0 && <Text style={{
                     fontFamily: "noto-sans-jp-bold",
                     color: Colors.TextLight,
                     paddingHorizontal: 3 + Config.deviceWidth * 0.03
                 }}>
                     {fancyTimeFormat(props.remainingTime)}
-                </Text>
+                </Text>}
             </View>
         </View>
     )

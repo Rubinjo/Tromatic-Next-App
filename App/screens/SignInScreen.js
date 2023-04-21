@@ -165,6 +165,7 @@ const SignInScreen = (props) => {
               value={password}
               onChangeText={(password) => setPassword(password)}
               importantForAutofill="yes"
+              secureTextEntry={true}
             /></View>
         </View>
         <View

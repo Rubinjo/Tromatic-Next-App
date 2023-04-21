@@ -11,8 +11,8 @@ const Counter = (props) => {
         style={[
           styles.input,
           {
-            borderTopLeftRadius: Config.deviceWidth * 0.03,
-            borderTopRightRadius: Config.deviceWidth * 0.03,
+            borderTopLeftRadius: Config.deviceWidth * 0.02,
+            borderTopRightRadius: Config.deviceWidth * 0.02,
           },
         ]}
       >
@@ -43,7 +43,7 @@ const Counter = (props) => {
       >
         <View style={{ height: "100%", width: "50%", backgroundColor: Colors.DetailsLight, justifyContent: "center" }}>
           <Text style={{ fontFamily: "noto-sans-jp-regular", fontSize: Config.deviceHeight * 0.014, position: "absolute", top: "-15%", right: "4%" }}>
-            A
+            ACT
           </Text>
           <Text
             style={[
@@ -62,7 +62,7 @@ const Counter = (props) => {
         <View style={{ height: "100%", borderLeftWidth: 1, borderColor: Colors.DetailsLight }} />
         <View style={{ height: "100%", width: "50%", justifyContent: "center" }}>
           <Text style={{ fontFamily: "noto-sans-jp-regular", fontSize: Config.deviceHeight * 0.014, position: "absolute", top: "-15%", right: "4%" }}>
-            S
+            SET
           </Text>
           <Text
             style={[
@@ -84,8 +84,8 @@ const Counter = (props) => {
         style={[
           styles.input,
           {
-            borderBottomLeftRadius: Config.deviceWidth * 0.03,
-            borderBottomRightRadius: Config.deviceWidth * 0.03,
+            borderBottomLeftRadius: Config.deviceWidth * 0.02,
+            borderBottomRightRadius: Config.deviceWidth * 0.02,
           },
         ]}
       >

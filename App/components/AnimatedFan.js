@@ -36,7 +36,6 @@ const AnimatedFan = (props) => {
                     transform: [{ rotate: interpolateRotation }]
                 }}
             />
-            <Text style={{ position: "absolute", alignSelf: "center", top: "45%", color: "black" }}>{props.rpm}</Text>
         </View>
     );
 };

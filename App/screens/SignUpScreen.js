@@ -170,6 +170,7 @@ const SignUpScreen = (props) => {
               textContentType="newPassword"
               value={password}
               onChangeText={(password) => setPassword(password)}
+              secureTextEntry={true}
             />
           </View>
           <View style={styles.textInputBox}>
@@ -187,6 +188,7 @@ const SignUpScreen = (props) => {
               textContentType="newPassword"
               value={confirmPassword}
               onChangeText={(password2) => setConfirmPassword(password2)}
+              secureTextEntry={true}
             />
           </View>
         </View>
