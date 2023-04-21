@@ -71,27 +71,27 @@ const GraphScreen = (props) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            selectGraphTime(12);
+            selectGraphTime(10);
           }}
           style={
-            activeTimeNum == 12
+            activeTimeNum == 10
               ? [
                   styles.selectionContainerActive,
                   { borderLeftWidth: 1, borderRightWidth: 1 },
                 ]
-              : activeTimeNum == 12
+              : activeTimeNum == 10
               ? [styles.selectionContainer, { borderRightWidth: 1 }]
               : [styles.selectionContainer, { borderLeftWidth: 1 }]
           }
         >
           <Text
             style={
-              activeTimeNum == 12
+              activeTimeNum == 10
                 ? styles.selectionTextActive
                 : styles.selectionText
             }
           >
-            12 hours
+            10 hours
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
