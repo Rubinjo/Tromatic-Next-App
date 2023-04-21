@@ -19,6 +19,7 @@ import { getDatabase, ref, onValue, update } from "firebase/database";
 import Config from "../utils/config";
 import i18n from "../utils/i18n";
 import Colors from "../assets/constants/colors";
+import { fancyTimeFormat } from "../utils/helper"
 import CompactSlider from "../components/CompactSlider"
 
 import Counter from "../components/Counter";
@@ -335,6 +336,7 @@ const GraphScreen = (props) => {
         <CompactSlider remainingTime={dataFB.remainingTime} totalTime={dataFB.totalTime}/>
       </View>
       <Text>List test:</Text>
+      <Text totalTime={dataFB.totalTime}>Test</Text>
     </View>
   );
 };
