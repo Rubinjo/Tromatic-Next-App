@@ -43,3 +43,4 @@ yarn-error.log*
 # vercel
 *.vercel
 App/assets/config/keys.js
+App/.vscode/settings.json
