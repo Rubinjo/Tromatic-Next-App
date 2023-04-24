@@ -33,74 +33,64 @@ const OverviewScreen = (props) => {
 					const parsRef = ref(db, "machines/" + childKey);
 					onValue(parsRef, (snapshot) => {
 						const parData = snapshot.val();
-						fetchedData.push(
-							new Machine(
-								childKey,
-								cid,
-								parData.DeviceName,
-								childData.Creation,
-								parData.CurrentHum,
-								parData.CurrentTemp,
-								parData.DamperPos,
-								parData.EMCOffset,
-								parData.FanDirection,
-								parData.HeatingValvePos,
-								parData.NumOfWmProbes,
-								parData.RPM,
-								parData.RemainingTime,
-								parData.TotalTime,
-								parData.SetPointHum,
-								parData.SetPointTemp,
-								parData.SprayPos,
-								parData.Status,
-								parData.TempOffset,
-								new Date(parData.DateTimeMessage),
-								parData.NumOfCTProbes,
-								parData.DamperOpMode,
-								parData.HeaterOpMode,
-								parData.SprayOpMode,
-								parData.FansOpMode,
-								parData.WMValue1,
-								parData.WMValue2,
-								parData.WMValue3,
-								parData.WMValue4,
-								parData.WMValue5,
-								parData.WMValue6,
-								parData.WMValue7,
-								parData.WMValue8,
-								parData.WMValue9,
-								parData.WMValue10,
-								parData.WMActive1,
-								parData.WMActive2,
-								parData.WMActive3,
-								parData.WMActive4,
-								parData.WMActive5,
-								parData.WMActive6,
-								parData.WMActive7,
-								parData.WMActive8,
-								parData.WMActive9,
-								parData.WMActive10
-							)
+						const machineData = new Machine(
+							childKey,
+							cid,
+							parData.DeviceName,
+							childData.Creation,
+							parData.CurrentHum,
+							parData.CurrentTemp,
+							parData.DamperPos,
+							parData.EMCOffset,
+							parData.FanDirection,
+							parData.HeatingValvePos,
+							parData.NumOfWmProbes,
+							parData.RPM,
+							parData.RemainingTime,
+							parData.TotalTime,
+							parData.SetPointHum,
+							parData.SetPointTemp,
+							parData.SprayPos,
+							parData.Status,
+							parData.TempOffset,
+							new Date(parData.DateTimeMessage),
+							parData.NumOfCTProbes,
+							parData.DamperOpMode,
+							parData.HeaterOpMode,
+							parData.SprayOpMode,
+							parData.FansOpMode,
+							parData.WMValue1,
+							parData.WMValue2,
+							parData.WMValue3,
+							parData.WMValue4,
+							parData.WMValue5,
+							parData.WMValue6,
+							parData.WMValue7,
+							parData.WMValue8,
+							parData.WMValue9,
+							parData.WMValue10,
+							parData.WMActive1,
+							parData.WMActive2,
+							parData.WMActive3,
+							parData.WMActive4,
+							parData.WMActive5,
+							parData.WMActive6,
+							parData.WMActive7,
+							parData.WMActive8,
+							parData.WMActive9,
+							parData.WMActive10
 						);
-						const new_data = fetchedData
-							.reverse()
-							.reduce(function (filtered, machine) {
-								if (
-									!filtered.some(
-										(filMachine) =>
-											filMachine.id === machine.id
-									)
-								) {
-									filtered.push(machine);
-								}
-								return filtered;
-							}, []);
-						const sorted_data = new_data.sort(function (a, b) {
-							return (
-								a.id.split("_").at(-1) - b.id.split("_").at(-1)
-							);
-						});
-						setData(sorted_data);
+
+						const index = fetchedData.findIndex(
+							(i) => i.id === childKey
+						);
+						if (index > -1) {
+							fetchedData.splice(index, 1, machineData);
+						} else {
+							fetchedData.push(machineData);
+						}
+
+						setData([...fetchedData]);
 					});
 				});
 			});

@@ -19,7 +19,7 @@ const FullSlider = (props) => {
 					minimumValue={-props.totalTime * 0.08} // Ensure track border radius stays intact
 					step={1}
 					value={props.remainingTime}
-					// disabled={true}
+					disabled={true}
 					minimumTrackStyle={{
 						backgroundColor:
 							props.remainingTime == 0
