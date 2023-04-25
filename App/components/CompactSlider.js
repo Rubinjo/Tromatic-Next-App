@@ -18,8 +18,8 @@ const FullSlider = (props) => {
 				step={1}
 				value={props.remainingTime}
 				disabled={true}
-				minimumTrackTintColor={Colors.PrimaryForeground}
-				maximumTrackTintColor={Colors.PrimaryBackground}
+				minimumTrackTintColor={Colors.Secondary}
+				maximumTrackTintColor={Colors.Primary}
 			/>
 			<View
 				style={{
@@ -40,13 +40,13 @@ const FullSlider = (props) => {
 				>
 					<Stopwatch
 						width={Config.deviceWidth * 0.05}
-						color={Colors.TextLight}
+						color={Colors.PrimaryLight}
 						marginTop={Config.deviceHeight * 0.005}
 					/>
 					<Text
 						style={{
 							fontFamily: "noto-sans-jp-regular",
-							color: Colors.TextLight,
+							color: Colors.PrimaryLight,
 							paddingHorizontal: Config.deviceWidth * 0.02,
 						}}
 					>
@@ -55,7 +55,7 @@ const FullSlider = (props) => {
 					<Text
 						style={{
 							fontFamily: "noto-sans-jp-bold",
-							color: Colors.TextLight,
+							color: Colors.PrimaryLight,
 							paddingHorizontal: 3 + Config.deviceWidth * 0.03,
 							marginTop: Config.deviceHeight * 0.003,
 						}}

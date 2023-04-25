@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { View, Text, StyleSheet, Platform } from "react-native";
 
 import Config from "../utils/config";
@@ -24,13 +24,13 @@ const FullSlider = (props) => {
 						backgroundColor:
 							props.remainingTime == 0
 								? "transparent"
-								: Colors.PrimaryForeground,
+								: Colors.Secondary,
 					}}
 					maximumTrackStyle={{
 						backgroundColor:
 							props.remainingTime == 0
 								? "transparent"
-								: Colors.PrimaryBackground,
+								: Colors.Primary,
 						borderWidth:
 							props.remainingTime == 0
 								? Config.deviceWidth * 0.005
@@ -38,8 +38,6 @@ const FullSlider = (props) => {
 						borderColor:
 							props.remainingTime == 0 ? Colors.Active : null,
 					}}
-					// minimumTrackTintColor={props.remainingTime == 0 ? "transparent" : Colors.PrimaryForeground}
-					// maximumTrackTintColor={ }
 				/>
 			</View>
 			<View
@@ -61,7 +59,7 @@ const FullSlider = (props) => {
 					{props.remainingTime > 0 && (
 						<Stopwatch
 							width={Config.deviceWidth * 0.052}
-							color={Colors.TextLight}
+							color={Colors.PrimaryLight}
 							style={{
 								alignSelf: "center",
 								paddingHorizontal: Config.deviceWidth * 0.02,
@@ -77,7 +75,7 @@ const FullSlider = (props) => {
 							color:
 								props.remainingTime == 0
 									? Colors.Active
-									: Colors.TextLight,
+									: Colors.PrimaryLight,
 							paddingHorizontal: Config.deviceWidth * 0.02,
 						}}
 					>
@@ -90,7 +88,7 @@ const FullSlider = (props) => {
 					<Text
 						style={{
 							fontFamily: "noto-sans-jp-bold",
-							color: Colors.TextLight,
+							color: Colors.PrimaryLight,
 							paddingHorizontal: 3 + Config.deviceWidth * 0.03,
 						}}
 					>

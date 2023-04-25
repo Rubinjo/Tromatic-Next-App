@@ -157,14 +157,14 @@ const SettingsScreen = (props) => {
 					<Text
 						style={{
 							fontFamily: "noto-sans-jp-regular",
-							color: Colors.TextDark,
+							color: Colors.SecondaryDark,
 						}}
 					>
 						Logged in as
 					</Text>
 					<View
 						style={{
-							backgroundColor: Colors.TextLight,
+							backgroundColor: Colors.PrimaryLight,
 							borderRadius: 9,
 							flexDirection: "row",
 						}}
@@ -226,7 +226,7 @@ const SettingsScreen = (props) => {
 					{isLoading ? (
 						<ActivityIndicator
 							size="large"
-							color={Colors.SecondaryColor}
+							color={Colors.Secondary}
 						/>
 					) : (
 						<TouchableOpacity
@@ -242,21 +242,21 @@ const SettingsScreen = (props) => {
 					<Text
 						style={{
 							fontFamily: "noto-sans-jp-regular",
-							color: Colors.TextDark,
+							color: Colors.PrimaryDark,
 						}}
 					>
 						Language
 					</Text>
 					<DropDownPicker
 						style={{
-							borderColor: Colors.DetailsLight,
+							borderColor: Colors.SecondaryLight,
 							borderRadius: 9,
 							paddingHorizontal: Config.deviceWidth * 0.04,
 							paddingVertical: Config.deviceWidth * 0.035,
 						}}
 						dropDownContainerStyle={{
 							alignSelf: "center",
-							borderColor: Colors.DetailsLight,
+							borderColor: Colors.SecondaryLight,
 							borderRadius: 9,
 							paddingHorizontal: Config.deviceWidth * 0.02,
 						}}
@@ -282,14 +282,14 @@ const SettingsScreen = (props) => {
 					<Text
 						style={{
 							fontFamily: "noto-sans-jp-regular",
-							color: Colors.TextDark,
+							color: Colors.PrimaryDark,
 						}}
 					>
 						Notifications
 					</Text>
 					<View
 						style={{
-							backgroundColor: Colors.TextLight,
+							backgroundColor: Colors.PrimaryLight,
 							borderRadius: 9,
 							paddingLeft: Config.deviceWidth * 0.04,
 							paddingVertical:
@@ -316,13 +316,13 @@ const SettingsScreen = (props) => {
 								}}
 								disabled={true}
 								trackColor={{
-									false: Colors.DetailsLight,
-									true: Colors.PrimaryForeground,
+									false: Colors.SecondaryLight,
+									true: Colors.Secondary,
 								}}
 								thumbColor={
 									notification
-										? Colors.PrimaryForeground
-										: Colors.DetailsLight
+										? Colors.Secondary
+										: Colors.SecondaryLight
 								}
 								onValueChange={() =>
 									setNotification((prev) => !prev)
@@ -336,14 +336,14 @@ const SettingsScreen = (props) => {
 					<Text
 						style={{
 							fontFamily: "noto-sans-jp-regular",
-							color: Colors.TextDark,
+							color: Colors.PrimaryDark,
 						}}
 					>
 						Information
 					</Text>
 					<View
 						style={{
-							backgroundColor: Colors.TextLight,
+							backgroundColor: Colors.PrimaryLight,
 							borderRadius: 9,
 							paddingLeft: Config.deviceWidth * 0.04,
 							paddingVertical:
@@ -366,9 +366,7 @@ export const tabOptions = (navData) => {
 	return {
 		tabBarIcon: (props) => {
 			let iconColor;
-			iconColor = props.focused
-				? Colors.PrimaryBackground
-				: Colors.TextDarkest;
+			iconColor = props.focused ? Colors.Primary : Colors.PrimaryDark;
 			return (
 				<Settings
 					width={Config.deviceWidth * 0.067}
@@ -382,13 +380,13 @@ export const tabOptions = (navData) => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: Colors.PrimaryBackground + "1a", // opacity of 0.1
+		backgroundColor: Colors.Primary + "1a", // opacity of 0.1
 		alignItems: "center",
 		// justifyContent: "center",
 	},
 	headText: {
 		fontFamily: "noto-sans-jp-bold",
-		color: Colors.PrimaryForeground,
+		color: Colors.Secondary,
 		fontSize: Config.deviceWidth * 0.038,
 		textAlign: "center",
 	},
@@ -396,7 +394,7 @@ const styles = StyleSheet.create({
 		marginTop: Config.deviceHeight * 0.02,
 		borderRadius: 9,
 		borderWidth: 1,
-		borderColor: Colors.PrimaryForeground,
+		borderColor: Colors.Secondary,
 		paddingVertical:
 			Platform.OS === "ios" ? Config.deviceHeight * 0.015 : 0,
 	},
