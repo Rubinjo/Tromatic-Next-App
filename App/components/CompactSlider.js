@@ -51,7 +51,7 @@ const FullSlider = (props) => {
 							paddingHorizontal: Config.deviceWidth * 0.02,
 						}}
 					>
-						{i18n.t("general.readyForOperation")}
+						{i18n.t("general.timeRemaining")}
 					</Text>
 					<Text
 						style={{
