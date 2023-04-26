@@ -6,12 +6,12 @@ import en from "../locales/en.json";
 import nl from "../locales/nl.json";
 
 const i18n = new I18n({
-  ...en,
-  ...de,
-  ...nl,
+	...en,
+	...de,
+	...nl,
 });
 
-i18n.locale = "nl";
+i18n.locale = "en";
 
 // Fallback to English if user locale doesn't exists
 i18n.fallbacks = true;

@@ -160,7 +160,7 @@ const SettingsScreen = (props) => {
 							color: Colors.SecondaryDark,
 						}}
 					>
-						Logged in as
+						{i18n.t("general.loggedInAs")}
 					</Text>
 					<View
 						style={{
@@ -188,12 +188,12 @@ const SettingsScreen = (props) => {
 											: -Config.deviceWidth * 0.04,
 								}}
 							>
-								Full name
+								{i18n.t("general.fullName")}
 							</Text>
 							<Text
 								style={{ fontFamily: "noto-sans-jp-regular" }}
 							>
-								Company ID
+								{i18n.t("general.companyIdentification")}
 							</Text>
 						</View>
 						<View
@@ -233,7 +233,9 @@ const SettingsScreen = (props) => {
 							style={styles.button}
 							onPress={signOutUser}
 						>
-							<Text style={styles.headText}>Sign out</Text>
+							<Text style={styles.headText}>
+								{i18n.t("authentication.signOut")}
+							</Text>
 						</TouchableOpacity>
 					)}
 				</View>
@@ -245,7 +247,7 @@ const SettingsScreen = (props) => {
 							color: Colors.PrimaryDark,
 						}}
 					>
-						Language
+						{i18n.t("general.language")}
 					</Text>
 					<DropDownPicker
 						style={{
@@ -285,7 +287,7 @@ const SettingsScreen = (props) => {
 							color: Colors.PrimaryDark,
 						}}
 					>
-						Notifications
+						{i18n.t("general.notifications")}
 					</Text>
 					<View
 						style={{
@@ -307,7 +309,7 @@ const SettingsScreen = (props) => {
 							<Text
 								style={{ fontFamily: "noto-sans-jp-regular" }}
 							>
-								Notifications
+								{i18n.t("general.notifications")}
 							</Text>
 							<Switch
 								style={{
@@ -339,7 +341,7 @@ const SettingsScreen = (props) => {
 							color: Colors.PrimaryDark,
 						}}
 					>
-						Information
+						{i18n.t("general.information")}
 					</Text>
 					<View
 						style={{
@@ -353,7 +355,8 @@ const SettingsScreen = (props) => {
 						}}
 					>
 						<Text style={{ fontFamily: "noto-sans-jp-regular" }}>
-							Version: {Constants.manifest.version}
+							{i18n.t("general.version")}{" "}
+							{Constants.manifest.version}
 						</Text>
 					</View>
 				</View>

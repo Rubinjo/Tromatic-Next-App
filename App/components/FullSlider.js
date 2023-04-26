@@ -7,6 +7,7 @@ import { fancyTimeFormat } from "../utils/helper";
 
 import { Slider } from "@miblanchard/react-native-slider";
 import Stopwatch from "../assets/icons/Stopwatch";
+import i18n from "../utils/i18n";
 
 const FullSlider = (props) => {
 	return (
@@ -79,9 +80,11 @@ const FullSlider = (props) => {
 							paddingHorizontal: Config.deviceWidth * 0.02,
 						}}
 					>
-						{props.remainingTime == 0
-							? "Ready for operation"
-							: "Time remainin"}
+						{props.remainingTime == 0 ? (
+							<Text>{i18n.t("general.readyForOperation")}</Text>
+						) : (
+							<Text>{i18n.t("general.timeRemaining")}</Text>
+						)}
 					</Text>
 				</View>
 				{props.remainingTime > 0 && (

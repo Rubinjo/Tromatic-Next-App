@@ -8,7 +8,8 @@
       "cancel": "Annuleren",
       "retry": "Iets is fout gegaan, probeer het opnieuw",
       "lastUpdated": "Laatst geupdate",
-      "today": "Vandaag"
+      "today": "Vandaag",
+      "loggedInAs": "User login informatie"
     },
     "authentication": {
       "welcome": "Welkom",

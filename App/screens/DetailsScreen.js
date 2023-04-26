@@ -405,7 +405,7 @@ const DetailsScreen = (props) => {
 											: -Config.deviceHeight * 0.008,
 								}}
 							>
-								Temperature
+								{i18n.t("general.temperature")}
 							</Text>
 							<Counter
 								item={"setPointTemp"}
@@ -432,7 +432,7 @@ const DetailsScreen = (props) => {
 											: -Config.deviceHeight * 0.008,
 								}}
 							>
-								RPM
+								{i18n.t("general.rpm")}
 							</Text>
 							<View
 								style={{
@@ -470,7 +470,7 @@ const DetailsScreen = (props) => {
 											: -Config.deviceHeight * 0.008,
 								}}
 							>
-								Woodmoisture
+								{i18n.t("general.woodMoisture")}
 							</Text>
 							<View
 								style={{
@@ -490,7 +490,7 @@ const DetailsScreen = (props) => {
 												: -Config.deviceHeight * 0.006,
 									}}
 								>
-									?%
+									-%
 								</Text>
 							</View>
 						</View>
@@ -511,7 +511,7 @@ const DetailsScreen = (props) => {
 											: -Config.deviceHeight * 0.008,
 								}}
 							>
-								Humidity
+								{i18n.t("general.humidity")}
 							</Text>
 							<Counter
 								item={"setPointHum"}
@@ -561,7 +561,7 @@ const DetailsScreen = (props) => {
 										fontSize: Config.deviceHeight * 0.012,
 									}}
 								>
-									Valves
+									{i18n.t("general.valves")}
 								</Text>
 							</View>
 							<View
@@ -629,7 +629,7 @@ const DetailsScreen = (props) => {
 										fontSize: Config.deviceHeight * 0.012,
 									}}
 								>
-									Heating
+									{i18n.t("general.heating")}
 								</Text>
 							</View>
 							<View
@@ -697,7 +697,7 @@ const DetailsScreen = (props) => {
 										fontSize: Config.deviceHeight * 0.012,
 									}}
 								>
-									Sprayer
+									{i18n.t("general.sprayer")}
 								</Text>
 							</View>
 							<View
@@ -768,7 +768,7 @@ const DetailsScreen = (props) => {
 										fontSize: Config.deviceHeight * 0.012,
 									}}
 								>
-									Direction
+									{i18n.t("general.direction")}
 								</Text>
 							</View>
 							<View
@@ -836,7 +836,7 @@ const DetailsScreen = (props) => {
 										fontFamily: "noto-sans-jp-regular",
 									}}
 								>
-									Core temperatures
+									{i18n.t("general.coreTemperatures")}
 								</Text>
 								<MaterialIcons
 									name="keyboard-arrow-down"
@@ -900,7 +900,7 @@ const DetailsScreen = (props) => {
 							<Text
 								style={{ fontFamily: "noto-sans-jp-regular" }}
 							>
-								View graph
+								{i18n.t("general.viewGraph")}
 							</Text>
 							<MaterialIcons
 								name="keyboard-arrow-right"
@@ -947,7 +947,7 @@ const DetailsScreen = (props) => {
 										color: Colors.PrimaryLight,
 									}}
 								>
-									Last updated
+									{i18n.t("general.lastUpdated")}
 								</Text>
 							</View>
 							<View
@@ -1010,7 +1010,7 @@ const DetailsScreen = (props) => {
 			>
 				<View style={{ flex: 1, alignItems: "center" }}>
 					<Text style={{ fontFamily: "noto-sans-jp-bold" }}>
-						Core temperatures
+						{i18n.t("general.coreTemperatures")}
 					</Text>
 					{data.CTs?.slice(0, data.numOfCTProbes).map((ct) => {
 						return (
@@ -1036,7 +1036,8 @@ const DetailsScreen = (props) => {
 											fontFamily: "noto-sans-jp-regular",
 										}}
 									>
-										Core T{ct.id}
+										{i18n.t("general.coreT")}
+										{ct.id}
 									</Text>
 									<Text
 										style={{
@@ -1071,7 +1072,7 @@ const DetailsScreen = (props) => {
 			>
 				<View style={{ flex: 1, alignItems: "center" }}>
 					<Text style={{ fontFamily: "noto-sans-jp-bold" }}>
-						Measurements
+						{i18n.t("general.measurements")}
 					</Text>
 					{data.WMs?.slice(0, data.numOfWmProbes).map((wm) => {
 						return (
