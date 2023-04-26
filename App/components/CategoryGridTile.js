@@ -115,7 +115,7 @@ const CategoryGridTile = (props) => {
 						>
 							<Thermometer
 								height={Config.deviceHeight * 0.04}
-								color={Colors.PrimaryForeground}
+								color={Colors.Secondary}
 							/>
 							<Text
 								style={{
@@ -137,7 +137,7 @@ const CategoryGridTile = (props) => {
 						<View
 							style={{
 								borderRightWidth: 2,
-								borderRightColor: Colors.DetailsLight,
+								borderRightColor: Colors.SecondaryLight,
 							}}
 						/>
 						<View
@@ -149,7 +149,7 @@ const CategoryGridTile = (props) => {
 						>
 							<Humidity
 								height={Config.deviceHeight * 0.04}
-								color={Colors.PrimaryForeground}
+								color={Colors.Secondary}
 							/>
 
 							<Text>{props.item.currentHum}%</Text>
@@ -158,7 +158,7 @@ const CategoryGridTile = (props) => {
 						<View
 							style={{
 								borderRightWidth: 2,
-								borderRightColor: Colors.DetailsLight,
+								borderRightColor: Colors.SecondaryLight,
 							}}
 						/>
 
@@ -169,13 +169,13 @@ const CategoryGridTile = (props) => {
 								justifyContent: "space-evenly",
 							}}
 						>
-							<Fan color={Colors.PrimaryForeground} />
+							<Fan color={Colors.Secondary} />
 							<Text>{props.item.RPM}%</Text>
 						</View>
 						<View
 							style={{
 								borderRightWidth: 2,
-								borderRightColor: Colors.DetailsLight,
+								borderRightColor: Colors.SecondaryLight,
 							}}
 						/>
 
@@ -188,7 +188,7 @@ const CategoryGridTile = (props) => {
 						>
 							<WoodThermometer
 								height={Config.deviceHeight * 0.04}
-								color={Colors.PrimaryForeground}
+								color={Colors.Secondary}
 							/>
 							<Text>
 								{Math.min(
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
 		width: "92%",
 		height: Config.deviceHeight * 0.3,
 		alignSelf: "center",
-		backgroundColor: Colors.TextLight,
+		backgroundColor: Colors.PrimaryLight,
 		borderRadius: Config.deviceWidth * 0.03,
 		marginVertical: Config.deviceHeight * 0.01,
 	},

@@ -26,7 +26,7 @@ const Counter = (props) => {
 					style={[
 						styles.text,
 						{
-							color: Colors.PrimaryForeground,
+							color: Colors.Secondary,
 							fontSize: Config.deviceHeight * 0.06,
 							marginTop:
 								Platform.OS === "ios"
@@ -46,7 +46,7 @@ const Counter = (props) => {
 						flexDirection: "row",
 						borderTopWidth: 1,
 						borderBottomWidth: 1,
-						borderColor: Colors.DetailsLight,
+						borderColor: Colors.SecondaryLight,
 					},
 				]}
 			>
@@ -54,7 +54,7 @@ const Counter = (props) => {
 					style={{
 						height: "100%",
 						width: "50%",
-						backgroundColor: Colors.DetailsLight,
+						backgroundColor: Colors.SecondaryLight,
 						justifyContent: "center",
 					}}
 				>
@@ -89,7 +89,7 @@ const Counter = (props) => {
 					style={{
 						height: "100%",
 						borderLeftWidth: 1,
-						borderColor: Colors.DetailsLight,
+						borderColor: Colors.SecondaryLight,
 					}}
 				/>
 				<View
@@ -140,7 +140,7 @@ const Counter = (props) => {
 					style={[
 						styles.text,
 						{
-							color: Colors.PrimaryForeground,
+							color: Colors.Secondary,
 							fontSize: Config.deviceHeight * 0.07,
 							marginTop:
 								Platform.OS === "ios"
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
 	input: {
 		width: Config.deviceWidth * 0.24,
 		height: Config.deviceHeight * 0.07,
-		backgroundColor: Colors.TextLight,
+		backgroundColor: Colors.PrimaryLight,
 		alignItems: "center",
 		justifyContent: "center",
 	},

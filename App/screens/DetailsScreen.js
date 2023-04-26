@@ -355,8 +355,8 @@ const DetailsScreen = (props) => {
 									  )
 									: ""
 							}
-							tintColor={Colors.PrimaryForeground}
-							titleColor={Colors.TextDarkest}
+							tintColor={Colors.Secondary}
+							titleColor={Colors.PrimaryDark}
 							refreshing={refreshing}
 							onRefresh={onRefresh}
 						/>
@@ -393,7 +393,7 @@ const DetailsScreen = (props) => {
 						>
 							<Thermometer
 								height={Config.deviceHeight * 0.045}
-								color={Colors.PrimaryForeground}
+								color={Colors.Secondary}
 							/>
 							<Text
 								style={{
@@ -419,7 +419,7 @@ const DetailsScreen = (props) => {
 						>
 							<AnimatedFan
 								height={Config.deviceHeight * 0.09}
-								color={Colors.PrimaryBackground}
+								color={Colors.Primary}
 								direction={directionValue(data.fanDirection)}
 							/>
 							<Text
@@ -437,7 +437,7 @@ const DetailsScreen = (props) => {
 							<View
 								style={{
 									alignItems: "center",
-									backgroundColor: Colors.TextLight,
+									backgroundColor: Colors.PrimaryLight,
 									width: Config.deviceWidth * 0.3,
 									borderRadius: Config.deviceWidth * 0.02,
 									marginBottom: Config.deviceHeight * 0.02,
@@ -458,7 +458,7 @@ const DetailsScreen = (props) => {
 							</View>
 							<Wood
 								height={Config.deviceHeight * 0.062}
-								color={Colors.PrimaryBackground}
+								color={Colors.Primary}
 							/>
 							<Text
 								style={{
@@ -475,7 +475,7 @@ const DetailsScreen = (props) => {
 							<View
 								style={{
 									alignItems: "center",
-									backgroundColor: Colors.TextLight,
+									backgroundColor: Colors.PrimaryLight,
 									width: Config.deviceWidth * 0.3,
 									borderRadius: Config.deviceWidth * 0.02,
 								}}
@@ -499,7 +499,7 @@ const DetailsScreen = (props) => {
 						>
 							<Humidity
 								height={Config.deviceHeight * 0.045}
-								color={Colors.PrimaryForeground}
+								color={Colors.Secondary}
 							/>
 							<Text
 								style={{
@@ -535,7 +535,7 @@ const DetailsScreen = (props) => {
 						<View
 							style={{
 								width: "25%",
-								backgroundColor: Colors.TextLight,
+								backgroundColor: Colors.PrimaryLight,
 								borderTopLeftRadius: Config.deviceWidth * 0.02,
 								borderBottomLeftRadius:
 									Config.deviceWidth * 0.02,
@@ -552,7 +552,7 @@ const DetailsScreen = (props) => {
 								>
 									<Valve
 										width={Config.deviceWidth * 0.1}
-										color={Colors.PrimaryForeground}
+										color={Colors.Secondary}
 									/>
 								</View>
 								<Text
@@ -600,13 +600,13 @@ const DetailsScreen = (props) => {
 						<View
 							style={{
 								borderRightWidth: 1.5,
-								borderColor: Colors.DetailsLight,
+								borderColor: Colors.PrimaryLight,
 							}}
 						/>
 						<View
 							style={{
 								width: "25%",
-								backgroundColor: Colors.TextLight,
+								backgroundColor: Colors.PrimaryLight,
 							}}
 						>
 							<View
@@ -620,7 +620,7 @@ const DetailsScreen = (props) => {
 								>
 									<Heating
 										width={Config.deviceWidth * 0.07}
-										color={Colors.PrimaryForeground}
+										color={Colors.Secondary}
 									/>
 								</View>
 								<Text
@@ -668,13 +668,13 @@ const DetailsScreen = (props) => {
 						<View
 							style={{
 								borderRightWidth: 1.5,
-								borderColor: Colors.DetailsLight,
+								borderColor: Colors.PrimaryLight,
 							}}
 						/>
 						<View
 							style={{
 								width: "25%",
-								backgroundColor: Colors.TextLight,
+								backgroundColor: Colors.PrimaryLight,
 							}}
 						>
 							<View
@@ -688,7 +688,7 @@ const DetailsScreen = (props) => {
 								>
 									<Sprayer
 										width={Config.deviceWidth * 0.08}
-										color={Colors.PrimaryForeground}
+										color={Colors.Secondary}
 									/>
 								</View>
 								<Text
@@ -736,13 +736,13 @@ const DetailsScreen = (props) => {
 						<View
 							style={{
 								borderRightWidth: 1.5,
-								borderColor: Colors.DetailsLight,
+								borderColor: Colors.PrimaryLight,
 							}}
 						/>
 						<View
 							style={{
 								width: "25%",
-								backgroundColor: Colors.TextLight,
+								backgroundColor: Colors.PrimaryLight,
 								borderTopRightRadius: Config.deviceWidth * 0.02,
 								borderBottomRightRadius:
 									Config.deviceWidth * 0.02,
@@ -759,7 +759,7 @@ const DetailsScreen = (props) => {
 								>
 									<FanDirection
 										width={Config.deviceWidth * 0.12}
-										color={Colors.PrimaryForeground}
+										color={Colors.Secondary}
 									/>
 								</View>
 								<Text
@@ -820,7 +820,7 @@ const DetailsScreen = (props) => {
 									flexDirection: "row",
 									alignItems: "center",
 									justifyContent: "space-between",
-									backgroundColor: Colors.TextLight,
+									backgroundColor: Colors.PrimaryLight,
 									borderRadius: 9,
 									paddingHorizontal:
 										Config.deviceWidth * 0.04,
@@ -841,7 +841,7 @@ const DetailsScreen = (props) => {
 								<MaterialIcons
 									name="keyboard-arrow-down"
 									size={Config.deviceWidth * 0.06}
-									color={Colors.TextDarkest}
+									color={Colors.PrimaryDark}
 								/>
 							</TouchableOpacity>
 						)}
@@ -852,7 +852,7 @@ const DetailsScreen = (props) => {
 									flexDirection: "row",
 									alignItems: "center",
 									justifyContent: "space-between",
-									backgroundColor: Colors.TextLight,
+									backgroundColor: Colors.PrimaryLight,
 									borderRadius: 9,
 									paddingHorizontal:
 										Config.deviceWidth * 0.04,
@@ -873,7 +873,7 @@ const DetailsScreen = (props) => {
 								<MaterialIcons
 									name="keyboard-arrow-down"
 									size={Config.deviceWidth * 0.06}
-									color={Colors.TextDarkest}
+									color={Colors.PrimaryDark}
 								/>
 							</TouchableOpacity>
 						)}
@@ -883,7 +883,7 @@ const DetailsScreen = (props) => {
 								flexDirection: "row",
 								alignItems: "center",
 								justifyContent: "space-between",
-								backgroundColor: Colors.TextLight,
+								backgroundColor: Colors.PrimaryLight,
 								borderRadius: 9,
 								paddingHorizontal: Config.deviceWidth * 0.04,
 								paddingVertical:
@@ -905,14 +905,14 @@ const DetailsScreen = (props) => {
 							<MaterialIcons
 								name="keyboard-arrow-right"
 								size={Config.deviceWidth * 0.06}
-								color={Colors.TextDarkest}
+								color={Colors.PrimaryDark}
 							/>
 						</TouchableOpacity>
 					</View>
 					<TouchableOpacity
 						style={{
 							marginTop: Config.deviceHeight * 0.03,
-							backgroundColor: Colors.PrimaryBackground,
+							backgroundColor: Colors.Primary,
 							paddingVertical:
 								Platform.OS === "ios"
 									? Config.deviceHeight * 0.01
@@ -937,14 +937,14 @@ const DetailsScreen = (props) => {
 								<Feather
 									name="rotate-ccw"
 									size={Config.deviceWidth * 0.05}
-									color={Colors.TextLight}
+									color={Colors.PrimaryLight}
 								/>
 								<Text
 									style={{
 										paddingLeft: Config.deviceWidth * 0.04,
 										fontFamily: "noto-sans-jp-regular",
 										fontSize: Config.deviceWidth * 0.036,
-										color: Colors.TextLight,
+										color: Colors.PrimaryLight,
 									}}
 								>
 									Last updated
@@ -960,7 +960,7 @@ const DetailsScreen = (props) => {
 									style={{
 										fontFamily: "noto-sans-jp-bold",
 										fontSize: Config.deviceWidth * 0.036,
-										color: Colors.TextLight,
+										color: Colors.PrimaryLight,
 										paddingRight: Config.deviceWidth * 0.04,
 									}}
 								>
@@ -979,7 +979,7 @@ const DetailsScreen = (props) => {
 									style={{
 										fontFamily: "noto-sans-jp-bold",
 										fontSize: Config.deviceWidth * 0.036,
-										color: Colors.TextLight,
+										color: Colors.PrimaryLight,
 									}}
 								>
 									{data.dateTimeMessage
@@ -1050,7 +1050,7 @@ const DetailsScreen = (props) => {
 									<View
 										style={{
 											borderBottomWidth: 1,
-											borderColor: Colors.DetailsLight,
+											borderColor: Colors.PrimaryLight,
 										}}
 									/>
 								)}
@@ -1087,17 +1087,17 @@ const DetailsScreen = (props) => {
 									<Text>{wm.value}</Text>
 									<Switch
 										trackColor={{
-											true: Colors.PrimaryForeground,
+											true: Colors.Secondary,
 											false:
 												Platform.OS == "android"
-													? Colors.DetailsLight
+													? Colors.PrimaryLight
 													: "#fbfbfb",
 										}}
 										thumbColor={
 											Platform.OS == "ios"
 												? "#FFFFFF"
 												: wm.active
-												? Colors.PrimaryForeground
+												? Colors.Secondary
 												: "#ffffff"
 										}
 										ios_backgroundColor="#fbfbfb"
@@ -1116,7 +1116,7 @@ const DetailsScreen = (props) => {
 									<View
 										style={{
 											borderBottomWidth: 1,
-											borderColor: Colors.DetailsLight,
+											borderColor: Colors.SecondaryLight,
 										}}
 									/>
 								)}
@@ -1132,7 +1132,7 @@ const DetailsScreen = (props) => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: Colors.PrimaryBackground + "1a", // opacity of 0.1
+		backgroundColor: Colors.Primary + "1a", // opacity of 0.1
 		// alignItems: "center",
 		// width: "100%",
 	},

@@ -129,9 +129,7 @@ export const tabOptions = (navData) => {
 	return {
 		tabBarIcon: (props) => {
 			let iconColor;
-			iconColor = props.focused
-				? Colors.PrimaryBackground
-				: Colors.TextDarkest;
+			iconColor = props.focused ? Colors.Primary : Colors.PrimaryDark;
 			return (
 				<Gauge width={Config.deviceWidth * 0.075} color={iconColor} />
 			);
@@ -156,7 +154,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: "stretch",
 		justifyContent: "center",
-		backgroundColor: Colors.PrimaryBackground + "1a", // opacity of 0.1
+		backgroundColor: Colors.Primary + "1a", // opacity of 0.1
 	},
 });
 
