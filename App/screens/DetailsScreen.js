@@ -868,7 +868,7 @@ const DetailsScreen = (props) => {
 										fontFamily: "noto-sans-jp-regular",
 									}}
 								>
-									Measurements
+									{i18n.t("general.measurements")}
 								</Text>
 								<MaterialIcons
 									name="keyboard-arrow-down"
