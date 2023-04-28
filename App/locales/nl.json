@@ -41,6 +41,7 @@
     "authentication": {
       "welcome": "Welkom",
       "signIn": "Inloggen",
+      "signOut": "Uitloggen",
       "forgot": "Wachtwoord vergeten?",
       "account": "Nog geen account?",
       "signUpAllCaps": "AANMELDEN",
