@@ -6,7 +6,6 @@ import {
 	collection,
 	where,
 	getDocs,
-	Timestamp,
 } from "firebase/firestore";
 import {
 	VictoryChart,
@@ -73,7 +72,8 @@ const GraphScreen = (props) => {
 		for (let i = 0; i < dataForChart.length; i++) {
 			dataForChart[i] = new Array();
 		}
-		data.forEach((measurement) => {
+		lenData = data.length;
+		data.forEach((measurement, i) => {
 			const time = new Date();
 			time.setTime(time.getTime() - timeOffsets[timeNum]);
 			const firestoreTime = new Date(
@@ -81,11 +81,19 @@ const GraphScreen = (props) => {
 					measurement.DateTimeMessage.nanoseconds / 1000000
 			);
 			if (firestoreTime >= time) {
-				varName.forEach((varName, i) => {
-					dataForChart[i].push({
-						x: firestoreTime,
-						y: measurement[varName],
-					});
+				varName.forEach((varName, j) => {
+					if (i === Math.floor(lenData * 0.8)) {
+						dataForChart[j].push({
+							x: firestoreTime,
+							y: measurement[varName],
+							label: varName.replace(/([A-Z])/g, " $1"),
+						});
+					} else {
+						dataForChart[j].push({
+							x: firestoreTime,
+							y: measurement[varName],
+						});
+					}
 				});
 			}
 		});
@@ -93,6 +101,7 @@ const GraphScreen = (props) => {
 	};
 
 	const setTimeNum = (timeNum) => {
+		setLoading(false);
 		if (timeNum > loaded) {
 			fetchData(timeNum);
 		} else {
@@ -102,6 +111,7 @@ const GraphScreen = (props) => {
 	};
 
 	const setVarName = (varName) => {
+		setLoading(false);
 		fetchChartData(activeTime, varName);
 		setActiveVar(varName);
 	};
@@ -130,9 +140,14 @@ const GraphScreen = (props) => {
 		<View>
 			<View
 				style={{
-					width: "100%",
-					height: Config.deviceHeight * 0.45,
+					width: "90%",
+					height: Config.deviceHeight * 0.4,
+					alignSelf: "center",
 					justifyContent: "center",
+					// alignItems: "center",
+					backgroundColor: Colors.PrimaryLight,
+					marginVertical: Config.deviceHeight * 0.025,
+					borderRadius: 8,
 				}}
 			>
 				<ActivityIndicator
@@ -141,54 +156,69 @@ const GraphScreen = (props) => {
 					size="large"
 					color={Colors.Secondary}
 				/>
-				<VictoryChart
-					height={Config.deviceHeight * 0.4}
-					domainPadding={{ y: 20 }}
-				>
-					<VictoryAxis
-						tickFormat={
-							loading
-								? []
-								: (x) =>
-										new Date(x).getHours() +
-										":" +
-										("0" + new Date(x).getMinutes()).slice(
-											-2
-										) +
-										"\n" +
-										new Date(x).getMonth() +
-										"/" +
-										new Date(x).getDate()
-						}
-						style={{
-							grid: {
-								stroke: Colors.ThirdlyDark,
-								strokeDasharray: [5, 5],
-							},
-						}}
-					/>
-					<VictoryAxis
-						dependentAxis
-						style={{
-							grid: {
-								stroke: Colors.ThirdlyDark,
-								strokeDasharray: [5, 5],
-							},
-						}}
-					/>
-					<VictoryLine
-						style={{
-							data: { stroke: Colors.Secondary, strokeWidth: 3 },
-						}}
-						data={chartData[0]}
-					/>
-					<VictoryLine
-						style={{
-							data: { stroke: Colors.Secondary, strokeWidth: 3 },
-						}}
-						data={chartData[1]}
-					/>
-				</VictoryChart>
+				<View style={{ marginLeft: Config.deviceWidth * 0.015 }}>
+					<VictoryChart
+						height={Config.deviceHeight * 0.4}
+						width={Config.deviceWidth * 0.95}
+						domainPadding={{ y: 20 }}
+					>
+						<VictoryAxis
+							tickFormat={
+								loading
+									? []
+									: (x) =>
+											new Date(x).getHours() +
+											":" +
+											(
+												"0" + new Date(x).getMinutes()
+											).slice(-2) +
+											"\n" +
+											new Date(x).getMonth() +
+											"/" +
+											new Date(x).getDate()
+							}
+							style={{
+								grid: {
+									stroke: Colors.ThirdlyDark,
+									strokeDasharray: [5, 5],
+								},
+							}}
+						/>
+						<VictoryAxis
+							dependentAxis
+							tickFormat={(y) =>
+								y +
+								(activeVar.includes("CurrentTemp")
+									? " °C"
+									: " %")
+							}
+							style={{
+								grid: {
+									stroke: Colors.ThirdlyDark,
+									strokeDasharray: [5, 5],
+								},
+							}}
+						/>
+						<VictoryLine
+							style={{
+								data: {
+									stroke: Colors.Secondary,
+									strokeWidth: 3,
+								},
+							}}
+							data={chartData[0]}
+						/>
+						<VictoryLine
+							style={{
+								data: {
+									stroke: Colors.Secondary,
+									strokeWidth: 3,
+								},
+							}}
+							data={chartData[1]}
+						/>
+					</VictoryChart>
+				</View>
 
 				<Text>{loading}</Text>
 			</View>
@@ -199,6 +229,7 @@ const GraphScreen = (props) => {
 					alignSelf: "center",
 					width: "90%",
 					height: Config.deviceHeight * 0.1,
+					marginVertical: Config.deviceHeight * 0.01,
 				}}
 			>
 				<View
@@ -239,6 +270,12 @@ const GraphScreen = (props) => {
 				</View>
 				<View
 					style={{
+						borderRightWidth: 1,
+						borderColor: Colors.SecondaryLight,
+					}}
+				/>
+				<View
+					style={{
 						width: "25%",
 						backgroundColor:
 							activeTime == 3
@@ -267,10 +304,16 @@ const GraphScreen = (props) => {
 										: Colors.PrimaryDark,
 							}}
 						>
-							1 week
+							1 Week
 						</Text>
 					</TouchableOpacity>
 				</View>
+				<View
+					style={{
+						borderRightWidth: 1,
+						borderColor: Colors.SecondaryLight,
+					}}
+				/>
 				<View
 					style={{
 						width: "25%",
@@ -301,10 +344,16 @@ const GraphScreen = (props) => {
 										: Colors.PrimaryDark,
 							}}
 						>
-							1 day
+							1 Day
 						</Text>
 					</TouchableOpacity>
 				</View>
+				<View
+					style={{
+						borderRightWidth: 1,
+						borderColor: Colors.SecondaryLight,
+					}}
+				/>
 				<View
 					style={{
 						width: "25%",
@@ -337,7 +386,7 @@ const GraphScreen = (props) => {
 										: Colors.PrimaryDark,
 							}}
 						>
-							8 hours
+							8 Hours
 						</Text>
 					</TouchableOpacity>
 				</View>
@@ -349,84 +398,17 @@ const GraphScreen = (props) => {
 					alignSelf: "center",
 					width: "90%",
 					height: Config.deviceHeight * 0.1,
+					marginVertical: Config.deviceHeight * 0.01,
 				}}
 			>
 				<View
 					style={{
-						width: "25%",
-						backgroundColor:
-							activeTime == 4
-								? Colors.Secondary
-								: Colors.PrimaryLight,
-						borderTopLeftRadius: Config.deviceWidth * 0.02,
-						borderBottomLeftRadius: Config.deviceWidth * 0.02,
-					}}
-				>
-					<TouchableOpacity
-						style={{
-							width: "100%",
-							height: "100%",
-							justifyContent: "center",
-						}}
-						onPress={() => setTimeNum(4)}
-					>
-						<Text
-							style={{
-								fontFamily:
-									activeTime == 4
-										? "noto-sans-jp-bold"
-										: "noto-sans-jp-regular",
-								textAlign: "center",
-								color:
-									activeTime == 4
-										? Colors.PrimaryLight
-										: Colors.PrimaryDark,
-							}}
-						>
-							?
-						</Text>
-					</TouchableOpacity>
-				</View>
-				<View
-					style={{
-						width: "25%",
-						backgroundColor:
-							activeTime == 3
-								? Colors.Secondary
-								: Colors.PrimaryLight,
-					}}
-				>
-					<TouchableOpacity
-						style={{
-							width: "100%",
-							height: "100%",
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-						onPress={() => setTimeNum(3)}
-					>
-						<Text
-							style={{
-								fontFamily:
-									activeTime == 3
-										? "noto-sans-jp-bold"
-										: "noto-sans-jp-regular",
-								color:
-									activeTime == 3
-										? Colors.PrimaryLight
-										: Colors.PrimaryDark,
-							}}
-						>
-							?
-						</Text>
-					</TouchableOpacity>
-				</View>
-				<View
-					style={{
-						width: "25%",
+						width: "50%",
 						backgroundColor: activeVar.includes("CurrentHum")
 							? Colors.Secondary
 							: Colors.PrimaryLight,
+						borderTopLeftRadius: Config.deviceWidth * 0.02,
+						borderBottomLeftRadius: Config.deviceWidth * 0.02,
 					}}
 				>
 					<TouchableOpacity
@@ -465,7 +447,13 @@ const GraphScreen = (props) => {
 				</View>
 				<View
 					style={{
-						width: "25%",
+						borderRightWidth: 1,
+						borderColor: Colors.SecondaryLight,
+					}}
+				/>
+				<View
+					style={{
+						width: "50%",
 						backgroundColor: activeVar.includes("CurrentTemp")
 							? Colors.Secondary
 							: Colors.PrimaryLight,
