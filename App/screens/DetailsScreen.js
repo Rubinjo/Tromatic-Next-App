@@ -894,6 +894,7 @@ const DetailsScreen = (props) => {
 							onPress={() => {
 								props.navigation.navigate("Graph", {
 									machineId: props.route.params.machineId,
+									deviceName: data.deviceName,
 								});
 							}}
 						>

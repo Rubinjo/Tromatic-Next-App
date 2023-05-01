@@ -1,546 +1,515 @@
 import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import {
-	StyleSheet,
-	Text,
-	View,
-	TouchableOpacity,
-	Switch,
-	Platform,
-	Image,
-	ScrollView,
-	RefreshControl,
-} from "react-native";
+	getFirestore,
+	query,
+	collection,
+	where,
+	getDocs,
+	Timestamp,
+} from "firebase/firestore";
+import {
+	VictoryChart,
+	VictoryGroup,
+	VictoryAxis,
+	VictoryLine,
+	VictoryLegend,
+	VictoryTheme,
+	VictoryScatter,
+	LineSegment,
+	VictoryZoomContainer,
+} from "victory-native";
 
-import { getAuth } from "firebase/auth";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { getDatabase, ref, onValue, update } from "firebase/database";
-
-// import { CHAMBERS } from "../data/dummy-data";
 import Config from "../utils/config";
 import i18n from "../utils/i18n";
 import Colors from "../assets/constants/colors";
-import CompactSlider from "../components/CompactSlider";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import Thermometer from "../assets/icons/Thermometer";
-import CounterGraph from "../components/CounterGraph";
-import AnimatedFan from "../components/AnimatedFan";
-import {
-	directionTitle,
-	directionValue,
-	opModeTitle,
-	opModeFanTitle,
-} from "../utils/helper";
 import Humidity from "../assets/icons/Humidity";
-import Wood from "../assets/icons/Wood";
-import Valve from "../assets/icons/Valve";
-import Heating from "../assets/icons/Heating";
-import Sprayer from "../assets/icons/Sprayer";
-import FanDirection from "../assets/icons/FanDirection";
-
-import { useSelector } from "react-redux";
-
-import LineChart from "../components/LineChart";
-import LineChart2 from "../components/Home";
-import Home from "../components/Home";
-//import Config from "../utils/config";
-
-//import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const GraphScreen = (props) => {
-	const [refreshing, setRefreshing] = useState(false);
-	const [areChanges, setAreChanges] = useState(false);
-	const [dataFB, setDataFB] = useState({});
-	const [data, setData] = useState({
-		currentHum: 0,
-		currentTemp: 0,
-		damperPos: 0,
-		EMCOffset: 0,
-		fanDirection: 0,
-		heatingValvePos: 0,
-		numOfWmProbes: 0,
-		RPM: 0,
-		remainingTime: 0,
-		setPointHum: 0,
-		setPointTemp: 0,
-		sprayPos: 0,
-		status: 0,
-		tempOffset: 0,
-		numOfCTProbes: 0,
-		damperOpMode: 0,
-		heaterOpMode: 0,
-		sprayOpMode: 0,
-		fansOpMode: 0,
-		timestamp: new Date(),
-		CTs: [
-			{ id: 1, value: 0 },
-			{ id: 2, value: 0 },
-			{ id: 3, value: 0 },
-			{ id: 4, value: 0 },
-			{ id: 5, value: 0 },
-			{ id: 6, value: 0 },
-			{ id: 7, value: 0 },
-			{ id: 8, value: 0 },
-			{ id: 9, value: 0 },
-			{ id: 10, value: 0 },
-			{ id: 11, value: 0 },
-			{ id: 12, value: 0 },
-		],
-		WMs: [
-			{ id: 1, value: 0, active: false },
-			{ id: 2, value: 0, active: false },
-			{ id: 3, value: 0, active: false },
-			{ id: 4, value: 0, active: false },
-			{ id: 5, value: 0, active: false },
-			{ id: 6, value: 0, active: false },
-			{ id: 7, value: 0, active: false },
-			{ id: 8, value: 0, active: false },
-			{ id: 9, value: 0, active: false },
-			{ id: 10, value: 0, active: false },
-		],
-	});
+	// const [firstRender, setFirstRender] = useState(true);
+	const [loading, setLoading] = useState(true);
+	// const [lastData, setLastData] = useState([]);
+	const [data, setData] = useState([]);
+	const [chartData, setChartData] = useState([]);
+	const [activeTime, setActiveTime] = useState(0);
+	const [activeVar, setActiveVar] = useState(["CurrentTemp", "SetPointTemp"]);
+	const [loaded, setLoaded] = useState(0);
+	const timeOffsets = [0, 28800000, 86400000, 604800000, 2592000000]; // 0 sec, 8 hours, 24 hours, 7 days, 1 month
+
+	const fetchData = (timeNum) => {
+		const startTime = new Date();
+		const endTime = new Date();
+		startTime.setTime(startTime.getTime() - timeOffsets[timeNum]);
+		endTime.setTime(endTime.getTime() - timeOffsets[loaded]);
+		try {
+			const db = getFirestore();
+			const q = query(
+				collection(
+					db,
+					"machines",
+					props.route.params.machineId,
+					"history"
+				),
+				where("DateTimeMessage", ">=", startTime),
+				where("DateTimeMessage", "<=", endTime)
+			);
+			getDocs(q).then((querySnapshot) => {
+				const measurements = [];
+				querySnapshot.forEach((doc) => {
+					measurements.push(doc.data());
+				});
+				setActiveTime(timeNum);
+				setData((prevData) => [...prevData, ...measurements]);
+			});
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	const fetchChartData = (timeNum, varName) => {
+		let dataForChart = new Array(varName.length);
+		for (let i = 0; i < dataForChart.length; i++) {
+			dataForChart[i] = new Array();
+		}
+		data.forEach((measurement) => {
+			const time = new Date();
+			time.setTime(time.getTime() - timeOffsets[timeNum]);
+			const firestoreTime = new Date(
+				measurement.DateTimeMessage.seconds * 1000 +
+					measurement.DateTimeMessage.nanoseconds / 1000000
+			);
+			if (firestoreTime >= time) {
+				varName.forEach((varName, i) => {
+					dataForChart[i].push({
+						x: firestoreTime,
+						y: measurement[varName],
+					});
+				});
+			}
+		});
+		setChartData(dataForChart);
+	};
+
+	const setTimeNum = (timeNum) => {
+		if (timeNum > loaded) {
+			fetchData(timeNum);
+		} else {
+			setActiveTime(timeNum);
+			fetchChartData(timeNum, activeVar);
+		}
+	};
+
+	const setVarName = (varName) => {
+		fetchChartData(activeTime, varName);
+		setActiveVar(varName);
+	};
 
 	useEffect(() => {
-		const db = getDatabase();
-		const machineRef = ref(db, "machines/" + props.route.params.machineId);
-		onValue(machineRef, (snapshot) => {
-			const machine = snapshot.val();
-			setDataFB({
-				...dataFB,
-				currentHum: machine.CurrentHum,
-				currentTemp: machine.CurrentTemp,
-				damperPos: machine.DamperPos,
-				EMCOffset: machine.EMCOffset,
-				fanDirection: machine.FanDirection,
-				heatingValvePos: machine.HeatingValvePos,
-				numOfWmProbes: machine.NumOfWmProbes,
-				RPM: machine.RPM,
-				remainingTime: machine.RemainingTime,
-				totalTime: machine.TotalTime,
-				setPointHum: machine.SetPointHum,
-				setPointTemp: machine.SetPointTemp,
-				sprayPos: machine.SprayPos,
-				status: machine.Status,
-				tempOffset: machine.TempOffset,
-				numOfCTProbes: machine.NumOfCTProbes,
-				damperOpMode: machine.DamperOpMode,
-				heaterOpMode: machine.HeaterOpMode,
-				sprayOpMode: machine.SprayOpMode,
-				fansOpMode: machine.FansOpMode,
-				timestamp: new Date(machine.Timestamp),
-				CTs: [
-					{ id: 1, value: machine.CTValue1 },
-					{ id: 2, value: machine.CTValue2 },
-					{ id: 3, value: machine.CTValue3 },
-					{ id: 4, value: machine.CTValue4 },
-					{ id: 5, value: machine.CTValue5 },
-					{ id: 6, value: machine.CTValue6 },
-					{ id: 7, value: machine.CTValue7 },
-					{ id: 8, value: machine.CTValue8 },
-					{ id: 9, value: machine.CTValue9 },
-					{ id: 10, value: machine.CTValue10 },
-					{ id: 11, value: machine.CTValue11 },
-					{ id: 12, value: machine.CTValue12 },
-				],
-				WMs: [
-					{
-						id: 1,
-						value: machine.WMValue1,
-						active: machine.WMActive1,
-					},
-					{
-						id: 2,
-						value: machine.WMValue2,
-						active: machine.WMActive2,
-					},
-					{
-						id: 3,
-						value: machine.WMValue3,
-						active: machine.WMActive3,
-					},
-					{
-						id: 4,
-						value: machine.WMValue4,
-						active: machine.WMActive4,
-					},
-					{
-						id: 5,
-						value: machine.WMValue5,
-						active: machine.WMActive5,
-					},
-					{
-						id: 6,
-						value: machine.WMValue6,
-						active: machine.WMActive6,
-					},
-					{
-						id: 7,
-						value: machine.WMValue7,
-						active: machine.WMActive7,
-					},
-					{
-						id: 8,
-						value: machine.WMValue8,
-						active: machine.WMActive8,
-					},
-					{
-						id: 9,
-						value: machine.WMValue9,
-						active: machine.WMActive9,
-					},
-					{
-						id: 10,
-						value: machine.WMValue10,
-						active: machine.WMActive10,
-					},
-				],
-			});
-		});
+		fetchData(1);
 	}, []);
 
 	useEffect(() => {
-		if (areChanges == false) {
-			setData(dataFB);
+		fetchChartData(activeTime, activeVar);
+	}, [data]);
+
+	useEffect(() => {
+		if (chartData.length > 0 && chartData[0].length > 0) {
+			setLoading(false);
 		}
-	}, [dataFB]);
+	}, [chartData]);
 
 	useEffect(() => {
 		props.navigation.setOptions({
-			headerRight: (props) =>
-				areChanges ? (
-					<TouchableOpacity
-						onPress={sendData}
-						style={{ marginRight: 12 }}
-					>
-						<MaterialCommunityIcons
-							name={"check"}
-							size={34}
-							color={"white"}
-						/>
-					</TouchableOpacity>
-				) : (
-					<View></View>
-				),
+			headerTitle: props.route.params.deviceName,
 		});
-	}, [areChanges, data]);
-
-	const onWMChange = (id, value, active) => {
-		const newArray = [...data.WMs];
-		newArray.splice(id - 1, 1);
-		newArray.splice(id - 1, 0, { id: id, value: value, active: active });
-		onChange("WMs", newArray);
-	};
-
-	const onChange = (item, value) => {
-		setAreChanges(true);
-		setData({ ...data, [item]: value });
-	};
-
-	const onRefresh = () => {
-		setRefreshing(true);
-		setTimeout(() => {
-			setData(dataFB);
-			setAreChanges(false);
-			setRefreshing(false);
-		}, 1000);
-	};
-
-	const sendData = () => {
-		const db = getDatabase();
-		const updates = {};
-		if (data.setPointTemp != dataFB.setPointTemp) {
-			updates[
-				"machines/" + props.route.params.machineId + "/SetPointTemp"
-			] = data.setPointTemp;
-		}
-		if (data.setPointHum != dataFB.setPointHum) {
-			updates[
-				"machines/" + props.route.params.machineId + "/SetPointHum"
-			] = data.setPointHum;
-		}
-		if (data.WMs[0].active != dataFB.WMs[0].active) {
-			updates["machines/" + props.route.params.machineId + "/WMActive1"] =
-				data.WMs[0].active;
-		}
-		if (data.WMs[1].active != dataFB.WMs[1].active) {
-			updates["machines/" + props.route.params.machineId + "/WMActive2"] =
-				data.WMs[1].active;
-		}
-		if (data.WMs[2].active != dataFB.WMs[2].active) {
-			updates["machines/" + props.route.params.machineId + "/WMActive3"] =
-				data.WMs[2].active;
-		}
-		if (data.WMs[3].active != dataFB.WMs[3].active) {
-			updates["machines/" + props.route.params.machineId + "/WMActive4"] =
-				data.WMs[3].active;
-		}
-		if (data.WMs[4].active != dataFB.WMs[4].active) {
-			updates["machines/" + props.route.params.machineId + "/WMActive5"] =
-				data.WMs[4].active;
-		}
-		if (data.WMs[5].active != dataFB.WMs[5].active) {
-			updates["machines/" + props.route.params.machineId + "/WMActive6"] =
-				data.WMs[5].active;
-		}
-		if (data.WMs[6].active != dataFB.WMs[6].active) {
-			updates["machines/" + props.route.params.machineId + "/WMActive7"] =
-				data.WMs[6].active;
-		}
-		if (data.WMs[7].active != dataFB.WMs[7].active) {
-			updates["machines/" + props.route.params.machineId + "/WMActive8"] =
-				data.WMs[7].active;
-		}
-		if (data.WMs[8].active != dataFB.WMs[8].active) {
-			updates["machines/" + props.route.params.machineId + "/WMActive9"] =
-				data.WMs[8].active;
-		}
-		if (data.WMs[9].active != dataFB.WMs[9].active) {
-			updates[
-				"machines/" + props.route.params.machineId + "/WMActive10"
-			] = data.WMs[9].active;
-		}
-		updates["machines/" + props.route.params.machineId + "/Timestamp"] =
-			new Date().toISOString();
-		const auth = getAuth();
-		updates["machines/" + props.route.params.machineId + "/LastEditor"] =
-			"u" + auth.currentUser.uid;
-		update(ref(db), updates);
-		setAreChanges(false);
-	};
-
-	const [activeTimeNum, setActiveTimeNum] = useState(3);
-
-	// Load graph from the redux store
-	const graphPar = useSelector((state) => state.graph.graph);
-
-	const selectGraphTime = (timeNum) => {
-		setActiveTimeNum(timeNum);
-	};
+	}, [props.route.params.deviceName]);
 
 	return (
 		<View>
 			<View
 				style={{
-					flexDirection: "row",
-					justifyContent: "space-between",
-					alignContent: "center",
-					alignSelf: "center",
-					height: Config.deviceHeight * 0.15,
-					width: "60%",
-				}}
-			>
-				<View style={{ alignItems: "center" }}>
-					{/* <Thermometer /> */}
-					<Text style={{ fontFamily: "noto-sans-jp-regular" }}>
-						Temperature
-					</Text>
-					<CounterGraph
-						item={"setPointTemp"}
-						actual={data.currentTemp}
-						setter={data.setPointTemp}
-						onChange={onChange}
-					/>
-				</View>
-				<View style={{ alignItems: "center" }}>
-					{/* <Humidity /> */}
-					<Text style={{ fontFamily: "noto-sans-jp-regular" }}>
-						Humidity
-					</Text>
-					<CounterGraph
-						item={"setPointHum"}
-						actual={data.currentHum}
-						setter={data.setPointHum}
-						onChange={onChange}
-					/>
-				</View>
-			</View>
-			<TouchableOpacity
-				style={{
 					width: "100%",
-					marginBottom: "auto",
-					borderTopWidth: 1,
-					borderBottomWidth: 1,
-					flexDirection: "row",
-					alignItems: "center",
-				}}
-				onPress={() => {
-					props.navigation.navigate("GraphSelector");
+					height: Config.deviceHeight * 0.45,
+					justifyContent: "center",
 				}}
 			>
-				<Text
-					style={{
-						marginLeft: Config.deviceWidth * 0.04,
-						fontFamily: "noto-sans-jp-regular",
-					}}
-				>
-					Variable selector
-				</Text>
-				<MaterialCommunityIcons
-					name={"menu-right"}
-					size={34}
-					color={"black"}
+				<ActivityIndicator
+					style={{ position: "absolute", top: "45%", left: "45%" }}
+					animating={loading}
+					size="large"
+					color={Colors.Secondary}
 				/>
-			</TouchableOpacity>
-			<LineChart timer={activeTimeNum} />
-			{/* <LineChart2 timer={activeTimeNum} /> */}
-			{/* <Home /> */}
-			{/*weird example*/}
-			<View style={{ flexDirection: "row" }}>
-				<TouchableOpacity
-					onPress={() => {
-						selectGraphTime(24);
-					}}
-					style={
-						activeTimeNum == 24
-							? [
-									styles.selectionContainerActive,
-									{ borderRightWidth: 1 },
-							  ]
-							: styles.selectionContainer
-					}
+				<VictoryChart
+					height={Config.deviceHeight * 0.4}
+					domainPadding={{ y: 20 }}
 				>
-					<Text
-						style={
-							activeTimeNum == 24
-								? styles.selectionTextActive
-								: styles.selectionText
+					<VictoryAxis
+						tickFormat={
+							loading
+								? []
+								: (x) =>
+										new Date(x).getHours() +
+										":" +
+										("0" + new Date(x).getMinutes()).slice(
+											-2
+										) +
+										"\n" +
+										new Date(x).getMonth() +
+										"/" +
+										new Date(x).getDate()
 						}
-					>
-						1 day
-					</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={() => {
-						selectGraphTime(9);
-					}}
-					style={
-						activeTimeNum == 9
-							? [
-									styles.selectionContainerActive,
-									{ borderLeftWidth: 1, borderRightWidth: 1 },
-							  ]
-							: activeTimeNum == 9
-							? [
-									styles.selectionContainer,
-									{ borderRightWidth: 1 },
-							  ]
-							: [
-									styles.selectionContainer,
-									{ borderLeftWidth: 1 },
-							  ]
-					}
-				>
-					<Text
-						style={
-							activeTimeNum == 9
-								? styles.selectionTextActive
-								: styles.selectionText
-						}
-					>
-						9 hours
-					</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={() => {
-						selectGraphTime(3);
-					}}
-					style={
-						activeTimeNum == 3
-							? [
-									styles.selectionContainerActive,
-									{ borderLeftWidth: 1, borderRightWidth: 1 },
-							  ]
-							: activeTimeNum == 3
-							? [
-									styles.selectionContainer,
-									{ borderLeftWidth: 1 },
-							  ]
-							: [
-									styles.selectionContainer,
-									{ borderRightWidth: 1 },
-							  ]
-					}
-				>
-					<Text
-						style={
-							activeTimeNum == 3
-								? styles.selectionTextActive
-								: styles.selectionText
-						}
-					>
-						3 hours
-					</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={() => {
-						selectGraphTime(1);
-					}}
-					style={
-						activeTimeNum == 1
-							? [
-									styles.selectionContainerActive,
-									{ borderLeftWidth: 1 },
-							  ]
-							: styles.selectionContainer
-					}
-				>
-					<Text
-						style={
-							activeTimeNum == 1
-								? styles.selectionTextActive
-								: styles.selectionText
-						}
-					>
-						1 hour
-					</Text>
-				</TouchableOpacity>
+						style={{
+							grid: {
+								stroke: Colors.ThirdlyDark,
+								strokeDasharray: [5, 5],
+							},
+						}}
+					/>
+					<VictoryAxis
+						dependentAxis
+						style={{
+							grid: {
+								stroke: Colors.ThirdlyDark,
+								strokeDasharray: [5, 5],
+							},
+						}}
+					/>
+					<VictoryLine
+						style={{
+							data: { stroke: Colors.Secondary, strokeWidth: 3 },
+						}}
+						data={chartData[0]}
+					/>
+					<VictoryLine
+						style={{
+							data: { stroke: Colors.Secondary, strokeWidth: 3 },
+						}}
+						data={chartData[1]}
+					/>
+				</VictoryChart>
+
+				<Text>{loading}</Text>
 			</View>
-			<Text>Time test</Text>
 			<View
 				style={{
-					marginTop: -8,
-					marginBottom: 8,
-					height: Config.deviceHeight * 0.04,
+					flexDirection: "row",
+					justifyContent: "space-around",
+					alignSelf: "center",
+					width: "90%",
+					height: Config.deviceHeight * 0.1,
 				}}
 			>
-				<CompactSlider
-					remainingTime={dataFB.remainingTime}
-					totalTime={dataFB.totalTime}
-				/>
+				<View
+					style={{
+						width: "25%",
+						backgroundColor:
+							activeTime == 4
+								? Colors.Secondary
+								: Colors.PrimaryLight,
+						borderTopLeftRadius: Config.deviceWidth * 0.02,
+						borderBottomLeftRadius: Config.deviceWidth * 0.02,
+					}}
+				>
+					<TouchableOpacity
+						style={{
+							width: "100%",
+							height: "100%",
+							justifyContent: "center",
+						}}
+						onPress={() => setTimeNum(4)}
+					>
+						<Text
+							style={{
+								fontFamily:
+									activeTime == 4
+										? "noto-sans-jp-bold"
+										: "noto-sans-jp-regular",
+								textAlign: "center",
+								color:
+									activeTime == 4
+										? Colors.PrimaryLight
+										: Colors.PrimaryDark,
+							}}
+						>
+							1 Month
+						</Text>
+					</TouchableOpacity>
+				</View>
+				<View
+					style={{
+						width: "25%",
+						backgroundColor:
+							activeTime == 3
+								? Colors.Secondary
+								: Colors.PrimaryLight,
+					}}
+				>
+					<TouchableOpacity
+						style={{
+							width: "100%",
+							height: "100%",
+							justifyContent: "center",
+						}}
+						onPress={() => setTimeNum(3)}
+					>
+						<Text
+							style={{
+								fontFamily:
+									activeTime == 3
+										? "noto-sans-jp-bold"
+										: "noto-sans-jp-regular",
+								textAlign: "center",
+								color:
+									activeTime == 3
+										? Colors.PrimaryLight
+										: Colors.PrimaryDark,
+							}}
+						>
+							1 week
+						</Text>
+					</TouchableOpacity>
+				</View>
+				<View
+					style={{
+						width: "25%",
+						backgroundColor:
+							activeTime == 2
+								? Colors.Secondary
+								: Colors.PrimaryLight,
+					}}
+				>
+					<TouchableOpacity
+						style={{
+							width: "100%",
+							height: "100%",
+							justifyContent: "center",
+						}}
+						onPress={() => setTimeNum(2)}
+					>
+						<Text
+							style={{
+								fontFamily:
+									activeTime == 2
+										? "noto-sans-jp-bold"
+										: "noto-sans-jp-regular",
+								textAlign: "center",
+								color:
+									activeTime == 2
+										? Colors.PrimaryLight
+										: Colors.PrimaryDark,
+							}}
+						>
+							1 day
+						</Text>
+					</TouchableOpacity>
+				</View>
+				<View
+					style={{
+						width: "25%",
+						backgroundColor:
+							activeTime == 1
+								? Colors.Secondary
+								: Colors.PrimaryLight,
+						borderTopRightRadius: Config.deviceWidth * 0.02,
+						borderBottomRightRadius: Config.deviceWidth * 0.02,
+					}}
+				>
+					<TouchableOpacity
+						style={{
+							width: "100%",
+							height: "100%",
+							justifyContent: "center",
+						}}
+						onPress={() => setTimeNum(1)}
+					>
+						<Text
+							style={{
+								fontFamily:
+									activeTime == 1
+										? "noto-sans-jp-bold"
+										: "noto-sans-jp-regular",
+								textAlign: "center",
+								color:
+									activeTime == 1
+										? Colors.PrimaryLight
+										: Colors.PrimaryDark,
+							}}
+						>
+							8 hours
+						</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
-			<Text>List test:</Text>
-			<Text totalTime={dataFB.totalTime}>Test</Text>
+			<View
+				style={{
+					flexDirection: "row",
+					justifyContent: "space-around",
+					alignSelf: "center",
+					width: "90%",
+					height: Config.deviceHeight * 0.1,
+				}}
+			>
+				<View
+					style={{
+						width: "25%",
+						backgroundColor:
+							activeTime == 4
+								? Colors.Secondary
+								: Colors.PrimaryLight,
+						borderTopLeftRadius: Config.deviceWidth * 0.02,
+						borderBottomLeftRadius: Config.deviceWidth * 0.02,
+					}}
+				>
+					<TouchableOpacity
+						style={{
+							width: "100%",
+							height: "100%",
+							justifyContent: "center",
+						}}
+						onPress={() => setTimeNum(4)}
+					>
+						<Text
+							style={{
+								fontFamily:
+									activeTime == 4
+										? "noto-sans-jp-bold"
+										: "noto-sans-jp-regular",
+								textAlign: "center",
+								color:
+									activeTime == 4
+										? Colors.PrimaryLight
+										: Colors.PrimaryDark,
+							}}
+						>
+							?
+						</Text>
+					</TouchableOpacity>
+				</View>
+				<View
+					style={{
+						width: "25%",
+						backgroundColor:
+							activeTime == 3
+								? Colors.Secondary
+								: Colors.PrimaryLight,
+					}}
+				>
+					<TouchableOpacity
+						style={{
+							width: "100%",
+							height: "100%",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+						onPress={() => setTimeNum(3)}
+					>
+						<Text
+							style={{
+								fontFamily:
+									activeTime == 3
+										? "noto-sans-jp-bold"
+										: "noto-sans-jp-regular",
+								color:
+									activeTime == 3
+										? Colors.PrimaryLight
+										: Colors.PrimaryDark,
+							}}
+						>
+							?
+						</Text>
+					</TouchableOpacity>
+				</View>
+				<View
+					style={{
+						width: "25%",
+						backgroundColor: activeVar.includes("CurrentHum")
+							? Colors.Secondary
+							: Colors.PrimaryLight,
+					}}
+				>
+					<TouchableOpacity
+						style={{
+							width: "100%",
+							height: "100%",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+						onPress={() =>
+							setVarName(["CurrentHum", "SetPointHum"])
+						}
+					>
+						<Humidity
+							height={Config.deviceHeight * 0.04}
+							color={
+								activeVar.includes("CurrentHum")
+									? Colors.PrimaryLight
+									: Colors.PrimaryDark
+							}
+						/>
+						<Text
+							style={{
+								fontFamily: activeVar.includes("CurrentHum")
+									? "noto-sans-jp-bold"
+									: "noto-sans-jp-regular",
+								fontSize: Config.deviceHeight * 0.011,
+								color: activeVar.includes("CurrentHum")
+									? Colors.PrimaryLight
+									: Colors.PrimaryDark,
+							}}
+						>
+							Humidity
+						</Text>
+					</TouchableOpacity>
+				</View>
+				<View
+					style={{
+						width: "25%",
+						backgroundColor: activeVar.includes("CurrentTemp")
+							? Colors.Secondary
+							: Colors.PrimaryLight,
+						borderTopRightRadius: Config.deviceWidth * 0.02,
+						borderBottomRightRadius: Config.deviceWidth * 0.02,
+					}}
+				>
+					<TouchableOpacity
+						style={{
+							width: "100%",
+							height: "100%",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+						onPress={() =>
+							setVarName(["CurrentTemp", "SetPointTemp"])
+						}
+					>
+						<Thermometer
+							height={Config.deviceHeight * 0.043}
+							color={
+								activeVar.includes("CurrentTemp")
+									? Colors.PrimaryLight
+									: Colors.PrimaryDark
+							}
+						/>
+						<Text
+							style={{
+								fontFamily: activeVar.includes("CurrentTemp")
+									? "noto-sans-jp-bold"
+									: "noto-sans-jp-regular",
+								fontSize: Config.deviceHeight * 0.011,
+								color: activeVar.includes("CurrentTemp")
+									? Colors.PrimaryLight
+									: Colors.PrimaryDark,
+							}}
+						>
+							Temperature
+						</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
 		</View>
 	);
 };
-
-const styles = StyleSheet.create({
-	selectionContainer: {
-		flex: 1,
-		borderTopWidth: 1,
-		borderBottomWidth: 1,
-		borderColor: "grey",
-	},
-	selectionContainerActive: {
-		flex: 1,
-		borderTopWidth: 1,
-		borderBottomWidth: 1,
-		backgroundColor: "lightgray",
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 3,
-		},
-		shadowOpacity: 0.27,
-		shadowRadius: 4.65,
-		elevation: 6,
-	},
-	selectionText: {
-		textAlign: "center",
-		fontFamily: "noto-sans-jp-regular",
-	},
-	selectionTextActive: {
-		textAlign: "center",
-		fontFamily: "noto-sans-jp-bold",
-	},
-});
 
 export default GraphScreen;
