@@ -6,10 +6,10 @@ admin.initializeApp();
 const firebase = admin.database();
 const firestore = admin.firestore();
 
-exports.scheduledFbToFsFunction = functions.region("europe-west1")
+exports.scheduledFbToFsFunction = functions
+    .region("europe-west1")
     .runWith({maxInstances: 10})
-    .pubsub
-    .schedule("every 30 minutes")
+    .pubsub.schedule("every 30 minutes")
     .onRun(async (context) => {
       const snapshot = await get(ref(firebase, "machines"));
       const machines = snapshot.val();
@@ -19,7 +19,9 @@ exports.scheduledFbToFsFunction = functions.region("europe-west1")
       dateExpiration.setDate(dateExpiration.getDate() + 30);
       for (const [key, value] of Object.entries(machines)) {
         value["Expiration"] = dateExpiration;
-        const machineRef = firestore.collection("machines")
+        value["DateTimeMessage"] = new Date(value["DateTimeMessage"]);
+        const machineRef = firestore
+            .collection("machines")
             .doc(key)
             .collection("history")
             .doc(dateIdString);
