@@ -32,7 +32,7 @@ export default {
 		package: "nl.bes_bollmann.tromatic_next",
 		adaptiveIcon: {
 			foregroundImage: "./assets/adaptive-icon.png",
-			backgroundColor: "#FFFFFF",
+			backgroundColor: "#0F7BCA",
 		},
 		softwareKeyboardLayoutMode: "pan",
 	},
