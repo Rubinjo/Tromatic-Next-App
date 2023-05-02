@@ -10,6 +10,10 @@ import Status from "../assets/constants/status";
 import Fan from "../assets/icons/Fan";
 import Warning from "../assets/icons/Warning";
 import WoodThermometer from "../assets/icons/WoodThermometer";
+import WoodMoisture from "../assets/icons/WoodMoisture";
+
+const average = (list) =>
+	list.reduce((prev, curr) => prev + curr) / list.length;
 
 const CategoryGridTile = (props) => {
 	return (
@@ -115,12 +119,20 @@ const CategoryGridTile = (props) => {
 						>
 							<Thermometer
 								height={Config.deviceHeight * 0.04}
-								color={Colors.Secondary}
+								color={
+									props.item.remainingTime == 0
+										? Colors.ThirdlyDark
+										: Colors.Secondary
+								}
 							/>
 							<Text
 								style={{
 									marginBottom: -Config.deviceHeight * 0.007,
 									fontFamily: "noto-sans-jp-regular",
+									color:
+										props.item.remainingTime == 0
+											? Colors.ThirdlyDark
+											: Colors.PrimaryDark,
 								}}
 							>
 								{props.item.currentTemp} °C
@@ -129,6 +141,10 @@ const CategoryGridTile = (props) => {
 								style={{
 									margin: -Config.deviceHeight * 0.007,
 									fontFamily: "noto-sans-jp-regular",
+									color:
+										props.item.remainingTime == 0
+											? Colors.ThirdlyDark
+											: Colors.PrimaryDark,
 								}}
 							>
 								{props.item.setPointTemp} °C
@@ -149,28 +165,37 @@ const CategoryGridTile = (props) => {
 						>
 							<Humidity
 								height={Config.deviceHeight * 0.04}
-								color={Colors.Secondary}
+								color={
+									props.item.remainingTime == 0
+										? Colors.ThirdlyDark
+										: Colors.Secondary
+								}
 							/>
 
-							<Text>{props.item.currentHum}%</Text>
-							<Text>{props.item.setPointHum}%</Text>
-						</View>
-						<View
-							style={{
-								borderRightWidth: 2,
-								borderRightColor: Colors.SecondaryLight,
-							}}
-						/>
-
-						<View
-							style={{
-								flex: 1,
-								alignItems: "center",
-								justifyContent: "space-evenly",
-							}}
-						>
-							<Fan color={Colors.Secondary} />
-							<Text>{props.item.RPM}%</Text>
+							<Text
+								style={{
+									margin: -Config.deviceHeight * 0.007,
+									fontFamily: "noto-sans-jp-regular",
+									color:
+										props.item.remainingTime == 0
+											? Colors.ThirdlyDark
+											: Colors.PrimaryDark,
+								}}
+							>
+								{props.item.currentHum}%
+							</Text>
+							<Text
+								style={{
+									margin: -Config.deviceHeight * 0.007,
+									fontFamily: "noto-sans-jp-regular",
+									color:
+										props.item.remainingTime == 0
+											? Colors.ThirdlyDark
+											: Colors.PrimaryDark,
+								}}
+							>
+								{props.item.setPointHum}%
+							</Text>
 						</View>
 						<View
 							style={{
@@ -188,21 +213,71 @@ const CategoryGridTile = (props) => {
 						>
 							<WoodThermometer
 								height={Config.deviceHeight * 0.04}
-								color={Colors.Secondary}
+								color={
+									props.item.remainingTime == 0
+										? Colors.ThirdlyDark
+										: Colors.Secondary
+								}
 							/>
-							<Text>
-								{Math.min(
-									props.item.WMValue1,
-									props.item.WMValue2,
-									props.item.WMValue3,
-									props.item.WMValue4,
-									props.item.WMValue5,
-									props.item.WMValue6,
-									props.item.WMValue7,
-									props.item.WMValue8,
-									props.item.WMValue9,
-									props.item.WMValue10
-								)}{" "}
+							<Text
+								style={{
+									margin: -Config.deviceHeight * 0.007,
+									fontFamily: "noto-sans-jp-regular",
+									color:
+										props.item.remainingTime == 0
+											? Colors.ThirdlyDark
+											: Colors.PrimaryDark,
+								}}
+							>
+								{props.item.RPM}%
+							</Text>
+						</View>
+						<View
+							style={{
+								borderRightWidth: 2,
+								borderRightColor: Colors.SecondaryLight,
+							}}
+						/>
+
+						<View
+							style={{
+								flex: 1,
+								alignItems: "center",
+								justifyContent: "space-evenly",
+							}}
+						>
+							<WoodMoisture
+								height={Config.deviceHeight * 0.036}
+								color={
+									props.item.remainingTime == 0
+										? Colors.ThirdlyDark
+										: Colors.Secondary
+								}
+							/>
+							<Text
+								style={{
+									margin: -Config.deviceHeight * 0.007,
+									fontFamily: "noto-sans-jp-regular",
+									color:
+										props.item.remainingTime == 0
+											? Colors.ThirdlyDark
+											: Colors.PrimaryDark,
+								}}
+							>
+								{average(
+									[
+										props.item.WMValue1,
+										props.item.WMValue2,
+										props.item.WMValue3,
+										props.item.WMValue4,
+										props.item.WMValue5,
+										props.item.WMValue6,
+										props.item.WMValue7,
+										props.item.WMValue8,
+										props.item.WMValue9,
+										props.item.WMValue10,
+									].filter(Number)
+								).toFixed(1)}{" "}
 								°C
 							</Text>
 						</View>
