@@ -311,6 +311,16 @@ const SettingsScreen = (props) => {
 							>
 								{i18n.t("general.notifications")}
 							</Text>
+							<Text
+								style={{
+									marginLeft: "auto",
+									marginRight: -Config.deviceWidth * 0.1,
+									fontFamily: "noto-sans-jp-regular",
+									color: Colors.ThirdlyDark,
+								}}
+							>
+								{i18n.t("general.upcoming")}
+							</Text>
 							<Switch
 								style={{
 									marginLeft: "auto",
