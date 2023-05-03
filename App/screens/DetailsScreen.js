@@ -1077,7 +1077,16 @@ const DetailsScreen = (props) => {
 					</Text>
 					{data.WMs?.slice(0, data.numOfWmProbes).map((wm) => {
 						return (
-							<View key={wm.id} style={{ width: "90%" }}>
+							<View
+								key={wm.id}
+								style={{
+									width: "90%",
+									marginVertical:
+										Platform.OS === "ios"
+											? Config.deviceHeight * 0.005
+											: 0,
+								}}
+							>
 								<View
 									style={{
 										flexDirection: "row",
@@ -1092,7 +1101,7 @@ const DetailsScreen = (props) => {
 											true: Colors.Secondary,
 											false:
 												Platform.OS == "android"
-													? Colors.PrimaryLight
+													? Colors.SecondaryLight
 													: "#fbfbfb",
 										}}
 										thumbColor={
@@ -1119,6 +1128,11 @@ const DetailsScreen = (props) => {
 										style={{
 											borderBottomWidth: 1,
 											borderColor: Colors.SecondaryLight,
+											marginVertical:
+												Platform.OS === "ios"
+													? Config.deviceHeight *
+													  0.005
+													: 0,
 										}}
 									/>
 								)}
