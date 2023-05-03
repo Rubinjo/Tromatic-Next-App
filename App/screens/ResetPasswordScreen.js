@@ -39,7 +39,7 @@ const ResetPasswordScreen = (props) => {
 		} else {
 			setIsLoading(true);
 			try {
-				await resetPasswordAccount(email, language);
+				await resetPasswordAccount(email, i18n.locale);
 				props.navigation.navigate("ResetConfirm");
 				setIsLoading(false);
 			} catch (err) {
