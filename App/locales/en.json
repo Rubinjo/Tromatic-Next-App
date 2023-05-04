@@ -22,7 +22,7 @@
       "rpm": "RPM",
       "woodMoisture": "Wood moisture",
       "humidity": "Humidity",
-      "valves": "Valves",
+      "valves": "Dampers",
       "heating": "Heating",
       "sprayer": "Sprayer",
       "direction": "Direction",
@@ -52,20 +52,23 @@
       "signOutWarning": "Sign out warning",
       "companyId": "Company-ID",
       "name": "Full Name",
+      "email": "Email",
+      "password": "Password",
       "confirm": "Confirm password",
       "resetHead": "Please check your email",
       "resetBodyInfo": "If your email address is known to us,\n you will receive an email from us with a reset link to create a new password",
       "resetBodyReceived": "Didn't receive an email?\n Please check your junkmail",
       "error": {
+        "title": "Error",
         "signUpTitle": "Sign up error",
         "signInTitle": "Sign in error",
-        "companyId": "Company ID is required",
+        "companyId": "Company ID is required.",
         "name": "Full name is required.",
         "email": "Email is required.",
         "password": "Password is required.",
         "confirmPassword": "Confirm password is required.",
         "passwordMatch": "Password does not match.",
-        "incorrectSignIn": "The entered credentials are wrong"
+        "incorrectSignIn": "The entered credentials are wrong."
       }
     },
     "status": {

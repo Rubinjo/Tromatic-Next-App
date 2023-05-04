@@ -52,8 +52,11 @@
       "signOutWarning": "Abmeldewarnung",
       "companyId": "Firmen-ID",
       "name": "Vor-und Nachname",
+      "email": "Email",
+      "password": "Passwort",
       "confirm": "Passwort bestätigen",
       "error": {
+        "title": "Error",
         "signUpTitle": "Anmeldefehler",
         "signInTitle": "Anmeldefehler",
         "companyId": "Firmen-ID ist erforderlich",
@@ -62,7 +65,7 @@
         "password": "Passwort ist erforderlich.",
         "confirmPassword": "Passwort bestätigen ist erforderlich.",
         "passwordMatch": "Passwort stimmt nicht überein.",
-        "incorrectSignIn": "Die eingegebenen Anmeldedaten sind falsch"
+        "incorrectSignIn": "Die eingegebenen Anmeldedaten sind falsch."
       }
     }
   }

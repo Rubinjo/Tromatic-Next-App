@@ -51,17 +51,20 @@
       "signOutWarning": "Uitlog waarschuwing",
       "companyId": "Bedrijfs-ID",
       "name": "Voor- en achternaam",
+      "email": "Email",
+      "password": "Wachtwoord",
       "confirm": "Wachtwoord bevestiging",
       "error": {
+        "title": "Error",
         "signUpTitle": "Aanmeld error",
         "signInTitle": "Inlog error",
-        "companyId": "Bedrijfs ID is verplicht",
+        "companyId": "Bedrijfs ID is verplicht.",
         "name": "Volledige naam is verplicht.",
         "email": "Email is verplicht.",
         "password": "Wachtwoord is verplicht.",
         "confirmPassword": "Wachtwoord bevestiging is verplicht.",
         "passwordMatch": "Wachtwoorden zijn niet hetzelfde.",
-        "incorrectSignIn": "Inloggegevens kloppen niet"
+        "incorrectSignIn": "Inloggegevens kloppen niet."
       }
     }
   }
