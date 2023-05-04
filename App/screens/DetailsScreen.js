@@ -41,6 +41,7 @@ import Heating from "../assets/icons/Heating";
 import Sprayer from "../assets/icons/Sprayer";
 import FanDirection from "../assets/icons/FanDirection";
 import { ScrollView } from "react-native-gesture-handler";
+import Status from "../models/status";
 
 const DetailsScreen = (props) => {
 	const [refreshing, setRefreshing] = useState(false);
@@ -60,7 +61,7 @@ const DetailsScreen = (props) => {
 		setPointHum: 0,
 		setPointTemp: 0,
 		sprayPos: 0,
-		status: 0,
+		status: new Status(0),
 		tempOffset: 0,
 		numOfCTProbes: 0,
 		damperOpMode: 0,
@@ -121,7 +122,7 @@ const DetailsScreen = (props) => {
 				setPointHum: machine.SetPointHum,
 				setPointTemp: machine.SetPointTemp,
 				sprayPos: machine.SprayPos,
-				status: machine.Status,
+				status: new Status(machine.Status),
 				tempOffset: machine.TempOffset,
 				numOfCTProbes: machine.NumOfCTProbes,
 				damperOpMode: machine.DamperOpMode,

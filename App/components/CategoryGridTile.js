@@ -1,12 +1,18 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableNativeFeedback } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	TouchableNativeFeedback,
+	TouchableOpacity,
+	Alert,
+} from "react-native";
 import FullSlider from "./FullSlider";
 
 import Colors from "../assets/constants/colors";
 import Config from "../utils/config";
 import Thermometer from "../assets/icons/Thermometer";
 import Humidity from "../assets/icons/Humidity";
-import Status from "../assets/constants/status";
 import Fan from "../assets/icons/Fan";
 import Warning from "../assets/icons/Warning";
 import WoodThermometer from "../assets/icons/WoodThermometer";
@@ -37,11 +43,15 @@ const CategoryGridTile = (props) => {
 								height: Config.deviceWidth * 0.06,
 								borderRadius: Config.deviceWidth * 0.03,
 								backgroundColor:
-									props.item.status - 65537 < 12
-										? props.item.status - 65537 == 0
-											? Colors.Active
-											: "yellow"
-										: Colors.NotActive,
+									props.item.status.statusNums.some(
+										(num) => num >= 12
+									)
+										? Colors.NotActive
+										: props.item.status.statusNums.includes(
+												7
+										  )
+										? Colors.Warning
+										: Colors.Active,
 							}}
 						/>
 						<View
@@ -60,7 +70,9 @@ const CategoryGridTile = (props) => {
 								{props.item.type}
 							</Text>
 						</View>
-						{props.item.status >= 12 && (
+						{props.item.status.statusNums.some(
+							(num) => num >= 12
+						) && (
 							<View
 								style={{
 									flexDirection: "row",
@@ -68,24 +80,32 @@ const CategoryGridTile = (props) => {
 									marginRight: Config.deviceWidth * 0.08,
 								}}
 							>
-								<Warning width={Config.deviceWidth * 0.12} />
-								<View
-									style={{
-										marginLeft:
-											1 + Config.deviceWidth * 0.02,
-									}}
+								<TouchableOpacity
+									onPress={() =>
+										// Make list of props.item.status.statusStrings
+										Alert.alert(
+											"Warnings",
+											"- " +
+												props.item.status.statusStrings.join(
+													"\n- "
+												),
+
+											[
+												{
+													text: "OK",
+													onPress: () =>
+														console.log(
+															"OK Pressed"
+														),
+												},
+											]
+										)
+									}
 								>
-									<Text
-										style={{
-											fontFamily: "noto-sans-jp-regular",
-											fontSize:
-												4 + Config.deviceHeight * 0.015,
-											color: "black",
-										}}
-									>
-										{Status[props.item.status]}
-									</Text>
-								</View>
+									<Warning
+										width={Config.deviceWidth * 0.12}
+									/>
+								</TouchableOpacity>
 							</View>
 						)}
 					</View>

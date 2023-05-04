@@ -5,7 +5,6 @@ import {
 	CommonActions,
 	useNavigation,
 } from "@react-navigation/native";
-import TromaticNextLogo from "../assets/logos/Tromatic_Next";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, onValue } from "firebase/database";
 
@@ -14,6 +13,7 @@ import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import i18n from "../utils/i18n";
 import Machine from "../models/machine";
+import Status from "../models/status";
 import CategoryGridTile from "../components/CategoryGridTile";
 
 const OverviewScreen = (props) => {
@@ -51,7 +51,7 @@ const OverviewScreen = (props) => {
 							parData.SetPointHum,
 							parData.SetPointTemp,
 							parData.SprayPos,
-							parData.Status,
+							new Status(parData.Status),
 							parData.TempOffset,
 							new Date(parData.DateTimeMessage),
 							parData.NumOfCTProbes,
