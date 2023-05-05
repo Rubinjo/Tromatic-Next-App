@@ -69,6 +69,7 @@ const DetailsScreen = (props) => {
 		sprayOpMode: 0,
 		fansOpMode: 0,
 		dateTimeMessage: new Date(),
+		currentWM: 0,
 		CTs: [
 			{ id: 1, value: 0 },
 			{ id: 2, value: 0 },
@@ -130,6 +131,7 @@ const DetailsScreen = (props) => {
 				sprayOpMode: machine.SprayOpMode,
 				fansOpMode: machine.FansOpMode,
 				dateTimeMessage: new Date(machine.DateTimeMessage),
+				currentWM: machine.CurrentWM,
 				CTs: [
 					{ id: 1, value: machine.CTValue1 },
 					{ id: 2, value: machine.CTValue2 },
@@ -491,7 +493,7 @@ const DetailsScreen = (props) => {
 												: -Config.deviceHeight * 0.006,
 									}}
 								>
-									-%
+									{data.currentWM}%
 								</Text>
 							</View>
 						</View>
