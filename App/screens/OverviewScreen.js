@@ -78,7 +78,20 @@ const OverviewScreen = (props) => {
 							parData.WMActive7,
 							parData.WMActive8,
 							parData.WMActive9,
-							parData.WMActive10
+							parData.WMActive10,
+							parData.CurrentWM,
+							parData.CTValue1,
+							parData.CTValue2,
+							parData.CTValue3,
+							parData.CTValue4,
+							parData.CTValue5,
+							parData.CTValue6,
+							parData.CTValue7,
+							parData.CTValue8,
+							parData.CTValue9,
+							parData.CTValue10,
+							parData.CTValue11,
+							parData.CTValue12
 						);
 
 						const index = fetchedData.findIndex(

@@ -217,90 +217,102 @@ const CategoryGridTile = (props) => {
 								{props.item.setPointHum}%
 							</Text>
 						</View>
-						<View
-							style={{
-								borderRightWidth: 2,
-								borderRightColor: Colors.SecondaryLight,
-							}}
-						/>
 
-						<View
-							style={{
-								flex: 1,
-								alignItems: "center",
-								justifyContent: "space-evenly",
-							}}
-						>
-							<WoodThermometer
-								height={Config.deviceHeight * 0.04}
-								color={
-									props.item.remainingTime == 0
-										? Colors.ThirdlyDark
-										: Colors.Secondary
-								}
-							/>
-							<Text
-								style={{
-									margin: -Config.deviceHeight * 0.007,
-									fontFamily: "noto-sans-jp-regular",
-									color:
-										props.item.remainingTime == 0
-											? Colors.ThirdlyDark
-											: Colors.PrimaryDark,
-								}}
-							>
-								{props.item.RPM}%
-							</Text>
-						</View>
-						<View
-							style={{
-								borderRightWidth: 2,
-								borderRightColor: Colors.SecondaryLight,
-							}}
-						/>
+						{props.item.numOfCTProbes > 0 && (
+							<View style={{ flex: 1, flexDirection: "row" }}>
+								<View
+									style={{
+										borderRightWidth: 2,
+										borderRightColor: Colors.SecondaryLight,
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										alignItems: "center",
+										justifyContent: "space-evenly",
+									}}
+								>
+									<WoodThermometer
+										height={Config.deviceHeight * 0.04}
+										color={
+											props.item.remainingTime == 0
+												? Colors.ThirdlyDark
+												: Colors.Secondary
+										}
+									/>
+									<Text
+										style={{
+											margin:
+												-Config.deviceHeight * 0.007,
+											fontFamily: "noto-sans-jp-regular",
+											color:
+												props.item.remainingTime == 0
+													? Colors.ThirdlyDark
+													: Colors.PrimaryDark,
+										}}
+									>
+										{Math.min(
+											[
+												props.item.CTValue1,
+												props.item.CTValue2,
+												props.item.CTValue3,
+												props.item.CTValue4,
+												props.item.CTValue5,
+												props.item.CTValue6,
+												props.item.CTValue7,
+												props.item.CTValue8,
+												props.item.CTValue9,
+												props.item.CTValue10,
+												props.item.CTValue11,
+												props.item.CTValue12,
+											].filter(Number)
+										).toFixed(1)}{" "}
+										°C
+									</Text>
+								</View>
+							</View>
+						)}
 
-						<View
-							style={{
-								flex: 1,
-								alignItems: "center",
-								justifyContent: "space-evenly",
-							}}
-						>
-							<WoodMoisture
-								height={Config.deviceHeight * 0.036}
-								color={
-									props.item.remainingTime == 0
-										? Colors.ThirdlyDark
-										: Colors.Secondary
-								}
-							/>
-							<Text
-								style={{
-									margin: -Config.deviceHeight * 0.007,
-									fontFamily: "noto-sans-jp-regular",
-									color:
-										props.item.remainingTime == 0
-											? Colors.ThirdlyDark
-											: Colors.PrimaryDark,
-								}}
-							>
-								{average(
-									[
-										props.item.WMValue1,
-										props.item.WMValue2,
-										props.item.WMValue3,
-										props.item.WMValue4,
-										props.item.WMValue5,
-										props.item.WMValue6,
-										props.item.WMValue7,
-										props.item.WMValue8,
-										props.item.WMValue9,
-										props.item.WMValue10,
-									].filter(Number)
-								).toFixed(1)}{" "}
-								°C
-							</Text>
-						</View>
+						{props.item.numOfWmProbes > 0 && (
+							<View style={{ flex: 1, flexDirection: "row" }}>
+								<View
+									style={{
+										borderRightWidth: 2,
+										borderRightColor: Colors.SecondaryLight,
+									}}
+								/>
+								<View
+									style={{
+										flex: 1,
+										alignItems: "center",
+										justifyContent: "space-evenly",
+									}}
+								>
+									<WoodMoisture
+										height={Config.deviceHeight * 0.036}
+										color={
+											props.item.remainingTime == 0
+												? Colors.ThirdlyDark
+												: Colors.Secondary
+										}
+									/>
+									<Text
+										style={{
+											margin:
+												-Config.deviceHeight * 0.007,
+											fontFamily: "noto-sans-jp-regular",
+											color:
+												props.item.remainingTime == 0
+													? Colors.ThirdlyDark
+													: Colors.PrimaryDark,
+										}}
+									>
+										{props.item.CurrentWM}%
+									</Text>
+								</View>
+							</View>
+						)}
 					</View>
 				</View>
 			</TouchableNativeFeedback>
