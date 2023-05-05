@@ -8,6 +8,7 @@ import {
 	Platform,
 	SafeAreaView,
 	RefreshControl,
+	Alert,
 } from "react-native";
 
 import { getAuth } from "firebase/auth";
@@ -19,6 +20,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 // import { CHAMBERS } from "../data/dummy-data";
 import Config from "../utils/config";
@@ -222,6 +224,30 @@ const DetailsScreen = (props) => {
 							color={"white"}
 						/>
 					</TouchableOpacity>
+				) : data.remainingTime > 0 ? (
+					<TouchableOpacity
+						onPress={() =>
+							Alert.alert(
+								"Stop Program",
+								"Are you sure you want to stop the program?",
+
+								[
+									{
+										text: "Yes",
+										onPress: () => sendStop(),
+									},
+									{
+										text: "No",
+										onPress: () =>
+											console.log("No Pressed"),
+									},
+								]
+							)
+						}
+						style={{ marginRight: 12 }}
+					>
+						<Ionicons name={"stop"} size={34} color={"white"} />
+					</TouchableOpacity>
 				) : (
 					<View></View>
 				),
@@ -318,6 +344,18 @@ const DetailsScreen = (props) => {
 			"u" + auth.currentUser.uid;
 		update(ref(db), updates);
 		setAreChanges(false);
+	};
+
+	const sendStop = () => {
+		const db = getDatabase();
+		const updates = {};
+		const auth = getAuth();
+		updates["machines/" + props.route.params.machineId + "/LastEditor"] =
+			"u" + auth.currentUser.uid;
+		updates[
+			"machines/" + props.route.params.machineId + "/RemainingTime"
+		] = 0;
+		update(ref(db), updates);
 	};
 
 	function handleCTModal() {
