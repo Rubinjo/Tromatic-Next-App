@@ -10,8 +10,10 @@ const appId = process.env.APPID;
 
 export default {
 	name: "Tromatic NEXT",
-	slug: "Tromatic-NEXT",
-	version: "1.0.1",
+	slug: "tromatic-next",
+	owner: "rtr-solutions",
+	currentFullName: "tromatic-next",
+	version: "1.0.2",
 	platforms: ["ios", "android"],
 	orientation: "portrait",
 	primaryColor: "#0F7BCA",
@@ -27,7 +29,7 @@ export default {
 	assetBundlePatterns: ["**/*"],
 	ios: {
 		supportsTablet: true,
-		buildNumber: "1.0.1",
+		buildNumber: "1.0.2",
 	},
 	android: {
 		package: "nl.bes_bollmann.tromatic_next",
@@ -36,7 +38,7 @@ export default {
 			backgroundColor: "#0F7BCA",
 		},
 		softwareKeyboardLayoutMode: "pan",
-		versionCode: 2,
+		versionCode: 3,
 	},
 	extra: {
 		APIKEY: apiKey,
