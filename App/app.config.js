@@ -13,7 +13,7 @@ export default {
 	slug: "tromatic-next",
 	owner: "rtr-solutions",
 	currentFullName: "tromatic-next",
-	version: "1.0.2",
+	version: "1.0.3",
 	platforms: ["ios", "android"],
 	orientation: "portrait",
 	primaryColor: "#0F7BCA",
@@ -29,7 +29,7 @@ export default {
 	assetBundlePatterns: ["**/*"],
 	ios: {
 		supportsTablet: true,
-		buildNumber: "1.0.2",
+		buildNumber: "1.0.3",
 	},
 	android: {
 		package: "nl.bes_bollmann.tromatic_next",
@@ -38,7 +38,7 @@ export default {
 			backgroundColor: "#0F7BCA",
 		},
 		softwareKeyboardLayoutMode: "pan",
-		versionCode: 3,
+		versionCode: 4,
 	},
 	extra: {
 		APIKEY: apiKey,
