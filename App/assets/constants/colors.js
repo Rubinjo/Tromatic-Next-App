@@ -9,4 +9,5 @@ export default {
 	ThirdlyDark: "#BCBCBC",
 	PrimaryLight: "#FFFFFF",
 	SecondaryLight: "#E4E4E4",
+	Red: "#EA1800",
 };

@@ -211,7 +211,7 @@ const GraphScreen = (props) => {
 						<VictoryLine
 							style={{
 								data: {
-									stroke: Colors.Secondary,
+									stroke: Colors.Red,
 									strokeWidth: 3,
 								},
 							}}

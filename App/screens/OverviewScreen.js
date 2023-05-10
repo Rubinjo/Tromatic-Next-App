@@ -110,6 +110,12 @@ const OverviewScreen = (props) => {
 		});
 	}, []);
 
+	useEffect(() => {
+		props.navigation.setOptions({
+			headerTitle: "Overview",
+		});
+	}, []);
+
 	const renderGridItem = (itemData) => {
 		return (
 			<CategoryGridTile
