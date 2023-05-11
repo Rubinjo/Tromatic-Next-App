@@ -13,7 +13,7 @@ export default {
 	slug: "tromatic-next",
 	owner: "rtr-solutions",
 	currentFullName: "tromatic-next",
-	version: "1.0.3",
+	version: "1.0.4",
 	platforms: ["ios", "android"],
 	orientation: "portrait",
 	primaryColor: "#0F7BCA",
@@ -38,7 +38,7 @@ export default {
 			backgroundColor: "#0F7BCA",
 		},
 		softwareKeyboardLayoutMode: "pan",
-		versionCode: 4,
+		versionCode: 5,
 	},
 	extra: {
 		APIKEY: apiKey,
