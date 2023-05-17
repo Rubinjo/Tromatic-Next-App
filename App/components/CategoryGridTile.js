@@ -308,7 +308,7 @@ const CategoryGridTile = (props) => {
 													: Colors.PrimaryDark,
 										}}
 									>
-										{props.item.CurrentWM}%
+										{props.item.CurrentWM.toFixed(1)}%
 									</Text>
 								</View>
 							</View>
