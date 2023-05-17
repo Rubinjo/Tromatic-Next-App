@@ -10,8 +10,8 @@ const appId = process.env.APPID;
 
 export default {
 	name: "Tromatic NEXT",
-	slug: "tromatic-next",
-	owner: "rtr-solutions",
+	slug: "Tromatic-NEXT",
+	owner: "your-expo-owner",
 	currentFullName: "tromatic-next",
 	version: "1.0.4",
 	platforms: ["ios", "android"],
