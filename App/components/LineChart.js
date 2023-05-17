@@ -6,12 +6,8 @@ import {
 	VictoryAxis,
 	VictoryLine,
 	VictoryLegend,
-	VictoryTheme,
-	VictoryScatter,
 	LineSegment,
-	VictoryZoomContainer,
 } from "victory-native";
-import PropTypes from "prop-types";
 
 import temperature from "../data/dummy-data-temp";
 import humidity from "../data/dummy-data-humi";

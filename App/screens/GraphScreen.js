@@ -7,17 +7,7 @@ import {
 	where,
 	getDocs,
 } from "firebase/firestore";
-import {
-	VictoryChart,
-	VictoryGroup,
-	VictoryAxis,
-	VictoryLine,
-	VictoryLegend,
-	VictoryTheme,
-	VictoryScatter,
-	LineSegment,
-	VictoryZoomContainer,
-} from "victory-native";
+import { VictoryChart, VictoryAxis, VictoryLine } from "victory-native";
 
 import Config from "../utils/config";
 import i18n from "../utils/i18n";
@@ -25,6 +15,7 @@ import Colors from "../assets/constants/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Thermometer from "../assets/icons/Thermometer";
 import Humidity from "../assets/icons/Humidity";
+import Stopwatch from "../assets/icons/Stopwatch";
 
 const GraphScreen = (props) => {
 	// const [firstRender, setFirstRender] = useState(true);
@@ -33,7 +24,11 @@ const GraphScreen = (props) => {
 	const [data, setData] = useState([]);
 	const [chartData, setChartData] = useState([]);
 	const [activeTime, setActiveTime] = useState(0);
-	const [activeVar, setActiveVar] = useState(["CurrentTemp", "SetPointTemp"]);
+	const [activeVar, setActiveVar] = useState([
+		"CurrentTemp",
+		"SetPointTemp",
+		"Both",
+	]);
 	const [loaded, setLoaded] = useState(0);
 	const timeOffsets = [0, 28800000, 86400000, 604800000, 2592000000]; // 0 sec, 8 hours, 24 hours, 7 days, 1 month
 
@@ -403,7 +398,7 @@ const GraphScreen = (props) => {
 			>
 				<View
 					style={{
-						width: "50%",
+						width: "33%",
 						backgroundColor: activeVar.includes("CurrentHum")
 							? Colors.Secondary
 							: Colors.PrimaryLight,
@@ -445,15 +440,59 @@ const GraphScreen = (props) => {
 						</Text>
 					</TouchableOpacity>
 				</View>
-				<View
+				{/* <View
 					style={{
 						borderRightWidth: 1,
 						borderColor: Colors.SecondaryLight,
 					}}
-				/>
+				/> */}
 				<View
 					style={{
-						width: "50%",
+						width: "34%",
+						backgroundColor: activeVar.includes("") // Both
+							? Colors.Secondary
+							: Colors.PrimaryLight,
+						//borderTopRightRadius: Config.deviceWidth * 0.02,
+						//borderBottomRightRadius: Config.deviceWidth * 0.02,
+					}}
+				>
+					<TouchableOpacity
+						style={{
+							width: "100%",
+							height: "100%",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+						onPress={() =>
+							setVarName(["CurrentTemp", "CurrentTemp"])
+						}
+					>
+						<Stopwatch
+							height={Config.deviceHeight * 0.043}
+							color={
+								activeVar.includes("")
+									? Colors.PrimaryLight
+									: Colors.PrimaryDark
+							}
+						/>
+						<Text
+							style={{
+								fontFamily: activeVar.includes("")
+									? "noto-sans-jp-bold"
+									: "noto-sans-jp-regular",
+								fontSize: Config.deviceHeight * 0.011,
+								color: activeVar.includes("")
+									? Colors.PrimaryLight
+									: Colors.PrimaryDark,
+							}}
+						>
+							Combined
+						</Text>
+					</TouchableOpacity>
+				</View>
+				<View
+					style={{
+						width: "33%",
 						backgroundColor: activeVar.includes("CurrentTemp")
 							? Colors.Secondary
 							: Colors.PrimaryLight,
