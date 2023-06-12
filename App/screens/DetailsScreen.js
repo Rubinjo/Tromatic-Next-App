@@ -287,13 +287,12 @@ const DetailsScreen = (props) => {
 		const updates = {};
 		if (data.setPointTemp != dataFB.setPointTemp) {
 			updates[
-				"machines/" + props.route.params.machineId + "/SetPointTemp"
-			] = data.setPointTemp;
+				"machines/" + props.route.params.machineId + "/TempOffset"
+			] = dataFB.tempOffset + (data.setPointTemp - dataFB.setPointTemp);
 		}
 		if (data.setPointHum != dataFB.setPointHum) {
-			updates[
-				"machines/" + props.route.params.machineId + "/SetPointHum"
-			] = data.setPointHum;
+			updates["machines/" + props.route.params.machineId + "/EMCOffset"] =
+				dataFB.EMCOffset + (data.setPointHum - dataFB.setPointHum);
 		}
 		if (data.WMs[0].active != dataFB.WMs[0].active) {
 			updates["machines/" + props.route.params.machineId + "/WMActive1"] =
@@ -352,6 +351,9 @@ const DetailsScreen = (props) => {
 		const auth = getAuth();
 		updates["machines/" + props.route.params.machineId + "/LastEditor"] =
 			"u" + auth.currentUser.uid;
+		updates[
+			"machines/" + props.route.params.machineId + "/DateTimeMessage"
+		] = new Date().toISOString();
 		updates[
 			"machines/" + props.route.params.machineId + "/RemainingTime"
 		] = 0;
