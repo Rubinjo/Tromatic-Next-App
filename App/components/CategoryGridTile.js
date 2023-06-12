@@ -155,7 +155,10 @@ const CategoryGridTile = (props) => {
 											: Colors.PrimaryDark,
 								}}
 							>
-								{props.item.currentTemp} °C
+								{typeof props.item.currentTemp !== "undefined"
+									? props.item.currentTemp.toFixed(1)
+									: "-"}
+								{" °C"}
 							</Text>
 							<Text
 								style={{
@@ -167,7 +170,10 @@ const CategoryGridTile = (props) => {
 											: Colors.PrimaryDark,
 								}}
 							>
-								{props.item.setPointTemp} °C
+								{typeof props.item.setPointTemp !== "undefined"
+									? props.item.setPointTemp.toFixed(1)
+									: "-"}
+								{" °C"}
 							</Text>
 						</View>
 						<View
@@ -202,7 +208,10 @@ const CategoryGridTile = (props) => {
 											: Colors.PrimaryDark,
 								}}
 							>
-								{props.item.currentHum}%
+								{typeof props.item.currentHum !== "undefined"
+									? props.item.currentHum.toFixed(1)
+									: "-"}
+								{"%"}
 							</Text>
 							<Text
 								style={{
@@ -214,7 +223,10 @@ const CategoryGridTile = (props) => {
 											: Colors.PrimaryDark,
 								}}
 							>
-								{props.item.setPointHum}%
+								{typeof props.item.setPointHum !== "undefined"
+									? props.item.setPointHum.toFixed(1)
+									: "-"}
+								{"%"}
 							</Text>
 						</View>
 
@@ -308,7 +320,11 @@ const CategoryGridTile = (props) => {
 													: Colors.PrimaryDark,
 										}}
 									>
-										{props.item.CurrentWM.toFixed(1)}%
+										{typeof props.item.CurrentWM !==
+										"undefined"
+											? props.item.CurrentWM.toFixed(1)
+											: "-"}
+										{"%"}
 									</Text>
 								</View>
 							</View>

@@ -81,7 +81,7 @@ const Counter = (props) => {
 					>
 						{typeof props.actual !== "undefined"
 							? props.actual.toFixed(1)
-							: props.actual}
+							: "-"}
 					</Text>
 				</View>
 
@@ -122,7 +122,7 @@ const Counter = (props) => {
 					>
 						{typeof props.setter !== "undefined"
 							? props.setter.toFixed(1)
-							: props.setter}
+							: "-"}
 					</Text>
 				</View>
 			</View>

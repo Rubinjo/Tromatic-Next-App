@@ -533,7 +533,10 @@ const DetailsScreen = (props) => {
 												: -Config.deviceHeight * 0.006,
 									}}
 								>
-									{data.currentWM}%
+									{typeof data.currentWM !== "undefined"
+										? data.currentWM.toFixed(1)
+										: "-"}
+									{"%"}
 								</Text>
 							</View>
 						</View>
@@ -1088,7 +1091,9 @@ const DetailsScreen = (props) => {
 											fontFamily: "noto-sans-jp-regular",
 										}}
 									>
-										{ct.value}
+										{typeof ct.value !== "undefined"
+											? ct.value.toFixed(1)
+											: "-"}
 									</Text>
 								</View>
 								{ct.id !== data.numOfCTProbes && (
@@ -1138,7 +1143,11 @@ const DetailsScreen = (props) => {
 									}}
 								>
 									<Text>M{wm.id}</Text>
-									<Text>{wm.value}</Text>
+									<Text>
+										{typeof wm.value !== "undefined"
+											? wm.value.toFixed(1)
+											: "-"}
+									</Text>
 									<Switch
 										trackColor={{
 											true: Colors.Secondary,
