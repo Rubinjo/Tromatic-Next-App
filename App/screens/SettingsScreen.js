@@ -366,7 +366,7 @@ const SettingsScreen = (props) => {
 					>
 						<Text style={{ fontFamily: "noto-sans-jp-regular" }}>
 							{i18n.t("general.version")}{" "}
-							{Constants.manifest.version}
+							{Constants.expoConfig.version}
 						</Text>
 					</View>
 				</View>
