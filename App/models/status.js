@@ -29,9 +29,9 @@ errorDict = {
 
 class Status {
 	constructor(num) {
-		this.num = num;
-		this.bitString = num.toString(2);
-		bitArray = this.bitString.split("");
+		num = num;
+		bitString = num.toString(2);
+		bitArray = bitString.split("").reverse();
 		this.statusNums = [];
 		this.statusStrings = [];
 		for (let i = 0; i < bitArray.length; i++) {
