@@ -78,6 +78,7 @@ fs.watch(FOLDER, (event, filename) => {
 					"_" +
 					jsonData.DryChamberID
 			] = {
+				CID: process.env.CID,
 				DateTimeMessage: jsonData.DateTimeMessage,
 				Status: jsonData.Status,
 				CurrentTemp: jsonData.CurrentTemp,

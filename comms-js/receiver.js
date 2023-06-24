@@ -9,12 +9,6 @@ dotenv.config();
 
 const log = new EventLogger("Tromatic Next Receiver");
 
-/**
- * Machine ids to retrieve updates for.
- * @type {string[]}
- */
-const CID = "hig";
-
 let mids;
 
 function sendData(mid, dateTime, lastEditor, changeItem, changeValue) {
@@ -60,49 +54,55 @@ const [db, auth] = await setupFirebase(
 );
 
 try {
-	onValue(ref(db, "companies/" + CID + "/machines"), (snapshot) => {
-		const machines = snapshot.val();
-		mids = Object.keys(machines);
-		for (const mid of mids) {
-			for (const changeItem of [
-				"RemainingTime",
-				"TempOffset",
-				"EMCOffset",
-				"WMActive1",
-				"WMActive2",
-				"WMActive3",
-				"WMActive4",
-				"WMActive5",
-				"WMActive6",
-				"WMActive7",
-				"WMActive8",
-				"WMActive9",
-			]) {
-				onValue(
-					ref(db, "machines/" + mid + "/" + changeItem),
-					async (snapshot) => {
-						const changeValue = snapshot.val();
-						const lastEditor = (
-							await get(
-								ref(db, "machines/" + mid + "/LastEditor")
-							)
-						).val();
-						if (lastEditor.startsWith("u")) {
-							sendData(
-								mid,
-								new Date(),
-								lastEditor,
-								changeItem,
-								changeValue
-							);
-						} else {
-							log.info("Registered update was not from user", 0);
+	onValue(
+		ref(db, "companies/" + process.env.CID + "/machines"),
+		(snapshot) => {
+			const machines = snapshot.val();
+			mids = Object.keys(machines);
+			for (const mid of mids) {
+				for (const changeItem of [
+					"RemainingTime",
+					"TempOffset",
+					"EMCOffset",
+					"WMActive1",
+					"WMActive2",
+					"WMActive3",
+					"WMActive4",
+					"WMActive5",
+					"WMActive6",
+					"WMActive7",
+					"WMActive8",
+					"WMActive9",
+				]) {
+					onValue(
+						ref(db, "machines/" + mid + "/" + changeItem),
+						async (snapshot) => {
+							const changeValue = snapshot.val();
+							const lastEditor = (
+								await get(
+									ref(db, "machines/" + mid + "/LastEditor")
+								)
+							).val();
+							if (lastEditor.startsWith("u")) {
+								sendData(
+									mid,
+									new Date(),
+									lastEditor,
+									changeItem,
+									changeValue
+								);
+							} else {
+								log.info(
+									"Registered update was not from user",
+									0
+								);
+							}
 						}
-					}
-				);
+					);
+				}
 			}
 		}
-	});
+	);
 } catch (e) {
 	log.error(e, 58);
 }
