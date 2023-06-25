@@ -18,9 +18,8 @@ import Humidity from "../assets/icons/Humidity";
 import Stopwatch from "../assets/icons/Stopwatch";
 
 const GraphScreen = (props) => {
-	// const [firstRender, setFirstRender] = useState(true);
 	const [loading, setLoading] = useState(true);
-	// const [lastData, setLastData] = useState([]);
+	// Array of all loaded data
 	const [data, setData] = useState([]);
 	const [chartData, setChartData] = useState([]);
 	const [activeTime, setActiveTime] = useState(0);
@@ -29,16 +28,22 @@ const GraphScreen = (props) => {
 		"SetPointTemp",
 		"Both",
 	]);
+	// Till what timeOffset is already loaded into data
 	const [loaded, setLoaded] = useState(0);
 	const timeOffsets = [0, 28800000, 86400000, 604800000, 2592000000]; // 0 sec, 8 hours, 24 hours, 7 days, 1 month
 
+	// Fetch graph data from firestore
 	const fetchData = (timeNum) => {
+		// startTime is till the timeOffset the user selected and endTime is the timeOffset that is currently loaded into data
 		const startTime = new Date();
 		const endTime = new Date();
 		startTime.setTime(startTime.getTime() - timeOffsets[timeNum]);
 		endTime.setTime(endTime.getTime() - timeOffsets[loaded]);
+
 		try {
+			// Setup connection to database
 			const db = getFirestore();
+			// Query for history data from machine that is between already loaded and needed times
 			const q = query(
 				collection(
 					db,
@@ -51,10 +56,12 @@ const GraphScreen = (props) => {
 			);
 			getDocs(q).then((querySnapshot) => {
 				const measurements = [];
+				// Loop through found history times
 				querySnapshot.forEach((doc) => {
 					measurements.push(doc.data());
 				});
 				setActiveTime(timeNum);
+				// Add new data to the already loaded data
 				setData((prevData) => [...prevData, ...measurements]);
 			});
 		} catch (e) {
@@ -62,6 +69,7 @@ const GraphScreen = (props) => {
 		}
 	};
 
+	// Select time slice for selected varName
 	const fetchChartData = (timeNum, varName) => {
 		let dataForChart = new Array(varName.length);
 		for (let i = 0; i < dataForChart.length; i++) {
@@ -70,18 +78,21 @@ const GraphScreen = (props) => {
 		lenData = data.length;
 		data.forEach((measurement, i) => {
 			const time = new Date();
+			// Get timeframe of selected timeOffset
 			time.setTime(time.getTime() - timeOffsets[timeNum]);
+			// Translate time in firestore to js format
 			const firestoreTime = new Date(
 				measurement.DateTimeMessage.seconds * 1000 +
 					measurement.DateTimeMessage.nanoseconds / 1000000
 			);
+			// Add every firestore measurement that is in the selected timeframe
 			if (firestoreTime >= time) {
 				varName.forEach((varName, j) => {
 					if (i === Math.floor(lenData * 0.8)) {
 						dataForChart[j].push({
 							x: firestoreTime,
 							y: measurement[varName],
-							label: varName.replace(/([A-Z])/g, " $1"),
+							label: varName.replace(/([A-Z])/g, " $1"), // Add spaces between words
 						});
 					} else {
 						dataForChart[j].push({
@@ -97,6 +108,7 @@ const GraphScreen = (props) => {
 
 	const setTimeNum = (timeNum) => {
 		setLoading(false);
+		// Check if data is not already loaded
 		if (timeNum > loaded) {
 			fetchData(timeNum);
 		} else {
