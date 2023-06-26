@@ -31,6 +31,10 @@ let md5Previous = null;
 let fsWait = false;
 let jsonData, jsonString, md5Current;
 
+let oldStatus = 1;
+let newStatus = 0;
+let numStatusChanges = 0;
+
 const [db, auth] = await setupFirebase(
 	{
 		apiKey: process.env.APIKEY,
@@ -71,6 +75,15 @@ fs.watch(FOLDER, (event, filename) => {
 		try {
 			jsonString = fs.readFileSync(FOLDER + "/" + filename);
 			jsonData = JSON.parse(jsonString);
+			if (newStatus === jsonData.Status) {
+				numStatusChanges++;
+				if (numStatusChanges > 2) {
+					oldStatus = newStatus;
+				}
+			} else {
+				newStatus = jsonData.Status;
+				numStatusChanges = 0;
+			}
 			const updates = {};
 			updates[
 				"machines/m" +
@@ -80,7 +93,7 @@ fs.watch(FOLDER, (event, filename) => {
 			] = {
 				CID: process.env.CID,
 				DateTimeMessage: jsonData.DateTimeMessage,
-				Status: jsonData.Status,
+				Status: oldStatus,
 				CurrentTemp: jsonData.CurrentTemp,
 				SetPointTemp: jsonData.SetPointTemp,
 				CurrentHum: jsonData.CurrentHum,
