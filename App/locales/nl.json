@@ -66,6 +66,33 @@
         "passwordMatch": "Wachtwoorden zijn niet hetzelfde.",
         "incorrectSignIn": "Inloggegevens kloppen niet."
       }
+    },
+    "status": {
+      "ready": "Klaar",
+      "halted": "Gestopt",
+      "running": "Lopend",
+      "waitPreconditions": "Wachten op voorwaarden",
+      "ended": "Programma beëindigd",
+      "stopped": "Programma gestopt door een fout",
+      "equalizing": "Egaliserende fase",
+      "manual": "Handmatige modus actief",
+      "newProcess": "Programmeer nieuwe procesgegevens",
+      "delay": "Start vertraging",
+      "highTempA": "Hoge temperatuur alarm",
+      "lowTempA": "Lage temperatuur alarm",
+      "highHumA": "Hoge luchtvochtigheid alarm",
+      "lowHumA": "Lage luchtvochtigheid alarm",
+      "externalA": "Extern alarm",
+      "diffTempA": "Temperatuurverschil alarm",
+      "diffHumA": "Luchtvochtigheidsverschil alarm",
+      "purge": "Purge actief",
+      "boiler": "Ketel bescherming",
+      "highTempE": "Hoge temperatuur error",
+      "lowHumE": "Lage luchtvochtigheid error",
+      "voltage": "Referentiespanning error",
+      "externalE": "Externe error",
+      "diffTempE": "Temperatuurverschil error",
+      "diffHumE": "Luchtvochtigheidsverschil error"
     }
   }
 }

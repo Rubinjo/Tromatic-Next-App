@@ -92,7 +92,7 @@
       "purge": "Purge active",
       "boiler": "Boiler protection",
       "highTempE": "High temperature error",
-      "lowHumE": "Low humidty error",
+      "lowHumE": "Low humidity error",
       "voltage": "Reference voltage error",
       "externalE": "External error",
       "diffTempE": "Temperature difference error",
