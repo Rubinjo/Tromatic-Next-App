@@ -59,7 +59,13 @@ const SignUpScreen = (props) => {
 		} else {
 			setIsLoading(true);
 			try {
-				await registration(companyID, fullName, email, password);
+				await registration(
+					companyID,
+					fullName,
+					email,
+					password,
+					i18n.locale
+				);
 			} catch (err) {
 				console.log(err.message);
 				setIsLoading(false);

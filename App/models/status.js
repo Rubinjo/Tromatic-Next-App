@@ -1,4 +1,5 @@
 import i18n from "../utils/i18n";
+
 errorDict = {
 	0: i18n.t("status.ready"),
 	1: i18n.t("status.halted"),

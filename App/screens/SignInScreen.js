@@ -103,7 +103,7 @@ const SignInScreen = (props) => {
 		} else {
 			setIsLoading(true);
 			try {
-				await signInAccount(email, password);
+				await signInAccount(email, password, i18n.locale);
 			} catch (err) {
 				console.log(err.message);
 				setEmail("");

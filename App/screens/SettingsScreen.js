@@ -15,7 +15,7 @@ import Constants from "expo-constants";
 import { useSelector, useDispatch } from "react-redux";
 import DropDownPicker from "react-native-dropdown-picker";
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref, get } from "firebase/database";
+import { getDatabase, ref, get, update } from "firebase/database";
 
 import Colors from "../assets/constants/colors";
 import Settings from "../assets/icons/Settings";
@@ -270,8 +270,16 @@ const SettingsScreen = (props) => {
 						setValue={setValue}
 						setItems={setItems}
 						onChangeValue={(value) => {
-							i18n.locale = value;
+							const auth = getAuth();
+							const db = getDatabase();
 							try {
+								update(
+									ref(db, "users/" + auth.currentUser.uid),
+									{
+										language: value,
+									}
+								);
+								i18n.locale = value;
 								dispatch(updateLanguage(value));
 							} catch (err) {
 								console.log(err);
