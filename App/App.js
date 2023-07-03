@@ -18,6 +18,8 @@ import { store, persistor } from "./store/store";
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
+// Test 123
+
 // Fetch custom font-family
 const fetchFonts = async () => {
 	return Font.loadAsync({
