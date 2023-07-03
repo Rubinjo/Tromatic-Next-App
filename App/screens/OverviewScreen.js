@@ -47,11 +47,10 @@ async function registerForPushNotificationsAsync() {
 			finalStatus = status;
 		}
 		if (finalStatus !== "granted") {
-			alert("Failed to get push token for push notification!");
+			console.log("Access to notifications was denied");
 			return;
 		}
 		token = (await Notifications.getExpoPushTokenAsync()).data;
-		console.log(token);
 	} else {
 		alert("Must use physical device for Push Notifications");
 	}
@@ -196,11 +195,11 @@ const OverviewScreen = (props) => {
 		});
 	}, []);
 
-	useEffect(() => {
-		props.navigation.setOptions({
-			headerTitle: "Overview",
-		});
-	}, []);
+	// useEffect(() => {
+	// 	props.navigation.setOptions({
+	// 		headerTitle: "Overview",
+	// 	});
+	// }, []);
 
 	const renderGridItem = (itemData) => {
 		return (

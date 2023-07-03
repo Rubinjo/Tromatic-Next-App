@@ -1,5 +1,6 @@
 */node_modules/
 App/.expo/
+App/google-services.json
 */npm-debug.*
 *.jks
 *.p8

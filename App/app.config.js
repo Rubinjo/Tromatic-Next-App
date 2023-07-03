@@ -7,13 +7,14 @@ const projectId = process.env.PROJECTID;
 const storageBucket = process.env.STROAGEBUCKET;
 const messagingSenderId = process.env.MESSAGINGSENDERID;
 const appId = process.env.APPID;
+const googleServiceFile = process.env.GOOGLE_SERVICES_JSON;
 
 export default {
 	name: "Tromatic NEXT",
 	slug: "Tromatic-NEXT",
 	owner: "your-expo-owner",
 	currentFullName: "tromatic-next",
-	version: "1.0.5",
+	version: "1.0.6",
 	platforms: ["ios", "android"],
 	orientation: "portrait",
 	primaryColor: "#0F7BCA",
@@ -31,18 +32,24 @@ export default {
 		policy: "sdkVersion",
 	},
 	assetBundlePatterns: ["**/*"],
+	notification: {
+		icon: "./assets/notification-icon.png",
+		color: "#0F7BCA",
+		iosDisplayInForeground: true,
+	},
 	ios: {
 		supportsTablet: true,
-		buildNumber: "1.0.5",
+		buildNumber: "1.0.6",
 	},
 	android: {
 		package: "nl.bes_bollmann.tromatic_next",
+		googleServicesFile: googleServiceFile,
 		adaptiveIcon: {
 			foregroundImage: "./assets/adaptive-icon.png",
 			backgroundColor: "#0F7BCA",
 		},
 		softwareKeyboardLayoutMode: "pan",
-		versionCode: 6,
+		versionCode: 7,
 	},
 	extra: {
 		APIKEY: apiKey,
