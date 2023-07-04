@@ -15,7 +15,8 @@ import Colors from "../assets/constants/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Thermometer from "../assets/icons/Thermometer";
 import Humidity from "../assets/icons/Humidity";
-import Stopwatch from "../assets/icons/Stopwatch";
+
+import { AntDesign } from "@expo/vector-icons";
 
 const GraphScreen = (props) => {
 	const [loading, setLoading] = useState(true);
@@ -23,11 +24,7 @@ const GraphScreen = (props) => {
 	const [data, setData] = useState([]);
 	const [chartData, setChartData] = useState([]);
 	const [activeTime, setActiveTime] = useState(0);
-	const [activeVar, setActiveVar] = useState([
-		"CurrentTemp",
-		"SetPointTemp",
-		"Both",
-	]);
+	const [activeVar, setActiveVar] = useState(["CurrentTemp", "SetPointTemp"]);
 	// Till what timeOffset is already loaded into data
 	const [loaded, setLoaded] = useState(0);
 	const timeOffsets = [0, 28800000, 86400000, 604800000, 2592000000]; // 0 sec, 8 hours, 24 hours, 7 days, 1 month
@@ -206,24 +203,17 @@ const GraphScreen = (props) => {
 								},
 							}}
 						/>
-						<VictoryLine
-							style={{
-								data: {
-									stroke: Colors.Secondary,
-									strokeWidth: 3,
-								},
-							}}
-							data={chartData[0]}
-						/>
-						<VictoryLine
-							style={{
-								data: {
-									stroke: Colors.Red,
-									strokeWidth: 3,
-								},
-							}}
-							data={chartData[1]}
-						/>
+						{chartData.map((data) => (
+							<VictoryLine
+								style={{
+									data: {
+										stroke: Colors.Secondary,
+										strokeWidth: 3,
+									},
+								}}
+								data={data}
+							/>
+						))}
 					</VictoryChart>
 				</View>
 
@@ -411,9 +401,11 @@ const GraphScreen = (props) => {
 				<View
 					style={{
 						width: "33%",
-						backgroundColor: activeVar.includes("CurrentHum")
-							? Colors.Secondary
-							: Colors.PrimaryLight,
+						backgroundColor:
+							activeVar.includes("CurrentHum") &&
+							!activeVar.includes("CurrentTemp")
+								? Colors.Secondary
+								: Colors.PrimaryLight,
 						borderTopLeftRadius: Config.deviceWidth * 0.02,
 						borderBottomLeftRadius: Config.deviceWidth * 0.02,
 					}}
@@ -432,40 +424,45 @@ const GraphScreen = (props) => {
 						<Humidity
 							height={Config.deviceHeight * 0.04}
 							color={
-								activeVar.includes("CurrentHum")
+								activeVar.includes("CurrentHum") &&
+								!activeVar.includes("CurrentTemp")
 									? Colors.PrimaryLight
 									: Colors.PrimaryDark
 							}
 						/>
 						<Text
 							style={{
-								fontFamily: activeVar.includes("CurrentHum")
-									? "noto-sans-jp-bold"
-									: "noto-sans-jp-regular",
+								fontFamily:
+									activeVar.includes("CurrentHum") &&
+									!activeVar.includes("CurrentTemp")
+										? "noto-sans-jp-bold"
+										: "noto-sans-jp-regular",
 								fontSize: Config.deviceHeight * 0.011,
-								color: activeVar.includes("CurrentHum")
-									? Colors.PrimaryLight
-									: Colors.PrimaryDark,
+								color:
+									activeVar.includes("CurrentHum") &&
+									!activeVar.includes("CurrentTemp")
+										? Colors.PrimaryLight
+										: Colors.PrimaryDark,
 							}}
 						>
 							Humidity
 						</Text>
 					</TouchableOpacity>
 				</View>
-				{/* <View
+				<View
 					style={{
 						borderRightWidth: 1,
 						borderColor: Colors.SecondaryLight,
 					}}
-				/> */}
+				/>
 				<View
 					style={{
 						width: "34%",
-						backgroundColor: activeVar.includes("") // Both
-							? Colors.Secondary
-							: Colors.PrimaryLight,
-						//borderTopRightRadius: Config.deviceWidth * 0.02,
-						//borderBottomRightRadius: Config.deviceWidth * 0.02,
+						backgroundColor:
+							activeVar.includes("CurrentHum") &&
+							activeVar.includes("CurrentTemp")
+								? Colors.Secondary
+								: Colors.PrimaryLight,
 					}}
 				>
 					<TouchableOpacity
@@ -476,26 +473,37 @@ const GraphScreen = (props) => {
 							alignItems: "center",
 						}}
 						onPress={() =>
-							setVarName(["CurrentTemp", "CurrentTemp"])
+							setVarName([
+								"CurrentHum",
+								"SetPointHum",
+								"CurrentTemp",
+								"SetPointTemp",
+							])
 						}
 					>
-						<Stopwatch
-							height={Config.deviceHeight * 0.043}
+						<AntDesign
+							name="link"
+							size={Config.deviceHeight * 0.043}
 							color={
-								activeVar.includes("")
+								activeVar.includes("CurrentHum") &&
+								activeVar.includes("CurrentTemp")
 									? Colors.PrimaryLight
 									: Colors.PrimaryDark
 							}
 						/>
 						<Text
 							style={{
-								fontFamily: activeVar.includes("")
-									? "noto-sans-jp-bold"
-									: "noto-sans-jp-regular",
+								fontFamily:
+									activeVar.includes("CurrentHum") &&
+									activeVar.includes("CurrentTemp")
+										? "noto-sans-jp-bold"
+										: "noto-sans-jp-regular",
 								fontSize: Config.deviceHeight * 0.011,
-								color: activeVar.includes("")
-									? Colors.PrimaryLight
-									: Colors.PrimaryDark,
+								color:
+									activeVar.includes("CurrentHum") &&
+									activeVar.includes("CurrentTemp")
+										? Colors.PrimaryLight
+										: Colors.PrimaryDark,
 							}}
 						>
 							Combined
@@ -504,10 +512,23 @@ const GraphScreen = (props) => {
 				</View>
 				<View
 					style={{
+						borderRightWidth: 1,
+						borderColor: Colors.SecondaryLight,
+						color:
+							activeVar.includes("CurrentHum") &&
+							!activeVar.includes("CurrentTemp")
+								? Colors.PrimaryLight
+								: Colors.PrimaryDark,
+					}}
+				/>
+				<View
+					style={{
 						width: "33%",
-						backgroundColor: activeVar.includes("CurrentTemp")
-							? Colors.Secondary
-							: Colors.PrimaryLight,
+						backgroundColor:
+							activeVar.includes("CurrentTemp") &&
+							!activeVar.includes("CurrentHum")
+								? Colors.Secondary
+								: Colors.PrimaryLight,
 						borderTopRightRadius: Config.deviceWidth * 0.02,
 						borderBottomRightRadius: Config.deviceWidth * 0.02,
 					}}
@@ -526,20 +547,25 @@ const GraphScreen = (props) => {
 						<Thermometer
 							height={Config.deviceHeight * 0.043}
 							color={
-								activeVar.includes("CurrentTemp")
+								activeVar.includes("CurrentTemp") &&
+								!activeVar.includes("CurrentHum")
 									? Colors.PrimaryLight
 									: Colors.PrimaryDark
 							}
 						/>
 						<Text
 							style={{
-								fontFamily: activeVar.includes("CurrentTemp")
-									? "noto-sans-jp-bold"
-									: "noto-sans-jp-regular",
+								fontFamily:
+									activeVar.includes("CurrentTemp") &&
+									!activeVar.includes("CurrentHum")
+										? "noto-sans-jp-bold"
+										: "noto-sans-jp-regular",
 								fontSize: Config.deviceHeight * 0.011,
-								color: activeVar.includes("CurrentTemp")
-									? Colors.PrimaryLight
-									: Colors.PrimaryDark,
+								color:
+									activeVar.includes("CurrentTemp") &&
+									!activeVar.includes("CurrentHum")
+										? Colors.PrimaryLight
+										: Colors.PrimaryDark,
 							}}
 						>
 							Temperature
