@@ -22,12 +22,19 @@ const GraphScreen = (props) => {
 	const [loading, setLoading] = useState(true);
 	// Array of all loaded data
 	const [data, setData] = useState([]);
+	// Array of all data for current chart
 	const [chartData, setChartData] = useState([]);
 	const [activeTime, setActiveTime] = useState(0);
 	const [activeVar, setActiveVar] = useState(["CurrentTemp", "SetPointTemp"]);
 	// Till what timeOffset is already loaded into data
 	const [loaded, setLoaded] = useState(0);
 	const timeOffsets = [0, 28800000, 86400000, 604800000, 2592000000]; // 0 sec, 8 hours, 24 hours, 7 days, 1 month
+	const labelOffsets = {
+		CurrentTemp: 0.2,
+		SetPointTemp: 0.4,
+		CurrentHum: 0.6,
+		SetPointHum: 0.8,
+	};
 
 	// Fetch graph data from firestore
 	const fetchData = (timeNum) => {
@@ -58,8 +65,9 @@ const GraphScreen = (props) => {
 					measurements.push(doc.data());
 				});
 				setActiveTime(timeNum);
+				setLoaded(timeNum);
 				// Add new data to the already loaded data
-				setData((prevData) => [...prevData, ...measurements]);
+				setData((prevData) => [...measurements, ...prevData]);
 			});
 		} catch (e) {
 			console.log(e);
@@ -72,11 +80,26 @@ const GraphScreen = (props) => {
 		for (let i = 0; i < dataForChart.length; i++) {
 			dataForChart[i] = new Array();
 		}
-		lenData = data.length;
+		const time = new Date();
+		// Get timeframe of selected timeOffset
+		time.setTime(time.getTime() - timeOffsets[timeNum]);
+
+		const lenData = data.length;
+		let lenTime = 0;
+
+		data.forEach((measurement) => {
+			// Translate time in firestore to js format
+			const firestoreTime = new Date(
+				measurement.DateTimeMessage.seconds * 1000 +
+					measurement.DateTimeMessage.nanoseconds / 1000000
+			);
+			// Add every firestore measurement that is in the selected timeframe
+			if (firestoreTime >= time) {
+				lenTime++;
+			}
+		});
+
 		data.forEach((measurement, i) => {
-			const time = new Date();
-			// Get timeframe of selected timeOffset
-			time.setTime(time.getTime() - timeOffsets[timeNum]);
 			// Translate time in firestore to js format
 			const firestoreTime = new Date(
 				measurement.DateTimeMessage.seconds * 1000 +
@@ -85,7 +108,12 @@ const GraphScreen = (props) => {
 			// Add every firestore measurement that is in the selected timeframe
 			if (firestoreTime >= time) {
 				varName.forEach((varName, j) => {
-					if (i === Math.floor(lenData * 0.8)) {
+					if (
+						i ===
+						Math.floor(
+							lenData - lenTime + lenTime * labelOffsets[varName]
+						)
+					) {
 						dataForChart[j].push({
 							x: firestoreTime,
 							y: measurement[varName],
@@ -144,8 +172,8 @@ const GraphScreen = (props) => {
 		<View>
 			<View
 				style={{
-					width: "90%",
-					height: Config.deviceHeight * 0.4,
+					width: "95%",
+					height: Config.deviceHeight * 0.42,
 					alignSelf: "center",
 					justifyContent: "center",
 					// alignItems: "center",
@@ -160,11 +188,11 @@ const GraphScreen = (props) => {
 					size="large"
 					color={Colors.Secondary}
 				/>
-				<View style={{ marginLeft: Config.deviceWidth * 0.015 }}>
+				<View>
 					<VictoryChart
-						height={Config.deviceHeight * 0.4}
+						height={Config.deviceHeight * 0.42}
 						width={Config.deviceWidth * 0.95}
-						domainPadding={{ y: 20 }}
+						domainPadding={{ y: 25 }}
 					>
 						<VictoryAxis
 							tickFormat={
@@ -186,6 +214,9 @@ const GraphScreen = (props) => {
 									stroke: Colors.ThirdlyDark,
 									strokeDasharray: [5, 5],
 								},
+								tickLabels: {
+									fontSize: 6 + Config.deviceWidth * 0.015,
+								},
 							}}
 						/>
 						<VictoryAxis
@@ -201,13 +232,60 @@ const GraphScreen = (props) => {
 									stroke: Colors.ThirdlyDark,
 									strokeDasharray: [5, 5],
 								},
+								tickLabels: {
+									fontSize: 6 + Config.deviceWidth * 0.015,
+								},
 							}}
 						/>
+						{activeVar.includes("CurrentTemp") &&
+							activeVar.includes("CurrentHum") && (
+								<VictoryAxis
+									dependentAxis
+									orientation="right"
+									offsetX={50}
+									tickFormat={(y) => y + " %"}
+									style={{
+										grid: {
+											stroke: Colors.ThirdlyDark,
+											strokeDasharray: [5, 5],
+										},
+										tickLabels: {
+											fontSize:
+												6 + Config.deviceWidth * 0.015,
+										},
+									}}
+								/>
+							)}
 						{chartData.map((data) => (
 							<VictoryLine
 								style={{
 									data: {
-										stroke: Colors.Secondary,
+										stroke:
+											data.length > 0
+												? data[
+														Math.floor(
+															data.length * 0.2
+														)
+												  ]["label"] === " Current Temp"
+													? Colors.Red
+													: data[
+															Math.floor(
+																data.length *
+																	0.4
+															)
+													  ]["label"] ===
+													  " Set Point Temp"
+													? Colors.Orange
+													: data[
+															Math.floor(
+																data.length *
+																	0.6
+															)
+													  ]["label"] ===
+													  "  Current Hum"
+													? Colors.Primary
+													: Colors.Secondary
+												: null,
 										strokeWidth: 3,
 									},
 								}}

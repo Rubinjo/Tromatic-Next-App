@@ -10,4 +10,5 @@ export default {
 	PrimaryLight: "#FFFFFF",
 	SecondaryLight: "#E4E4E4",
 	Red: "#EA1800",
+	Orange: "#E27602",
 };
