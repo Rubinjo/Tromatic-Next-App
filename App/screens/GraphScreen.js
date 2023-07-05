@@ -132,7 +132,7 @@ const GraphScreen = (props) => {
 	};
 
 	const setTimeNum = (timeNum) => {
-		setLoading(false);
+		setLoading(true);
 		// Check if data is not already loaded
 		if (timeNum > loaded) {
 			fetchData(timeNum);
@@ -143,7 +143,7 @@ const GraphScreen = (props) => {
 	};
 
 	const setVarName = (varName) => {
-		setLoading(false);
+		setLoading(true);
 		fetchChartData(activeTime, varName);
 		setActiveVar(varName);
 	};
@@ -176,7 +176,6 @@ const GraphScreen = (props) => {
 					height: Config.deviceHeight * 0.42,
 					alignSelf: "center",
 					justifyContent: "center",
-					// alignItems: "center",
 					backgroundColor: Colors.PrimaryLight,
 					marginVertical: Config.deviceHeight * 0.025,
 					borderRadius: 8,
