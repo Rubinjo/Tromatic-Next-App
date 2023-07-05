@@ -34,7 +34,7 @@ const GraphScreen = (props) => {
 		SetPointTemp: 0.4,
 		CurrentHum: 0.6,
 		SetPointHum: 0.8,
-	};
+	}; // Where to place graph label
 
 	// Fetch graph data from firestore
 	const fetchData = (timeNum) => {
@@ -87,6 +87,7 @@ const GraphScreen = (props) => {
 		const lenData = data.length;
 		let lenTime = 0;
 
+		// Get number of timesteps in timeframe
 		data.forEach((measurement) => {
 			// Translate time in firestore to js format
 			const firestoreTime = new Date(
