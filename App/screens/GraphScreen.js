@@ -256,8 +256,9 @@ const GraphScreen = (props) => {
 									}}
 								/>
 							)}
-						{chartData.map((data) => (
+						{chartData.map((data, i) => (
 							<VictoryLine
+								key={i}
 								style={{
 									data: {
 										stroke:
@@ -282,7 +283,7 @@ const GraphScreen = (props) => {
 																	0.6
 															)
 													  ]["label"] ===
-													  "  Current Hum"
+													  " Current Hum"
 													? Colors.Primary
 													: Colors.Secondary
 												: null,
