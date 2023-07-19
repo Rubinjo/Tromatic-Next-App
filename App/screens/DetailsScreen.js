@@ -228,16 +228,15 @@ const DetailsScreen = (props) => {
 					<TouchableOpacity
 						onPress={() =>
 							Alert.alert(
-								"Stop Program",
-								"Are you sure you want to stop the program?",
-
+								i18n.t("general.error.StopProgram"),
+								i18n.t("general.error.StopProgramMessage"),
 								[
 									{
-										text: "Yes",
+										text: i18n.t("general.yes"),
 										onPress: () => sendStop(),
 									},
 									{
-										text: "No",
+										text: i18n.t("general.no"),
 										onPress: () =>
 											console.log("No Pressed"),
 									},

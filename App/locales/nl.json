@@ -3,13 +3,14 @@
     "general": {
       "email": "Email",
       "password": "Wachtwoord",
-      "error": "Error",
       "okAllCaps": "OK",
       "cancel": "Annuleren",
+      "yes": "Ja",
+      "no": "Nee",
       "retry": "Iets is fout gegaan, probeer het opnieuw",
       "lastUpdated": "Laatst geupdate",
       "today": "Vandaag",
-      "loggedInAs": "User login informatie",
+      "loggedInAs": "Gebruiker login informatie",
       "fullName": "Volledige naam",
       "companyIdentification": "Bedrijfs-ID",
       "language": "Taal",
@@ -37,7 +38,25 @@
       "viewGraph8": "View graph",
       "viewGraph9": "View graph",
       "viewGraph10": "View graph",
-      "upcoming": "Aankomend"
+      "upcoming": "Aankomend",
+      "combined": "Gecombineerd",
+      "SetPointTemp": "Ingestelde Temp",
+      "CurrentTemp": "Actuele Temp",
+      "SetPointHum": "Ingestelde Luchtvocht",
+      "CurrentHum": "Actuele Luchtvocht",
+      "error": {
+        "error": "Error",
+        "StopProgram": "Stop Programma",
+        "StopProgramMessage": "Weet je zeker dat je het programma wilt stoppen?"
+      }
+    },
+    "time": {
+      "monthCap": "Maand",
+      "weekCap": "Week",
+      "dayCap": "Dag",
+      "days": "dagen",
+      "hours": "uren",
+      "hoursCap": "Uren"
     },
     "authentication": {
       "welcome": "Welkom",

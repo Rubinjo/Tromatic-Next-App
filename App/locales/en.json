@@ -3,9 +3,10 @@
     "general": {
       "email": "Email",
       "password": "Password",
-      "error": "Error",
       "okAllCaps": "OK",
       "cancel": "Cancel",
+      "yes": "Yes",
+      "no": "No",
       "retry": "Something went wrong, please try again later",
       "lastUpdated": "Last updated",
       "today": "Today",
@@ -37,7 +38,25 @@
       "viewGraph8": "View graph",
       "viewGraph9": "View graph",
       "viewGraph10": "View graph",
-      "upcoming": "Upcoming"
+      "upcoming": "Upcoming",
+      "combined": "Combined",
+      "SetPointTemp": "Set Point Temp",
+      "CurrentTemp": "Current Temp",
+      "SetPointHum": "Set Point Hum",
+      "CurrentHum": "Current Hum",
+      "error": {
+        "error": "Error",
+        "StopProgram": "Stop Program",
+        "StopProgramMessage": "Are you sure you want to stop the program?"
+      }
+    },
+    "time": {
+      "monthCap": "Month",
+      "weekCap": "Week",
+      "dayCap": "Day",
+      "days": "days",
+      "hours": "hours",
+      "hoursCap": "Hours"
     },
     "authentication": {
       "welcome": "Welcome",

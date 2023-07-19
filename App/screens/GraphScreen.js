@@ -118,7 +118,7 @@ const GraphScreen = (props) => {
 						dataForChart[j].push({
 							x: firestoreTime,
 							y: measurement[varName],
-							label: varName.replace(/([A-Z])/g, " $1"), // Add spaces between words
+							label: i18n.t("general." + varName),
 						});
 					} else {
 						dataForChart[j].push({
@@ -340,7 +340,7 @@ const GraphScreen = (props) => {
 										: Colors.PrimaryDark,
 							}}
 						>
-							1 Month
+							1 {i18n.t("time.monthCap")}
 						</Text>
 					</TouchableOpacity>
 				</View>
@@ -380,7 +380,7 @@ const GraphScreen = (props) => {
 										: Colors.PrimaryDark,
 							}}
 						>
-							1 Week
+							1 {i18n.t("time.weekCap")}
 						</Text>
 					</TouchableOpacity>
 				</View>
@@ -420,7 +420,7 @@ const GraphScreen = (props) => {
 										: Colors.PrimaryDark,
 							}}
 						>
-							1 Day
+							1 {i18n.t("time.dayCap")}
 						</Text>
 					</TouchableOpacity>
 				</View>
@@ -462,7 +462,7 @@ const GraphScreen = (props) => {
 										: Colors.PrimaryDark,
 							}}
 						>
-							8 Hours
+							8 {i18n.t("time.hoursCap")}
 						</Text>
 					</TouchableOpacity>
 				</View>
@@ -524,7 +524,7 @@ const GraphScreen = (props) => {
 										: Colors.PrimaryDark,
 							}}
 						>
-							Humidity
+							{i18n.t("general.humidity")}
 						</Text>
 					</TouchableOpacity>
 				</View>
@@ -585,7 +585,7 @@ const GraphScreen = (props) => {
 										: Colors.PrimaryDark,
 							}}
 						>
-							Combined
+							{i18n.t("general.combined")}
 						</Text>
 					</TouchableOpacity>
 				</View>
@@ -647,7 +647,7 @@ const GraphScreen = (props) => {
 										: Colors.PrimaryDark,
 							}}
 						>
-							Temperature
+							{i18n.t("general.temperature")}
 						</Text>
 					</TouchableOpacity>
 				</View>

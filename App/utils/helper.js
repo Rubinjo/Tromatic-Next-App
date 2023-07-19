@@ -1,3 +1,5 @@
+import i18n from "../utils/i18n";
+
 function fancyTimeFormat(duration) {
 	const days = ~~(duration / 24);
 	const hrs = ~~(duration % 24);
@@ -5,10 +7,10 @@ function fancyTimeFormat(duration) {
 	let ret = "";
 	// TODO: convert strings to i18n
 	if (days > 0) {
-		ret += days + " days ";
+		ret += days + " " + i18n.t("time.days") + " ";
 	}
 
-	ret += hrs + " hours";
+	ret += hrs + " " + i18n.t("time.hours");
 	return ret;
 }
 
