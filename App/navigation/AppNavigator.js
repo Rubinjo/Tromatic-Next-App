@@ -4,6 +4,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+import i18n from "../utils/i18n";
+
 import DetailsScreen from "../screens/DetailsScreen";
 import OverviewScreen, {
 	tabOptions as overviewTabOptions,
@@ -32,6 +34,7 @@ const defaultStackOptions = {
 	headerTitle: "",
 	headerTitleAlign: "center",
 	headerTintColor: Colors.SecondaryLight,
+	headerBackTitle: i18n.t("general.back"),
 };
 const defaultTabOptions = {
 	headerStyle: { backgroundColor: Colors.Primary },

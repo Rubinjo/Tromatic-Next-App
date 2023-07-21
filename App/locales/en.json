@@ -3,6 +3,7 @@
     "general": {
       "overview": "Overview",
       "settings": "Settings",
+      "back": "Back",
       "email": "Email",
       "password": "Password",
       "okAllCaps": "OK",
