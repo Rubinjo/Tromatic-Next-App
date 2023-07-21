@@ -31,8 +31,8 @@ const SignUpScreen = (props) => {
 	// Show alert when error occurs
 	useEffect(() => {
 		if (error) {
-			Alert.alert(i18n.t("authentication.error.title"), error, [
-				{ text: "OK" },
+			Alert.alert(i18n.t("general.error.error"), error, [
+				{ text: i18n.t("general.okAllCaps") },
 			]);
 		}
 	}, [error]);
@@ -69,7 +69,7 @@ const SignUpScreen = (props) => {
 			} catch (err) {
 				console.log(err.message);
 				setIsLoading(false);
-				setError(err);
+				setError(i18n.t("authentication.error.databaseError"));
 			}
 		}
 	};

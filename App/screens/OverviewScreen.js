@@ -238,7 +238,7 @@ export const tabOptions = (navData) => {
 				<Gauge width={Config.deviceWidth * 0.075} color={iconColor} />
 			);
 		},
-		tabBarLabel: "Overview",
+		tabBarLabel: i18n.t("general.overview"),
 		headerShown: false,
 	};
 };

@@ -82,7 +82,7 @@ const SignInScreen = (props) => {
 	useEffect(() => {
 		if (error) {
 			Alert.alert(i18n.t("autentication.error.signInError"), error, [
-				{ text: "OK" },
+				{ text: i18n.t("general.okAllCaps") },
 			]);
 		}
 	}, [error]);

@@ -45,7 +45,7 @@ const ResetPasswordScreen = (props) => {
 			} catch (err) {
 				console.log(err.message);
 				setIsLoading(false);
-				setEmail(err);
+				setError(i18n.t("authentication.error.databaseError"));
 			}
 		}
 	};

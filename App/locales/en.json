@@ -1,13 +1,14 @@
 {
   "en": {
     "general": {
+      "overview": "Overview",
+      "settings": "Settings",
       "email": "Email",
       "password": "Password",
       "okAllCaps": "OK",
       "cancel": "Cancel",
       "yes": "Yes",
       "no": "No",
-      "retry": "Something went wrong, please try again later",
       "lastUpdated": "Last updated",
       "today": "Today",
       "loggedInAs": "User login information",
@@ -31,13 +32,6 @@
       "viewGraph": "View graph",
       "coreT": "Core T",
       "measurements": "Measurements",
-      "viewGraph4": "View graph",
-      "viewGraph5": "View graph",
-      "viewGraph6": "View graph",
-      "viewGraph7": "View graph",
-      "viewGraph8": "View graph",
-      "viewGraph9": "View graph",
-      "viewGraph10": "View graph",
       "upcoming": "Upcoming",
       "combined": "Combined",
       "SetPointTemp": "Set Point Temp",
@@ -47,7 +41,9 @@
       "error": {
         "error": "Error",
         "StopProgram": "Stop Program",
-        "StopProgramMessage": "Are you sure you want to stop the program?"
+        "StopProgramMessage": "Are you sure you want to stop the program?",
+        "retry": "Something went wrong, please try again later",
+        "database": "Database could not be reached"
       }
     },
     "time": {
@@ -78,16 +74,16 @@
       "resetBodyInfo": "If your email address is known to us,\n you will receive an email from us with a reset link to create a new password",
       "resetBodyReceived": "Didn't receive an email?\n Please check your junkmail",
       "error": {
-        "title": "Error",
         "signUpTitle": "Sign up error",
         "signInTitle": "Sign in error",
-        "companyId": "Company ID is required.",
-        "name": "Full name is required.",
-        "email": "Email is required.",
-        "password": "Password is required.",
-        "confirmPassword": "Confirm password is required.",
-        "passwordMatch": "Password does not match.",
-        "incorrectSignIn": "The entered credentials are wrong."
+        "companyId": "Company ID is required",
+        "name": "Full name is required",
+        "email": "Email is required",
+        "password": "Password is required",
+        "confirmPassword": "Confirm password is required",
+        "passwordMatch": "Password does not match",
+        "incorrectSignIn": "The entered credentials are wrong",
+        "databaseError": "Your request could not be processed, please try again later"
       }
     },
     "status": {

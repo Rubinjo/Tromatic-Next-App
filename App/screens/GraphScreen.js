@@ -28,6 +28,7 @@ const GraphScreen = (props) => {
 	const [activeVar, setActiveVar] = useState(["CurrentTemp", "SetPointTemp"]);
 	// Till what timeOffset is already loaded into data
 	const [loaded, setLoaded] = useState(0);
+	const [error, setError] = useState();
 	const timeOffsets = [0, 28800000, 86400000, 604800000, 2592000000]; // 0 sec, 8 hours, 24 hours, 7 days, 1 month
 	const labelOffsets = {
 		CurrentTemp: 0.2,
@@ -35,6 +36,15 @@ const GraphScreen = (props) => {
 		CurrentHum: 0.6,
 		SetPointHum: 0.8,
 	}; // Where to place graph label
+
+	// Show alert when error occurs
+	useEffect(() => {
+		if (error) {
+			Alert.alert(i18n.t("general.error.error"), error, [
+				{ text: i18n.t("general.okAllCaps") },
+			]);
+		}
+	}, [error]);
 
 	// Fetch graph data from firestore
 	const fetchData = (timeNum) => {
@@ -69,8 +79,9 @@ const GraphScreen = (props) => {
 				// Add new data to the already loaded data
 				setData((prevData) => [...measurements, ...prevData]);
 			});
-		} catch (e) {
-			console.log(e);
+		} catch (err) {
+			console.log(err);
+			setError(i18n.t("general.error.database"));
 		}
 	};
 

@@ -84,11 +84,12 @@ const SettingsScreen = (props) => {
 					setName(user.fullName);
 					setCid(user.cid);
 				} else {
-					setError("User not found");
+					setError(i18n.t("general.error.database"));
 				}
 			})
 			.catch((e) => {
-				setError(e);
+				console.log(e);
+				setError(i18n.t("general.error.database"));
 			});
 	}, []);
 
@@ -133,7 +134,7 @@ const SettingsScreen = (props) => {
 							await signOutAccount();
 						} catch (err) {
 							setIsLoading(false);
-							setError(i18n.t("general.retry"));
+							setError(i18n.t("general.error.retry"));
 						}
 					},
 				},
@@ -283,7 +284,7 @@ const SettingsScreen = (props) => {
 								dispatch(updateLanguage(value));
 							} catch (err) {
 								console.log(err);
-								setError(err.message);
+								setError(i18n.t("general.error.database"));
 							}
 						}}
 					/>
@@ -331,6 +332,7 @@ export const tabOptions = (navData) => {
 				/>
 			);
 		},
+		tabBarLabel: i18n.t("general.settings"),
 	};
 };
 

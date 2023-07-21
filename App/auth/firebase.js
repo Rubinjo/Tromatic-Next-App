@@ -83,7 +83,6 @@ export async function signInAccount(email, password, language) {
 			);
 		}
 	} catch (err) {
-		console.log(err.message);
 		throw new Error(err.message);
 	}
 }

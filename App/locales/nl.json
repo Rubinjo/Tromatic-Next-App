@@ -1,13 +1,14 @@
 {
   "nl": {
     "general": {
+      "overview": "Overzicht",
+      "settings": "Instellingen",
       "email": "Email",
       "password": "Wachtwoord",
       "okAllCaps": "OK",
       "cancel": "Annuleren",
       "yes": "Ja",
       "no": "Nee",
-      "retry": "Iets is fout gegaan, probeer het opnieuw",
       "lastUpdated": "Laatst geupdate",
       "today": "Vandaag",
       "loggedInAs": "Gebruiker login informatie",
@@ -31,13 +32,6 @@
       "viewGraph": "Bekijk grafiek",
       "coreT": "Kern T",
       "measurements": "Metingen",
-      "viewGraph4": "View graph",
-      "viewGraph5": "View graph",
-      "viewGraph6": "View graph",
-      "viewGraph7": "View graph",
-      "viewGraph8": "View graph",
-      "viewGraph9": "View graph",
-      "viewGraph10": "View graph",
       "upcoming": "Aankomend",
       "combined": "Gecombineerd",
       "SetPointTemp": "Ingestelde Temp",
@@ -45,9 +39,11 @@
       "SetPointHum": "Ingestelde Luchtvocht",
       "CurrentHum": "Actuele Luchtvocht",
       "error": {
-        "error": "Error",
         "StopProgram": "Stop Programma",
-        "StopProgramMessage": "Weet je zeker dat je het programma wilt stoppen?"
+        "StopProgramMessage": "Weet je zeker dat je het programma wilt stoppen?",
+        "retry": "Iets is fout gegaan, probeer het opnieuw",
+        "database": "Database kon niet worden bereikt",
+        "databaseError": "Je verzoek kon niet worden verwerkt, probeer het later opnieuw"
       }
     },
     "time": {

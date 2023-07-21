@@ -1,12 +1,14 @@
 {
   "de": {
     "general": {
+      "overview": "Überblick",
+      "settings": "Einstellungen",
       "email": "Email",
       "password": "Passwort",
-      "error": "Fehler",
       "okAllCaps": "OK",
-      "cancel": "Stornieren",
-      "retry": "Etwas ist schief gelaufen, bitte versuchen Sie es später erneut",
+      "cancel": "Fehler",
+      "yes": "Ja",
+      "no": "Nein",
       "lastUpdated": "Letzte Aktualisierung",
       "today": "Heute",
       "loggedInAs": "Anmeldeinformationen des Benutzers",
@@ -30,15 +32,27 @@
       "viewGraph": "Grafik anzeigen",
       "coreT": "Kern T",
       "measurements": "Messungen",
-      "viewGraph4": "View graph",
-      "viewGraph5": "View graph",
-      "viewGraph6": "View graph",
-      "viewGraph7": "View graph",
-      "viewGraph8": "View graph",
-      "viewGraph9": "View graph",
-      "viewGraph10": "View graph",
-      "upcoming": "Kommende"
-
+      "upcoming": "Kommende",
+      "combined": "Kombiniert",
+      "SetPointTemp": "Solltemp",
+      "CurrentTemp": "Aktuelle Temp",
+      "SetPointHum": "Soll-Feucht",
+      "CurrentHum": "Aktuelle Feucht",
+      "error": {
+        "error": "Fehler",
+        "StopProgram": "Programm beenden",
+        "StopProgramMessage": "Sind Sie sicher, dass Sie das Programm stoppen möchten?",
+        "retry": "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal",
+        "database": "Die Datenbank konnte nicht erreicht werden"
+      }
+    },
+    "time": {
+      "monthCap": "Monat",
+      "weekCap": "Woche",
+      "dayCap": "Tag",
+      "days": "tag",
+      "hours": "stunden",
+      "hoursCap": "Stunden"
     },
     "authentication": {
       "welcome": "Willkommen",
@@ -48,6 +62,7 @@
       "account": "Sie haben kein Konto?",
       "signUpAllCaps": "ANMELDUNG",
       "signUp": "Anmeldung",
+      "reset": "Zurücksetzen",
       "signOutWarningTitle": "Abmeldewarnung",
       "signOutWarning": "Abmeldewarnung",
       "companyId": "Firmen-ID",
@@ -55,18 +70,48 @@
       "email": "Email",
       "password": "Passwort",
       "confirm": "Passwort bestätigen",
+      "resetHead": "Bitte überprüfen Sie Ihre E-Mails",
+      "resetBodyInfo": "Wenn uns Ihre E-Mail-Adresse bekannt ist,\n erhalten Sie von uns eine E-Mail mit einem Link zum Zurücksetzen, um ein neues Passwort zu erstellen",
+      "resetBodyReceived": "Keine E-Mail erhalten?\n Bitte überprüfen Sie Ihre Junkmail",
       "error": {
-        "title": "Error",
         "signUpTitle": "Anmeldefehler",
         "signInTitle": "Anmeldefehler",
         "companyId": "Firmen-ID ist erforderlich",
-        "name": "Vor-und Nachname ist erforderlich.",
-        "email": "Email ist erforderlich.",
-        "password": "Passwort ist erforderlich.",
-        "confirmPassword": "Passwort bestätigen ist erforderlich.",
-        "passwordMatch": "Passwort stimmt nicht überein.",
-        "incorrectSignIn": "Die eingegebenen Anmeldedaten sind falsch."
+        "name": "Vor-und Nachname ist erforderlich",
+        "email": "Email ist erforderlich",
+        "password": "Passwort ist erforderlich",
+        "confirmPassword": "Passwort bestätigen ist erforderlich",
+        "passwordMatch": "Passwort stimmt nicht überein",
+        "incorrectSignIn": "Die eingegebenen Anmeldedaten sind falsch",
+        "databaseError": "Ihre Anfrage konnte nicht bearbeitet werden, bitte versuchen Sie es später erneut"
       }
+    },
+    "status": {
+      "ready": "Bereit",
+      "halted": "Angehalten",
+      "running": "Betrieb",
+      "waitPreconditions": "Warten auf Vorbedingungen",
+      "ended": "Programm beendet",
+      "stopped": "Programm wurde durch einen Fehler gestoppt",
+      "equalizing": "Ausgleichsphase",
+      "manual": "Manueller Modus aktiv",
+      "newProcess": "Neue Prozessdaten programmieren",
+      "delay": "Startverzögerung",
+      "highTempA": "Alarm bei hoher Temperatur",
+      "lowTempA": "Alarm bei niedriger Temperatur",
+      "highHumA": "Alarm bei hoher Luftfeuchtigkeit",
+      "lowHumA": "Alarm bei niedriger Luftfeuchtigkeit",
+      "externalA": "Externer Alarm",
+      "diffTempA": "Temperaturdifferenzalarm",
+      "diffHumA": "Alarm bei Luftfeuchtigkeitsdifferenz",
+      "purge": "Spülung aktiv",
+      "boiler": "Kesselschutz",
+      "highTempE": "Hoher Temperaturfehler",
+      "lowHumE": "Fehler bei niedriger Luftfeuchtigkeit",
+      "voltage": "Referenzspannungsfehler",
+      "externalE": "Externer Fehler",
+      "diffTempE": "Temperaturdifferenzfehler",
+      "diffHumE": "Fehler bei der Luftfeuchtigkeitsdifferenz"
     }
   }
 }
