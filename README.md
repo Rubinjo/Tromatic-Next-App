@@ -34,3 +34,8 @@
     <img alt="Runs on IOS" src="https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white" target="_blank" />
   </a>
 </p>
+
+## Setup Dev Environment (for the entire project)
+1. Install `Node.js` on your pc
+2. Follow the [App setup](App/README.md) steps
+3. Follow the [Comms-js setup](Comms-js/Readme.md) steps
