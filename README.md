@@ -1,4 +1,4 @@
-# DryChamber
+# Tromatic Next App
 <p align="center">
   <a aria-label="Visual Studio Code" href="https://open.vscode.dev/RTR-Development/DryChamber" target="_blank">
     <img alt="Open in Visual Studio Code" src="https://open.vscode.dev/badges/open-in-vscode.svg" target="_blank" />
