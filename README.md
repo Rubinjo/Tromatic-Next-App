@@ -38,4 +38,4 @@
 ## Setup Dev Environment (for the entire project)
 1. Install `Node.js` on your pc
 2. Follow the [App setup](App/README.md) steps
-3. Follow the [Comms-js setup](Comms-js/Readme.md) steps
+3. Follow the [Comms-js setup](Comms-js/README.md) steps
