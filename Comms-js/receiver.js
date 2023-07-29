@@ -26,6 +26,7 @@ function sendData(mid, dateTime, lastEditor, changeItem, changeValue) {
 	fs.writeFile(
 		"../receiver/" +
 			mid +
+			"_" +
 			dateTime.toJSON().slice(0, 19).replaceAll(":", "-") +
 			".json",
 		jsonString,
@@ -85,7 +86,7 @@ try {
 							).val();
 							if (lastEditor.startsWith("u")) {
 								sendData(
-									mid,
+									mid.split("_").slice(-1)[0],
 									new Date(),
 									lastEditor,
 									changeItem,
