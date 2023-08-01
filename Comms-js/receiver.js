@@ -85,10 +85,19 @@ try {
 								)
 							).val();
 							if (lastEditor.startsWith("u")) {
+								const uid = lastEditor
+									.split("_")
+									.slice(0)[0]
+									.slice(1);
+								const fullName = (
+									await get(
+										ref(db, "users/" + uid + "/fullName")
+									)
+								).val();
 								sendData(
 									mid.split("_").slice(-1)[0],
 									new Date(),
-									lastEditor,
+									fullName,
 									changeItem,
 									changeValue
 								);
