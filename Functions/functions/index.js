@@ -49,6 +49,23 @@ const errorDict = {
     28: "Temperatuurverschil error",
     29: "Humidity difference error",
   },
+  de: {
+    4: "Programm beendet",
+    5: "Programm wurde durch einen Fehler gestoppt",
+    12: "Alarm bei hoher Temperatur",
+    13: "Alarm bei niedriger Temperatur",
+    14: "Alarm bei hoher Luftfeuchtigkeit",
+    15: "Alarm bei niedriger Luftfeuchtigkeit",
+    16: "Externer Alarm",
+    17: "Temperaturdifferenzalarm",
+    18: "Alarm bei Luftfeuchtigkeitsdifferenz",
+    24: "Hoher Temperaturfehler",
+    25: "Fehler bei niedriger Luftfeuchtigkeit",
+    26: "Referenzspannungsfehler",
+    27: "Externer Fehler",
+    28: "Temperaturdifferenzfehler",
+    29: "Fehler bei der Luftfeuchtigkeitsdifferenz",
+  },
 };
 
 /**
@@ -137,7 +154,7 @@ exports.statusChangedFunction = onValueUpdated(
                                 userTokenSnapshot.exists()
                               ) {
                                 const expoPushToken =
-                                    userTokenSnapshot.val();
+                                  userTokenSnapshot.val();
                                 if (
                                   Expo.isExpoPushToken(
                                       expoPushToken,
@@ -146,14 +163,17 @@ exports.statusChangedFunction = onValueUpdated(
                                   const userLanguageSnapshot =
                                     await get(
                                         child(
-                                            ref(firebase),
+                                            ref(
+                                                firebase,
+                                            ),
                                             `users/${uid}/language`,
                                         ),
                                     );
                                   if (
                                     userLanguageSnapshot.exists()
                                   ) {
-                                    const userLanguage = userLanguageSnapshot.val();
+                                    const userLanguage =
+                                      userLanguageSnapshot.val();
                                     messages.push({
                                       to: expoPushToken,
                                       sound: "default",
@@ -183,7 +203,7 @@ exports.statusChangedFunction = onValueUpdated(
                           console.log("No device name found");
                         }
                         const chunks =
-                            expo.chunkPushNotifications(messages);
+                          expo.chunkPushNotifications(messages);
                         const tickets = [];
                         (async () => {
                           for (const chunk of chunks) {
