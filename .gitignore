@@ -38,7 +38,7 @@ firebase-debug.*.log*
 *.env.production.local
 
 # next.js
-/.next/
+.next/
 /out/
 
 # vercel
