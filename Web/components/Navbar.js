@@ -12,17 +12,10 @@ const languages = [
 ];
 
 const Navbar = () => {
-	const { user, logIn, logOut } = UserAuth();
+	const { user, logOut } = UserAuth();
 	const [loading, setLoading] = useState(true);
 	const [selectedLanguage, setSelectedLanguage] = useState(languages[0]);
 
-	const handleLogIn = async (email, password) => {
-		try {
-			await logIn(email, password);
-		} catch (e) {
-			console.log(e);
-		}
-	};
 	const handleLogOut = async () => {
 		try {
 			await logOut();
@@ -133,13 +126,16 @@ const Navbar = () => {
 					</Transition>
 				</Listbox>
 
-				{user ? (
-					<li className="cursor-pointer text-white font-semibold">
-						Logout
-					</li>
-				) : (
+				{/* {user ? ( */}
+				<li
+					className="cursor-pointer text-white font-semibold"
+					onClick={handleLogOut}
+				>
+					Logout
+				</li>
+				{/* ) : (
 					<li />
-				)}
+				)} */}
 			</ul>
 		</div>
 	);

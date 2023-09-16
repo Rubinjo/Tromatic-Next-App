@@ -6,8 +6,7 @@ import React from "react";
 import { FaRegEnvelope } from "react-icons/fa";
 import { MdLockOutline } from "react-icons/md";
 
-function Login({ auth }) {
-	const { logIn } = auth;
+function Login({ logIn }) {
 	const handleLogIn = async (event) => {
 		event.preventDefault();
 		const formData = new FormData(event.target);

@@ -5,8 +5,7 @@ import Link from "next/link";
 import React from "react";
 import { FaRegEnvelope } from "react-icons/fa";
 
-function Forgot({ auth }) {
-	const { passwordResetEmail } = auth;
+function Forgot({ passwordResetEmail }) {
 	const handlePasswordResetEmail = async (event) => {
 		event.preventDefault();
 		const formData = new FormData(event.target);

@@ -1,31 +1,58 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import { UserAuth } from "./AuthContext";
 import { useRouter } from "next/navigation";
 
 export function withPublic(Component) {
 	return function WithPublic(props) {
-		const auth = UserAuth();
+		const { user, logIn, logOut, passwordResetEmail } = UserAuth();
 		const router = useRouter();
 
-		if (auth.user) {
-			router.replace("/machines");
-			return <h1>Loading...</h1>;
-		}
+		useEffect(() => {
+			if (user) {
+				router.replace("/models/machines");
+				return () => {
+					<h1>Loading...</h1>;
+				};
+			}
+		}, [user]);
 
-		return <Component auth={auth} {...props} />;
+		return (
+			<Component
+				user={user}
+				logIn={logIn}
+				logOut={logOut}
+				passwordResetEmail={passwordResetEmail}
+				{...props}
+			/>
+		);
 	};
 }
 
 export function withProtected(Component) {
 	return function WithProtected(props) {
-		const auth = UserAuth();
+		const { user, logIn, logOut, passwordResetEmail } = UserAuth();
 		const router = useRouter();
+		console.log(user);
 
-		if (!auth.user) {
-			router.replace("/login");
-			return <h1>Loading...</h1>;
-		}
+		useEffect(() => {
+			if (!user) {
+				router.replace("/login");
+				return () => {
+					<h1>Loading...</h1>;
+				};
+			}
+		}, [user]);
 
-		return <Component auth={auth} {...props} />;
+		return (
+			<Component
+				user={user}
+				logIn={logIn}
+				logOut={logOut}
+				passwordResetEmail={passwordResetEmail}
+				{...props}
+			/>
+		);
 	};
 }
