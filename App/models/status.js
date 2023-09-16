@@ -30,9 +30,8 @@ errorDict = {
 
 class Status {
 	constructor(num) {
-		num = num;
-		bitString = num.toString(2);
-		bitArray = bitString.split("").reverse();
+		const bitString = num.toString(2);
+		const bitArray = bitString.split("").reverse();
 		this.statusNums = [];
 		this.statusStrings = [];
 		for (let i = 0; i < bitArray.length; i++) {
