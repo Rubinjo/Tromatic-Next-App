@@ -126,8 +126,8 @@ function Machines({ user }) {
 	];
 
 	return (
-		<div class="flex justify-center">
-			<div class="w-11/12">
+		<div className="flex justify-center">
+			<div className="w-11/12">
 				<Table
 					data={data}
 					columns={columns}
