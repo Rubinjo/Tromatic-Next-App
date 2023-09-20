@@ -7,9 +7,11 @@ import { withProtected } from "@/context/Route";
 import Machine from "../../../models/machine";
 import Status from "../../../models/status";
 import Table from "@/components/Table";
+import Modal from "@/components/Modal";
 
 function Machines({ user }) {
 	const [data, setData] = useState([]);
+	const [modalOpen, setModalOpen] = useState(false);
 
 	useEffect(() => {
 		if (user) {
@@ -124,8 +126,41 @@ function Machines({ user }) {
 	];
 
 	return (
-		<div>
-			<Table data={data} columns={columns} />
+		<div class="flex justify-center">
+			<div class="w-11/12">
+				<Table
+					data={data}
+					columns={columns}
+					onAdd={() => setModalOpen(true)}
+				/>
+			</div>
+			<div>
+				{modalOpen && (
+					<Modal
+						isOpen={modalOpen}
+						handleClose={() => setModalOpen(false)}
+					>
+						<div className="flex flex-col justify-between h-full w-full">
+							<form>
+								<label for="externalID">PC ID:</label>
+								<input
+									type="text"
+									id="externalID"
+									name="externalID"
+								/>
+								<label for="controllerType">
+									Controller type:
+								</label>
+								<input
+									type="text"
+									id="controllerType"
+									name="controllerType"
+								/>
+							</form>
+						</div>
+					</Modal>
+				)}
+			</div>
 		</div>
 	);
 }
