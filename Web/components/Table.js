@@ -7,9 +7,9 @@ import {
 	getSortedRowModel,
 	getFilteredRowModel,
 } from "@tanstack/react-table";
-import { FaMagnifyingGlass } from "react-icons/fa6";
+import { FaPlus, FaMagnifyingGlass } from "react-icons/fa6";
 
-export default function Table({ data, columns }) {
+export default function Table({ data, columns, onAdd }) {
 	const [sorting, setSorting] = useState([]);
 	const [filtering, setFiltering] = useState("");
 	const table = useReactTable({
@@ -29,13 +29,32 @@ export default function Table({ data, columns }) {
 	return (
 		<div class="relative overflow-x-auto sm:rounded">
 			<div class="flex p-2 justify-end">
+				<label for="add" class="sr-only">
+					Add
+				</label>
+				<div class="relative mt-1">
+					<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+						<FaPlus
+							class="w-4 h-4 text-green-200"
+							aria-hidden="true"
+						/>
+					</div>
+					<button
+						id="add"
+						type="button"
+						class="block py-2 pl-4 mr-5 text-sm text-green-200 transition-colors bg-green-600 rounded-lg w-24 focus:shadow-outline hover:bg-green-700"
+						onClick={onAdd}
+					>
+						ADD
+					</button>
+				</div>
 				<label for="table-search" class="sr-only">
 					Search
 				</label>
 				<div class="relative mt-1">
 					<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
 						<FaMagnifyingGlass
-							class="w-4 h-4 text-gray-500 dark:text-gray-400"
+							class="w-4 h-4 text-gray-400"
 							aria-hidden="true"
 						/>
 					</div>
