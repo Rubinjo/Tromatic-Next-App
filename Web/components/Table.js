@@ -29,7 +29,7 @@ export default function Table({ data, columns, onAdd }) {
 	return (
 		<div class="relative overflow-x-auto sm:rounded">
 			<div class="flex p-2 justify-end">
-				<label for="add" class="sr-only">
+				<label htmlFor="add" class="sr-only">
 					Add
 				</label>
 				<div class="relative mt-1">
@@ -48,7 +48,7 @@ export default function Table({ data, columns, onAdd }) {
 						ADD
 					</button>
 				</div>
-				<label for="table-search" class="sr-only">
+				<label htmlFor="table-search" class="sr-only">
 					Search
 				</label>
 				<div class="relative mt-1">
