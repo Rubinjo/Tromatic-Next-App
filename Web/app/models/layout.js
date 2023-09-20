@@ -13,7 +13,9 @@ export default function RootLayout({ children }) {
 	const pathname = usePathname();
 	return (
 		<div>
-			<Tab selection={pathname.split("/").pop()} />
+			{/* <div class="w-1/4 ml-16 my-6">
+				<Tab selection={pathname.split("/").pop()} />
+			</div> */}
 			{children}
 		</div>
 	);
