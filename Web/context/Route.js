@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 export function withPublic(Component) {
 	return function WithPublic(props) {
-		const { user, logIn, logOut, passwordResetEmail } = UserAuth();
+		const { user, role, logIn, logOut, passwordResetEmail } = UserAuth();
 		const router = useRouter();
 
 		useEffect(() => {
@@ -21,6 +21,7 @@ export function withPublic(Component) {
 		return (
 			<Component
 				user={user}
+				role={role}
 				logIn={logIn}
 				logOut={logOut}
 				passwordResetEmail={passwordResetEmail}
@@ -32,7 +33,7 @@ export function withPublic(Component) {
 
 export function withProtected(Component) {
 	return function WithProtected(props) {
-		const { user, logIn, logOut, passwordResetEmail } = UserAuth();
+		const { user, role, logIn, logOut, passwordResetEmail } = UserAuth();
 		const router = useRouter();
 		console.log(user);
 
@@ -48,6 +49,7 @@ export function withProtected(Component) {
 		return (
 			<Component
 				user={user}
+				role={role}
 				logIn={logIn}
 				logOut={logOut}
 				passwordResetEmail={passwordResetEmail}
