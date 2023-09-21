@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 
 import { withProtected } from "@/context/Route";
-import Machine from "../../../models/machine";
-import Status from "../../../models/status";
+import Machine from "../../models/machine";
+import Status from "../../models/status";
 import Table from "@/components/Table";
 import Modal from "@/components/Modal";
 
@@ -134,33 +134,29 @@ function Machines({ user }) {
 					onAdd={() => setModalOpen(true)}
 				/>
 			</div>
-			<div>
-				{modalOpen && (
-					<Modal
-						isOpen={modalOpen}
-						handleClose={() => setModalOpen(false)}
-					>
-						<div className="flex flex-col justify-between h-full w-full">
-							<form>
-								<label for="externalID">PC ID:</label>
-								<input
-									type="text"
-									id="externalID"
-									name="externalID"
-								/>
-								<label for="controllerType">
-									Controller type:
-								</label>
-								<input
-									type="text"
-									id="controllerType"
-									name="controllerType"
-								/>
-							</form>
-						</div>
-					</Modal>
-				)}
-			</div>
+			{modalOpen && (
+				<Modal
+					isOpen={modalOpen}
+					handleClose={() => setModalOpen(false)}
+				>
+					<div className="flex flex-col justify-between h-full w-full">
+						<form>
+							<label for="externalID">PC ID:</label>
+							<input
+								type="text"
+								id="externalID"
+								name="externalID"
+							/>
+							<label for="controllerType">Controller type:</label>
+							<input
+								type="text"
+								id="controllerType"
+								name="controllerType"
+							/>
+						</form>
+					</div>
+				</Modal>
+			)}
 		</div>
 	);
 }

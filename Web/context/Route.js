@@ -11,7 +11,7 @@ export function withPublic(Component) {
 
 		useEffect(() => {
 			if (user) {
-				router.replace("/models/machines");
+				router.replace("/machines");
 				return () => {
 					<h1>Loading...</h1>;
 				};
