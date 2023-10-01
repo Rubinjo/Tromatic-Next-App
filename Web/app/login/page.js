@@ -2,19 +2,25 @@
 import { withPublic } from "@/context/Route";
 import Head from "next/head";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { FaRegEnvelope } from "react-icons/fa";
 import { MdLockOutline } from "react-icons/md";
 
 function Login({ logIn }) {
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState();
 	const handleLogIn = async (event) => {
 		event.preventDefault();
-		const formData = new FormData(event.target);
-		const values = Object.fromEntries(formData);
 		try {
+			setLoading(true);
+			const formData = new FormData(event.target);
+			const values = Object.fromEntries(formData);
 			await logIn(values.email, values.password);
+			setLoading(false);
 		} catch (error) {
-			console.log(error);
+			setError(() => {
+				throw error;
+			});
 		}
 	};
 	return (
@@ -62,12 +68,23 @@ function Login({ logIn }) {
 							Forgot Password?
 						</Link>
 					</div>
-					<button
-						type="submit"
-						className="border-2 border-secondary text-secondary rounded-full px-12 py-2 inline-block font-semibold hover:bg-secondary hover:text-white"
-					>
-						Sign In
-					</button>
+					{loading ? (
+						<div
+							class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
+							role="status"
+						>
+							<span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+								Loading...
+							</span>
+						</div>
+					) : (
+						<button
+							type="submit"
+							className="border-2 border-secondary text-secondary rounded-full px-12 py-2 inline-block font-semibold hover:bg-secondary hover:text-white"
+						>
+							Sign In
+						</button>
+					)}
 				</div>
 			</form>
 		</div>
