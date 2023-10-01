@@ -63,6 +63,7 @@
       "account": "Nog geen account?",
       "signUpAllCaps": "AANMELDEN",
       "signUp": "Aanmelden",
+      "reset": "Reset",
       "signOutWarningTitle": "Uitlog waarschuwing",
       "signOutWarning": "Uitlog waarschuwing",
       "companyId": "Bedrijfs-ID",
@@ -70,17 +71,24 @@
       "email": "Email",
       "password": "Wachtwoord",
       "confirm": "Wachtwoord bevestiging",
+      "resetHead": "Controleer uw email",
+      "resetBodyInfo": "Indien uw e-mailadres bij ons bekend is,\n ontvangt u van ons een e-mail met een resetlink waarmee u een nieuw wachtwoord kunt aanmaken",
+      "resetBodyReceived": "Geen e-mail ontvangen?\n Controleer uw junkmail",
       "error": {
-        "title": "Error",
         "signUpTitle": "Aanmeld error",
         "signInTitle": "Inlog error",
         "companyId": "Bedrijfs ID is verplicht.",
         "name": "Volledige naam is verplicht.",
-        "email": "Email is verplicht.",
+        "email": "E-mail is verplicht.",
         "password": "Wachtwoord is verplicht.",
         "confirmPassword": "Wachtwoord bevestiging is verplicht.",
         "passwordMatch": "Wachtwoorden zijn niet hetzelfde.",
-        "incorrectSignIn": "Inloggegevens kloppen niet."
+        "incorrectSignIn": "Inloggegevens kloppen niet.",
+        "databaseError": "Uw verzoek kon niet worden verwerkt, probeer het later opnieuw",
+        "notVerifiedTitle": "Account niet geverifieerd",
+        "notVerifiedMessage": "Controleer uw e-mailadres om in te loggen",
+        "notApprovedTitle": "Account nog niet goedgekeurd",
+        "notApprovedMessage": "Uw account wacht op goedkeuring door de bedrijfsbeheerder"
       }
     },
     "status": {

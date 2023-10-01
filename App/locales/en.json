@@ -84,7 +84,11 @@
         "confirmPassword": "Confirm password is required",
         "passwordMatch": "Password does not match",
         "incorrectSignIn": "The entered credentials are wrong",
-        "databaseError": "Your request could not be processed, please try again later"
+        "databaseError": "Your request could not be processed, please try again later",
+        "notVerifiedTitle": "Account not verified",
+        "notVerifiedMessage": "Please verify your email to log in",
+        "notApprovedTitle": "Account not approved",
+        "notApprovedMessage": "Your account is pending approval by the company admin"
       }
     },
     "status": {

@@ -15,6 +15,8 @@ import {
 	get,
 } from "firebase/database";
 
+import i18n from "../utils/i18n";
+
 /**
  * Register user account
  *
@@ -62,6 +64,20 @@ export async function signInAccount(email, password, language) {
 			lastActivity: serverTimestamp(),
 			language: language,
 		});
+		if (!auth.currentUser.isEmailVerified) {
+			signOutAccount();
+			Alert.alert(
+				i18n.t("authentication.error.notVerifiedTitle"),
+				i18n.t("authentication.error.notVerifiedMessage"),
+				[
+					{
+						text: "OK",
+						onPress: () => console.log("OK Pressed"),
+					},
+				],
+				{ cancelable: true }
+			);
+		}
 		if (
 			!(
 				(await checkAdmin()) ||
@@ -71,8 +87,8 @@ export async function signInAccount(email, password, language) {
 		) {
 			signOutAccount();
 			Alert.alert(
-				"Account not verified",
-				"Your account has not been verified by the specified company yet",
+				i18n.t("authentication.error.notApprovedTitle"),
+				i18n.t("authentication.error.notApprovedMessage"),
 				[
 					{
 						text: "OK",

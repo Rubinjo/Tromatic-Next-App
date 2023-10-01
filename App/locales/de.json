@@ -84,7 +84,11 @@
         "confirmPassword": "Passwort bestätigen ist erforderlich",
         "passwordMatch": "Passwort stimmt nicht überein",
         "incorrectSignIn": "Die eingegebenen Anmeldedaten sind falsch",
-        "databaseError": "Ihre Anfrage konnte nicht bearbeitet werden, bitte versuchen Sie es später erneut"
+        "databaseError": "Ihre Anfrage konnte nicht bearbeitet werden, bitte versuchen Sie es später erneut",
+        "notVerifiedTitle": "Konto nicht verifiziert",
+        "notVerifiedMessage": "Bitte bestätigen Sie Ihre E-Mail-Adresse, um sich anzumelden",
+        "notApprovedTitle": "Konto nicht genehmigt",
+        "notApprovedMessage": "Ihr Konto muss noch vom Unternehmensadministrator genehmigt werden"
       }
     },
     "status": {
