@@ -1,16 +1,26 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { UserAuth } from "./AuthContext";
 import { useRouter } from "next/navigation";
 
 export function withPublic(Component) {
 	return function WithPublic(props) {
-		const { user, role, logIn, logOut, passwordResetEmail } = UserAuth();
+		const [loading, setLoading] = useState(true);
+		const { user, role, logIn, logOut, passwordResetEmail, registration } =
+			UserAuth();
 		const router = useRouter();
 
 		useEffect(() => {
-			if (user) {
+			const checkAuthentication = async () => {
+				await new Promise((resolve) => setTimeout(resolve, 50));
+				setLoading(false);
+			};
+			checkAuthentication();
+		}, [user]);
+
+		useEffect(() => {
+			if (user && !loading) {
 				router.replace("/machines");
 				return () => {
 					<h1>Loading...</h1>;
@@ -25,6 +35,7 @@ export function withPublic(Component) {
 				logIn={logIn}
 				logOut={logOut}
 				passwordResetEmail={passwordResetEmail}
+				registration={registration}
 				{...props}
 			/>
 		);
@@ -33,12 +44,21 @@ export function withPublic(Component) {
 
 export function withProtected(Component) {
 	return function WithProtected(props) {
-		const { user, role, logIn, logOut, passwordResetEmail } = UserAuth();
+		const [loading, setLoading] = useState(true);
+		const { user, role, logIn, logOut, passwordResetEmail, registration } =
+			UserAuth();
 		const router = useRouter();
-		console.log(user);
 
 		useEffect(() => {
-			if (!user) {
+			const checkAuthentication = async () => {
+				await new Promise((resolve) => setTimeout(resolve, 50));
+				setLoading(false);
+			};
+			checkAuthentication();
+		}, [user]);
+
+		useEffect(() => {
+			if (!user && !loading) {
 				router.replace("/login");
 				return () => {
 					<h1>Loading...</h1>;
@@ -53,6 +73,7 @@ export function withProtected(Component) {
 				logIn={logIn}
 				logOut={logOut}
 				passwordResetEmail={passwordResetEmail}
+				registration={registration}
 				{...props}
 			/>
 		);
