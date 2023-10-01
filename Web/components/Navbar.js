@@ -136,7 +136,7 @@ const Navbar = () => {
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Listbox.Options className="absolute mt-44 p-1 overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+							<Listbox.Options className="absolute z-50 mt-44 p-1 overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
 								<ul>
 									{languages.map((language, languageIdx) => (
 										<Listbox.Option
