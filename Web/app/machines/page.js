@@ -11,7 +11,15 @@ import Modal from "@/components/Modal";
 
 function Machines({ user }) {
 	const [data, setData] = useState([]);
-	const [modalOpen, setModalOpen] = useState(false);
+	const [addModalOpen, setAddModalOpen] = useState(false);
+	const [editModalOpen, setEditModalOpen] = useState(false);
+	const [editModalData, setEditModalData] = useState({});
+
+	const handleEditModalOpen = (data) => {
+		console.log(data);
+		setEditModalData(data);
+		setEditModalOpen(true);
+	};
 
 	useEffect(() => {
 		if (user) {
@@ -131,13 +139,37 @@ function Machines({ user }) {
 				<Table
 					data={data}
 					columns={columns}
-					onAdd={() => setModalOpen(true)}
+					onAdd={setAddModalOpen}
+					onEdit={handleEditModalOpen}
 				/>
 			</div>
-			{modalOpen && (
+			{editModalOpen && (
 				<Modal
-					isOpen={modalOpen}
-					handleClose={() => setModalOpen(false)}
+					isOpen={editModalOpen}
+					handleClose={() => setEditModalOpen(false)}
+				>
+					<div className="flex flex-col justify-between h-full w-full">
+						<form>
+							<label for="externalID">PC ID:</label>
+							<input
+								type="text"
+								id="externalID"
+								name="externalID"
+							/>
+							<label for="controllerType">Controller type:</label>
+							<input
+								type="text"
+								id="controllerType"
+								name="controllerType"
+							/>
+						</form>
+					</div>
+				</Modal>
+			)}
+			{addModalOpen && (
+				<Modal
+					isOpen={addModalOpen}
+					handleClose={() => setAddModalOpen(false)}
 				>
 					<div className="flex flex-col justify-between h-full w-full">
 						<form>

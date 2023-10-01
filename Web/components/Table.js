@@ -11,11 +11,9 @@ import { FaPlus, FaMagnifyingGlass } from "react-icons/fa6";
 
 import Modal from "@/components/Modal";
 
-export default function Table({ data, columns, onAdd }) {
+export default function Table({ data, columns, onAdd, onEdit }) {
 	const [sorting, setSorting] = useState([]);
 	const [filtering, setFiltering] = useState("");
-	const [modalOpen, setModalOpen] = useState(false);
-	const [putData, setPutData] = useState(null);
 
 	const table = useReactTable({
 		data,
@@ -31,17 +29,6 @@ export default function Table({ data, columns, onAdd }) {
 		onSortingChange: setSorting,
 		onGlobalFilterChange: setFiltering,
 	});
-
-	const handleModalOpen = (data) => {
-		console.log(data);
-		setPutData(data);
-		setModalOpen(true);
-	};
-
-	const handleModalClose = () => {
-		setModalOpen(false);
-		setPutData(null);
-	};
 
 	return (
 		<div className="relative overflow-x-auto sm:rounded">
@@ -60,7 +47,7 @@ export default function Table({ data, columns, onAdd }) {
 						id="add"
 						type="button"
 						className="block py-2 pl-4 mr-5 text-sm text-green-200 transition-colors bg-green-600 rounded-lg w-24 focus:shadow-outline hover:bg-green-700"
-						onClick={onAdd}
+						onClick={() => onAdd(true)}
 					>
 						ADD
 					</button>
@@ -114,7 +101,7 @@ export default function Table({ data, columns, onAdd }) {
 					{table.getRowModel().rows.map((row) => (
 						<tr
 							key={row.id}
-							onClick={() => handleModalOpen(row.original)}
+							onClick={() => onEdit(row.original)}
 							className="bg-white border-b text-gray-700"
 						>
 							{row.getVisibleCells().map((cell) => (
@@ -167,18 +154,6 @@ export default function Table({ data, columns, onAdd }) {
 					Last page
 				</button>
 			</div>
-			{modalOpen && putData && (
-				<Modal
-					isOpen={modalOpen}
-					handleClose={() => handleModalClose()}
-				>
-					<div className="flex flex-col justify-between h-full w-full">
-						<form>
-							<label for="externalID">Edit Machine</label>
-						</form>
-					</div>
-				</Modal>
-			)}
 		</div>
 	);
 }
