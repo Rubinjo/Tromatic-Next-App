@@ -38,12 +38,6 @@ function Modal({ children, isOpen, handleClose }) {
 					ref={nodeRef}
 					className="fixed rounded flex flex-col box-border min-w-fit overflow-hidden p-5 bg-white inset-y-32 inset-x-48 "
 				>
-					<button
-						onClick={handleClose}
-						className="py-2 px-8 self-end font-bold border rounded"
-					>
-						Close
-					</button>
 					<div className="box-border h-5/6">{children}</div>
 				</div>
 			</>

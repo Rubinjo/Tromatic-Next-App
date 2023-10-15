@@ -9,8 +9,6 @@ import {
 } from "@tanstack/react-table";
 import { FaPlus, FaMagnifyingGlass } from "react-icons/fa6";
 
-import Modal from "@/components/Modal";
-
 export default function Table({ data, columns, onAdd, onEdit }) {
 	const [sorting, setSorting] = useState([]);
 	const [filtering, setFiltering] = useState("");

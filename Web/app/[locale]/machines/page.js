@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 
 import { withProtected } from "@/context/Route";
-import Machine from "../../models/machine";
-import Status from "../../models/status";
+import Machine from "../../../models/machine";
+import Status from "../../../models/status";
 import Table from "@/components/Table";
 import Modal from "@/components/Modal";
 

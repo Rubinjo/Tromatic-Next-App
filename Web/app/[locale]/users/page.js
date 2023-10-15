@@ -12,16 +12,26 @@ import {
 } from "firebase/database";
 
 import { withProtected } from "@/context/Route";
-import User from "../../models/user";
+import User from "../../../models/user";
 import Table from "@/components/Table";
 import Modal from "@/components/Modal";
+import Dialog from "@/components/Dialog";
 
 function Users({ user }) {
 	const [data, setData] = useState([]);
 	const [addModalOpen, setAddModalOpen] = useState(false);
 	const [editModalOpen, setEditModalOpen] = useState(false);
+	const [isDeleteConfirmationOpen, setDeleteConfirmationOpen] =
+		useState(false);
 	const [editModalData, setEditModalData] = useState({});
 	const [error, setError] = useState();
+
+	const handleDeleteUser = () => {
+		const db = getDatabase();
+		console.log("Got here!");
+		setEditModalOpen(false);
+		setDeleteConfirmationOpen(false);
+	};
 
 	const handleEditUser = async (event) => {
 		event.preventDefault();
@@ -159,11 +169,22 @@ function Users({ user }) {
 					<div className="flex justify-between h-full w-full">
 						<form
 							onSubmit={handleEditUser}
-							className="flex flex-col"
+							className="flex flex-col w-full mx-8"
 						>
-							<div className="mb-6">
+							<div className="flex flex-row justify-between my-4">
+								<h1 className="text-3xl font-semibold text-gray-900 ">
+									Edit User
+								</h1>
+								<button
+									onClick={() => setEditModalOpen(false)}
+									className="py-2 px-8 self-end font-bold border rounded"
+								>
+									Close
+								</button>
+							</div>
+							<div className="my-4">
 								<label
-									for="fullName"
+									htmlFor="fullName"
 									className="block mb-2 text-sm font-medium text-gray-900"
 								>
 									Full Name
@@ -177,9 +198,9 @@ function Users({ user }) {
 									disabled
 								/>
 							</div>
-							<div className="mb-6">
+							<div className="my-4">
 								<label
-									for="email"
+									htmlFor="email"
 									className="block mb-2 text-sm font-medium text-gray-900"
 								>
 									Email
@@ -193,9 +214,9 @@ function Users({ user }) {
 									disabled
 								/>
 							</div>
-							<div className="mb-6">
+							<div className="my-4">
 								<label
-									for="roles"
+									htmlFor="roles"
 									className="block mb-2 text-sm font-medium text-gray-900"
 								>
 									Role
@@ -214,16 +235,57 @@ function Users({ user }) {
 									</option>
 								</select>
 							</div>
-							<button
-								type="submit"
-								className="text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-2 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-							>
-								Edit
-							</button>
+							{isDeleteConfirmationOpen ? (
+								<div className="flex flex-col justify-center items-center my-8">
+									<p>
+										Are you sure you want to delete this
+										user?
+									</p>
+									<div className="flex flex-row justify-center">
+										<button
+											type="button"
+											onClick={() => {
+												setDeleteConfirmationOpen(
+													false
+												);
+											}}
+											className="text-white bg-gray-400 hover:bg-gray-500 focus:ring-2 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+										>
+											Cancel
+										</button>
+										<button
+											type="button"
+											onClick={handleDeleteUser}
+											className="text-white bg-red-500 hover:bg-red-600 focus:ring-2 focus:outline-none focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+										>
+											Confirm Delete
+										</button>
+									</div>
+								</div>
+							) : (
+								<div className="flex flex-col my-8">
+									<button
+										type="submit"
+										className="text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-2 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mx-24 my-2"
+									>
+										Edit
+									</button>
+									<button
+										type="button"
+										onClick={() =>
+											setDeleteConfirmationOpen(true)
+										}
+										className="text-white bg-red-500 hover:bg-red-600 focus:ring-2 focus:outline-none focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center mx-24 my-2"
+									>
+										Delete
+									</button>
+								</div>
+							)}
 						</form>
 					</div>
 				</Modal>
 			)}
+
 			{addModalOpen && (
 				<Modal
 					isOpen={addModalOpen}
@@ -231,13 +293,15 @@ function Users({ user }) {
 				>
 					<div className="flex flex-col justify-between h-full w-full">
 						<form>
-							<label for="externalID">PC ID:</label>
+							<label htmlFor="externalID">PC ID:</label>
 							<input
 								type="text"
 								id="externalID"
 								name="externalID"
 							/>
-							<label for="controllerType">Controller type:</label>
+							<label htmlFor="controllerType">
+								Controller type:
+							</label>
 							<input
 								type="text"
 								id="controllerType"

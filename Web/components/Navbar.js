@@ -66,7 +66,6 @@ const Navbar = () => {
 			(language) => language.locale === getCookie("NEXT_LOCALE")
 		)
 	);
-	console.log("Cookie: " + selectedLanguage);
 
 	const handleLogOut = async () => {
 		try {
