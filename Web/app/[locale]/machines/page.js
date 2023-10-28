@@ -1,125 +1,212 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { getDatabase, ref, onValue } from "firebase/database";
+import Head from "next/head";
+import { getDatabase, ref, onValue, get } from "firebase/database";
 
 import { withProtected } from "@/context/Route";
 import Machine from "../../../models/machine";
 import Status from "../../../models/status";
 import Table from "@/components/Table";
-import Modal from "@/components/Modal";
 
-function Machines({ user }) {
+function Machines({ user, role, cid }) {
 	const [data, setData] = useState([]);
-	const [addModalOpen, setAddModalOpen] = useState(false);
-	const [editModalOpen, setEditModalOpen] = useState(false);
-	const [editModalData, setEditModalData] = useState({});
-
-	const handleEditModalOpen = (data) => {
-		console.log(data);
-		setEditModalData(data);
-		setEditModalOpen(true);
-	};
 
 	useEffect(() => {
 		if (user) {
 			const db = getDatabase();
-			const userRef = ref(db, "users/" + user.uid + "/cid");
-			onValue(userRef, (snapshot) => {
-				const cid = snapshot.val();
+			if (role === "owner") {
+				const companyRef = ref(db, "companies/");
+				onValue(companyRef, (snapshot) => {
+					const fetchedData = [];
+					snapshot.forEach((childSnapshot) => {
+						const companyKey = childSnapshot.key;
+						const companyVal = childSnapshot
+							.child("machines")
+							.val();
+						companyVal &&
+							Object.entries(companyVal).forEach(
+								async ([key, value]) => {
+									const machine = new Machine({
+										id: key,
+										companyId: companyKey,
+										creation: value.Creation,
+									});
+									const machineNameRef = ref(
+										db,
+										"machines/" + key + "/DeviceName"
+									);
+									const remainingTimeRef = ref(
+										db,
+										"machines/" + key + "/RemainingTime"
+									);
+									const statusRef = ref(
+										db,
+										"machines/" + key + "/Status"
+									);
+									const dateTimeMessageRef = ref(
+										db,
+										"machines/" + key + "/DateTimeMessage"
+									);
+									const lastEditorRef = ref(
+										db,
+										"machines/" + key + "/LastEditor"
+									);
+									const results = await Promise.all([
+										get(machineNameRef),
+										get(remainingTimeRef),
+										get(statusRef),
+										get(dateTimeMessageRef),
+										get(lastEditorRef),
+									]);
+
+									machine.machineName = results[0].val();
+									machine.active = true
+										? results[1].val()
+										: false;
+									machine.status = new Status(
+										results[2].val()
+									).statusStrings;
+									machine.dateTimeMessage = results[3].val();
+									const lastEditorId = results[4].val();
+									if (lastEditorId === key) {
+										machine.lastEditor =
+											machine.machineName;
+									} else {
+										const lastEditorUserRef = ref(
+											db,
+											"users/" +
+												lastEditorId +
+												"/fullName"
+										);
+										machine.lastEditor = (
+											await get(lastEditorUserRef)
+										).val();
+									}
+
+									// Find the machine index in the fetchedData array
+									const machineIndex = fetchedData.findIndex(
+										(m) => m.id === key
+									);
+
+									// If the machine is found in the array, update it; otherwise, push it
+									if (machineIndex !== -1) {
+										fetchedData[machineIndex] = machine;
+									} else {
+										fetchedData.push(machine);
+									}
+									setData([...fetchedData]);
+								}
+							);
+					});
+				});
+			} else {
 				const machinesRef = ref(db, "companies/" + cid + "/machines");
 				onValue(machinesRef, (snapshot) => {
 					const fetchedData = [];
-					snapshot.forEach((childSnapshot) => {
+					snapshot.forEach(async (childSnapshot) => {
 						const childKey = childSnapshot.key;
 						const childData = childSnapshot.val();
-						const parsRef = ref(db, "machines/" + childKey);
-						onValue(parsRef, (snapshot) => {
-							const parData = snapshot.val();
-							const machineData = new Machine(
-								childKey,
-								cid,
-								parData.DeviceName,
-								childData.Creation,
-								parData.CurrentHum,
-								parData.CurrentTemp,
-								parData.DamperPos,
-								parData.EMCOffset,
-								parData.FanDirection,
-								parData.HeatingValvePos,
-								parData.NumOfWmProbes,
-								parData.RPM,
-								parData.RemainingTime,
-								parData.TotalTime,
-								parData.SetPointHum,
-								parData.SetPointTemp,
-								parData.SprayPos,
-								new Status(parData.Status),
-								parData.TempOffset,
-								new Date(parData.DateTimeMessage),
-								parData.NumOfCTProbes,
-								parData.DamperOpMode,
-								parData.HeaterOpMode,
-								parData.SprayOpMode,
-								parData.FansOpMode,
-								parData.WMValue1,
-								parData.WMValue2,
-								parData.WMValue3,
-								parData.WMValue4,
-								parData.WMValue5,
-								parData.WMValue6,
-								parData.WMValue7,
-								parData.WMValue8,
-								parData.WMValue9,
-								parData.WMValue10,
-								parData.WMActive1,
-								parData.WMActive2,
-								parData.WMActive3,
-								parData.WMActive4,
-								parData.WMActive5,
-								parData.WMActive6,
-								parData.WMActive7,
-								parData.WMActive8,
-								parData.WMActive9,
-								parData.WMActive10,
-								parData.CurrentWM,
-								parData.CTValue1,
-								parData.CTValue2,
-								parData.CTValue3,
-								parData.CTValue4,
-								parData.CTValue5,
-								parData.CTValue6,
-								parData.CTValue7,
-								parData.CTValue8,
-								parData.CTValue9,
-								parData.CTValue10,
-								parData.CTValue11,
-								parData.CTValue12
-							);
-							const index = fetchedData.findIndex(
-								(i) => i.id === childKey
-							);
-							if (index > -1) {
-								fetchedData.splice(index, 1, machineData);
-							} else {
-								fetchedData.push(machineData);
-							}
-							setData([...fetchedData]);
+						const machine = new Machine({
+							id: childKey,
+							companyId: cid,
+							creation: childData.Creation,
 						});
+						const machineNameRef = ref(
+							db,
+							"machines/" + key + "/DeviceName"
+						);
+						const remainingTimeRef = ref(
+							db,
+							"machines/" + key + "/RemainingTime"
+						);
+						const statusRef = ref(
+							db,
+							"machines/" + key + "/Status"
+						);
+						const dateTimeMessageRef = ref(
+							db,
+							"machines/" + key + "/DateTimeMessage"
+						);
+						const lastEditorRef = ref(
+							db,
+							"machines/" + key + "/LastEditor"
+						);
+						const results = await Promise.all([
+							get(machineNameRef),
+							get(remainingTimeRef),
+							get(statusRef),
+							get(dateTimeMessageRef),
+							get(lastEditorRef),
+						]);
+
+						machine.machineName = results[0].val();
+						machine.active = true ? results[1].val() : false;
+						machine.status = new Status(
+							results[2].val()
+						).statusStrings;
+						machine.dateTimeMessage = results[3].val();
+						const lastEditorId = results[4].val();
+						if (lastEditorId === key) {
+							machine.lastEditor = machine.machineName;
+						} else {
+							const lastEditorUserRef = ref(
+								db,
+								"users/" + lastEditorId + "/fullName"
+							);
+							machine.lastEditor = (
+								await get(lastEditorUserRef)
+							).val();
+						}
+
+						// Find the machine index in the fetchedData array
+						const machineIndex = fetchedData.findIndex(
+							(m) => m.id === key
+						);
+
+						// If the machine is found in the array, update it; otherwise, push it
+						if (machineIndex !== -1) {
+							fetchedData[machineIndex] = machine;
+						} else {
+							fetchedData.push(machine);
+						}
+						setData([...fetchedData]);
 					});
 				});
-			});
+			}
 		}
 	}, [user]);
 
-	const columns = [
+	const commonColumns = [
+		{
+			header: "Active",
+			accessorKey: "active",
+		},
 		{
 			header: "ID",
 			accessorKey: "id",
 		},
 		{
-			header: "Type",
-			accessorKey: "type",
+			header: "Display Name",
+			accessorKey: "machineName",
+		},
+		{
+			header: "Status Code",
+			accessorKey: "status",
+		},
+		{
+			header: "Last Editor",
+			accessorKey: "lastEditor",
+		},
+		{
+			header: "Last Edited",
+			accessorKey: "dateTimeMessage",
+			cell: (info) =>
+				new Date(info.getValue()).toLocaleDateString(undefined, {
+					year: "numeric",
+					month: "long",
+					day: "numeric",
+				}),
 		},
 		{
 			header: "Creation",
@@ -133,62 +220,26 @@ function Machines({ user }) {
 		},
 	];
 
+	const columns =
+		role === "owner"
+			? [
+					{
+						header: "Company",
+						accessorKey: "companyId",
+					},
+					...commonColumns,
+			  ]
+			: commonColumns;
+
 	return (
 		<div className="flex justify-center">
+			<Head>
+				<title>Machines</title>
+				<link rel="icon" href="bes_bollmann_icon_white.svg" />
+			</Head>
 			<div className="w-11/12">
-				<Table
-					data={data}
-					columns={columns}
-					onAdd={setAddModalOpen}
-					onEdit={handleEditModalOpen}
-				/>
+				<Table data={data} columns={columns} />
 			</div>
-			{editModalOpen && (
-				<Modal
-					isOpen={editModalOpen}
-					handleClose={() => setEditModalOpen(false)}
-				>
-					<div className="flex flex-col justify-between h-full w-full">
-						<form>
-							<label for="externalID">PC ID:</label>
-							<input
-								type="text"
-								id="externalID"
-								name="externalID"
-							/>
-							<label for="controllerType">Controller type:</label>
-							<input
-								type="text"
-								id="controllerType"
-								name="controllerType"
-							/>
-						</form>
-					</div>
-				</Modal>
-			)}
-			{addModalOpen && (
-				<Modal
-					isOpen={addModalOpen}
-					handleClose={() => setAddModalOpen(false)}
-				>
-					<div className="flex flex-col justify-between h-full w-full">
-						<form>
-							<label for="externalID">PC ID:</label>
-							<input
-								type="text"
-								id="externalID"
-								name="externalID"
-							/>
-							<label for="controllerType">Controller type:</label>
-							<input
-								type="text"
-								id="controllerType"
-								name="controllerType"
-							/>
-						</form>
-					</div>
-				</Modal>
-			)}
 		</div>
 	);
 }

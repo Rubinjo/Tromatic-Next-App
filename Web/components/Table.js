@@ -34,22 +34,24 @@ export default function Table({ data, columns, onAdd, onEdit }) {
 				<label htmlFor="add" className="sr-only">
 					Add
 				</label>
-				<div className="relative mt-1">
-					<div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-						<FaPlus
-							className="w-4 h-4 text-green-200"
-							aria-hidden="true"
-						/>
+				{onAdd && (
+					<div className="relative mt-1">
+						<div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+							<FaPlus
+								className="w-4 h-4 text-green-200"
+								aria-hidden="true"
+							/>
+						</div>
+						<button
+							id="add"
+							type="button"
+							className="block py-2 pl-4 mr-5 text-sm text-green-200 transition-colors bg-green-600 rounded-lg w-24 focus:shadow-outline hover:bg-green-700"
+							onClick={() => onAdd(true)}
+						>
+							ADD
+						</button>
 					</div>
-					<button
-						id="add"
-						type="button"
-						className="block py-2 pl-4 mr-5 text-sm text-green-200 transition-colors bg-green-600 rounded-lg w-24 focus:shadow-outline hover:bg-green-700"
-						onClick={() => onAdd(true)}
-					>
-						ADD
-					</button>
-				</div>
+				)}
 				<label htmlFor="table-search" className="sr-only">
 					Search
 				</label>
@@ -99,8 +101,10 @@ export default function Table({ data, columns, onAdd, onEdit }) {
 					{table.getRowModel().rows.map((row) => (
 						<tr
 							key={row.id}
-							onClick={() => onEdit(row.original)}
-							className="bg-white border-b text-gray-700"
+							onClick={() => onEdit && onEdit(row.original)}
+							className={`bg-white border-b text-gray-700 ${
+								onEdit && "cursor-pointer"
+							}`}
 						>
 							{row.getVisibleCells().map((cell) => (
 								<td key={cell.id} className="px-6 py-4">

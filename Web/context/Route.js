@@ -7,8 +7,17 @@ import { useRouter } from "next/navigation";
 export function withPublic(Component) {
 	return function WithPublic(props) {
 		const [loading, setLoading] = useState(true);
-		const { user, role, logIn, logOut, passwordResetEmail, registration } =
-			UserAuth();
+		const {
+			user,
+			role,
+			cid,
+			logIn,
+			logOut,
+			passwordResetEmail,
+			registration,
+			editUser,
+			deleteUser,
+		} = UserAuth();
 		const router = useRouter();
 
 		useEffect(() => {
@@ -32,10 +41,13 @@ export function withPublic(Component) {
 			<Component
 				user={user}
 				role={role}
+				cid={cid}
 				logIn={logIn}
 				logOut={logOut}
 				passwordResetEmail={passwordResetEmail}
 				registration={registration}
+				editUser={editUser}
+				deleteUser={deleteUser}
 				{...props}
 			/>
 		);
@@ -45,8 +57,17 @@ export function withPublic(Component) {
 export function withProtected(Component) {
 	return function WithProtected(props) {
 		const [loading, setLoading] = useState(true);
-		const { user, role, logIn, logOut, passwordResetEmail, registration } =
-			UserAuth();
+		const {
+			user,
+			role,
+			cid,
+			logIn,
+			logOut,
+			passwordResetEmail,
+			registration,
+			editUser,
+			deleteUser,
+		} = UserAuth();
 		const router = useRouter();
 
 		useEffect(() => {
@@ -70,10 +91,13 @@ export function withProtected(Component) {
 			<Component
 				user={user}
 				role={role}
+				cid={cid}
 				logIn={logIn}
 				logOut={logOut}
 				passwordResetEmail={passwordResetEmail}
 				registration={registration}
+				editUser={editUser}
+				deleteUser={deleteUser}
 				{...props}
 			/>
 		);
