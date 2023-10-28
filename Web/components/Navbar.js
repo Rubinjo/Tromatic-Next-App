@@ -90,28 +90,44 @@ const Navbar = () => {
 	return (
 		<div className="flex justify-center py-4 bg-primary">
 			<div className="flex justify-between w-5/6">
-				{user ? (
-					<ul className="flex items-center">
-						<li className="px-4 cursor-pointer">
-							<Link
-								href="/machines"
-								className="text-white font-semibold"
-							>
-								Machines
-							</Link>
-						</li>
-						<li className="px-4 cursor-pointer">
-							<Link
-								href="/users"
-								className="text-white font-semibold"
-							>
-								Users
-							</Link>
-						</li>
-					</ul>
-				) : (
-					<ul />
-				)}
+				<ul className="flex items-center">
+					{user ? (
+						<>
+							<li className="pl-4 pr-8 cursor-pointer">
+								<Link
+									href="/"
+									className="text-white font-semibold"
+								>
+									<Image
+										src="bes_bollmann_icon_white.svg"
+										alt="Tromatic Next"
+										width={30}
+										height={30}
+										layout="responsive"
+									/>
+								</Link>
+							</li>
+							<li className="px-4 cursor-pointer">
+								<Link
+									href="/machines"
+									className="text-white font-semibold"
+								>
+									Machines
+								</Link>
+							</li>
+							<li className="px-4 cursor-pointer">
+								<Link
+									href="/users"
+									className="text-white font-semibold"
+								>
+									Users
+								</Link>
+							</li>
+						</>
+					) : (
+						<li />
+					)}
+				</ul>
 
 				<ul className="flex items-center">
 					<Listbox
