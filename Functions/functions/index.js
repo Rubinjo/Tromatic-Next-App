@@ -1,8 +1,12 @@
 const {setGlobalOptions} = require("firebase-functions/v2");
 const {onSchedule} = require("firebase-functions/v2/scheduler");
 const {onValueUpdated} = require("firebase-functions/v2/database");
+const {onCall, HttpsError} = require("firebase-functions/v2/https");
 
-const admin = require("firebase-admin");
+const {initializeApp} = require("firebase-admin/app");
+const {getAuth} = require("firebase-admin/auth");
+const {getDatabase} = require("firebase-admin/database");
+const {getFirestore} = require("firebase-admin/firestore");
 const {ref, get, child} = require("firebase/database");
 
 const {Expo} = require("expo-server-sdk");
@@ -10,9 +14,10 @@ require("dotenv").config();
 
 const expo = new Expo({accessToken: process.env.EXPO_ACCESS_TOKEN});
 
-admin.initializeApp();
-const firebase = admin.database();
-const firestore = admin.firestore();
+const app = initializeApp();
+const firebase = getDatabase(app);
+const firestore = getFirestore(app);
+const auth = getAuth(app);
 
 const errorDict = {
   en: {
@@ -70,7 +75,7 @@ const errorDict = {
 
 /**
  * Parse error as integer number to get the corresponding error numbers that need to be send to the user
- * @param {number} num is an integer reflecting the bit error
+ * @param {number} num reflecting the bit error
  * @return {object} array containing the errors found in num that need to be reported to the user
  */
 function parseStatusNums(num) {
@@ -88,6 +93,21 @@ function parseStatusNums(num) {
     ),
   );
 }
+
+/**
+ * Check if user has some type of privilege
+ * @param {string} uid User identification number
+ * @param {string} role Privilege type
+ * @return {Promise<boolean>} Whether the user has the specified privilege.
+ */
+const checkPrivilege = async (uid, role) => {
+  try {
+    const snapshot = await get(ref(firebase, `${role}/${uid}`));
+    return snapshot.exists();
+  } catch (error) {
+    throw new Error(`${role} privileges couldn't be confirmed`);
+  }
+};
 
 setGlobalOptions({region: "europe-west1", maxInstances: 10});
 
@@ -232,6 +252,55 @@ exports.statusChangedFunction = onValueUpdated(
             .catch((error) => {
               console.error(error);
             });
+      }
+    },
+);
+
+exports.createAuthUserFunction = onCall(
+    // {cors: ["tromatic.app"]},
+    async (request) => {
+      try {
+        if (await checkPrivilege(request.auth.uid, "admin") || await checkPrivilege(request.auth.uid, "owner")) {
+          const userRecord = await auth.createUser({
+            email: request.data.text.email,
+            emailVerified: false,
+            password: "test123",
+            displayName: request.data.text.fullName,
+            disabled: false,
+          });
+          return {uid: userRecord.uid};
+        } else {
+          throw new HttpsError(
+              "permission-denied",
+              "You do not have the required privileges",
+          );
+        }
+      } catch (error) {
+        throw new HttpsError(
+            "internal",
+            "Something went wrong when processing your request",
+        );
+      }
+    },
+);
+
+exports.deleteAuthUserFunction = onCall(
+    // {cors: ["tromatic.app"]},
+    async (request) => {
+      try {
+        if (await checkPrivilege(request.auth.uid, "admin") || await checkPrivilege(request.auth.uid, "owner")) {
+          await auth.deleteUser(request.data.text.uid);
+        } else {
+          throw new HttpsError(
+              "not-authorized",
+              "You do not have the required privileges",
+          );
+        }
+      } catch (error) {
+        throw new HttpsError(
+            "server-error",
+            "Something went wrong when processing your request",
+        );
       }
     },
 );
