@@ -20,22 +20,24 @@ export function withPublic(Component) {
 		} = UserAuth();
 		const router = useRouter();
 
+		// Wait for user to be loaded
 		useEffect(() => {
 			const checkAuthentication = async () => {
-				await new Promise((resolve) => setTimeout(resolve, 50));
+				await new Promise((resolve) => setTimeout(resolve, 500));
 				setLoading(false);
 			};
 			checkAuthentication();
-		}, [user]);
+		}, []);
 
-		useEffect(() => {
-			if (user && !loading) {
-				router.replace("/machines");
-				return () => {
-					<h1>Loading...</h1>;
-				};
-			}
-		}, [user]);
+		if (loading) {
+			return null; // Prevent rendering
+		}
+
+		// If the user is already authenticated, perform the redirection
+		if (user) {
+			router.replace("/machines");
+			return null; // Prevent rendering
+		}
 
 		return (
 			<Component
@@ -70,22 +72,24 @@ export function withProtected(Component) {
 		} = UserAuth();
 		const router = useRouter();
 
+		// Wait for user to be loaded
 		useEffect(() => {
 			const checkAuthentication = async () => {
-				await new Promise((resolve) => setTimeout(resolve, 50));
+				await new Promise((resolve) => setTimeout(resolve, 500));
 				setLoading(false);
 			};
 			checkAuthentication();
-		}, [user]);
+		}, []);
 
-		useEffect(() => {
-			if (!user && !loading) {
-				router.replace("/login");
-				return () => {
-					<h1>Loading...</h1>;
-				};
-			}
-		}, [user]);
+		if (loading) {
+			return null; // Prevent rendering
+		}
+
+		// If the user is not authenticated, perform the redirection
+		if (!user) {
+			router.replace("/login");
+			return null; // Prevent rendering
+		}
 
 		return (
 			<Component

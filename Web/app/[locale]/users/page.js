@@ -1,23 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-	getDatabase,
-	ref,
-	get,
-	onValue,
-	remove,
-	set,
-	serverTimestamp,
-} from "firebase/database";
+import Head from "next/head";
+import { getDatabase, ref, get, onValue } from "firebase/database";
 
 import { withProtected } from "@/context/Route";
 import User from "../../../models/user";
 import Table from "@/components/Table";
 import Modal from "@/components/Modal";
-import Dialog from "@/components/Dialog";
 
-function Users({ user }) {
+function Users({ user, cid, role, registration, editUser, deleteUser }) {
 	const [data, setData] = useState([]);
 	const [addModalOpen, setAddModalOpen] = useState(false);
 	const [editModalOpen, setEditModalOpen] = useState(false);
@@ -26,42 +18,11 @@ function Users({ user }) {
 	const [editModalData, setEditModalData] = useState({});
 	const [error, setError] = useState();
 
-	const handleDeleteUser = () => {
-		const db = getDatabase();
-		console.log("Got here!");
-		setEditModalOpen(false);
-		setDeleteConfirmationOpen(false);
-	};
-
-	const handleEditUser = async (event) => {
-		event.preventDefault();
+	const handleDeleteUser = async () => {
 		try {
-			const formData = new FormData(event.target);
-			const values = Object.fromEntries(formData);
-			if (values.role !== editModalData.role) {
-				const db = getDatabase();
-				if (editModalData.role !== "Unassigned") {
-					const currentRoleRef = ref(
-						db,
-						editModalData.role + "/" + editModalData.id
-					);
-					remove(currentRoleRef);
-				}
-				const newRoleRef = ref(
-					db,
-					values.role + "/" + editModalData.id
-				);
-				set(newRoleRef, {
-					assignedAt: serverTimestamp(),
-				});
-				setData((prevData) =>
-					prevData.map((user) =>
-						user.id === editModalData.id
-							? { ...user, role: values.role }
-							: user
-					)
-				);
-			}
+			await deleteUser(editModalData);
+			setEditModalOpen(false);
+			setDeleteConfirmationOpen(false);
 		} catch (error) {
 			setError(() => {
 				throw error;
@@ -69,20 +30,124 @@ function Users({ user }) {
 		}
 	};
 
+	const handleEditUser = async (event) => {
+		event.preventDefault();
+		try {
+			const formData = new FormData(event.target);
+			const values = Object.fromEntries(formData);
+
+			const isRoleChanged = values.role !== editModalData.role;
+			const isFullNameChanged =
+				values.fullName !== editModalData.fullName;
+			const isEmailChanged = values.email !== editModalData.email;
+			const isCompanyIdChanged =
+				values.companyId !== editModalData.companyId;
+			if (
+				isRoleChanged ||
+				isFullNameChanged ||
+				isEmailChanged ||
+				isCompanyIdChanged
+			) {
+				const updatedUserData = {
+					id: editModalData.id,
+					role: isRoleChanged ? values.role : editModalData.role,
+					fullName: isFullNameChanged
+						? values.fullName
+						: editModalData.fullName,
+					email: isEmailChanged ? values.email : editModalData.email,
+					companyId: isCompanyIdChanged
+						? values.companyId
+						: editModalData.companyId,
+				};
+
+				await editUser(updatedUserData, editModalData);
+
+				// Update the user data in the state with the edited values
+				setData((prevData) =>
+					prevData.map((user) =>
+						user.id === editModalData.id
+							? { ...user, ...updatedUserData }
+							: user
+					)
+				);
+			}
+		} catch (error) {
+			console.log(error);
+			setError(() => {
+				throw error;
+			});
+		}
+	};
+
 	const handleEditModalOpen = (data) => {
-		console.log(data);
 		setEditModalData(data);
 		setEditModalOpen(true);
+	};
+
+	const handleAddUser = async (event) => {
+		event.preventDefault();
+		try {
+			const formData = new FormData(event.target);
+			const values = Object.fromEntries(formData);
+			await registration(
+				values.companyId || cid,
+				values.fullName,
+				values.email,
+				values.role
+			);
+		} catch (error) {
+			setError(() => {
+				throw error;
+			});
+		}
 	};
 
 	useEffect(() => {
 		if (user) {
 			const db = getDatabase();
-			const userRef = ref(db, "users/" + user.uid + "/cid");
-			onValue(userRef, (snapshot) => {
-				const cid = snapshot.val();
+			if (role === "owner") {
+				const usersRef = ref(db, "users/");
+				onValue(usersRef, async (snapshot) => {
+					const promises = [];
+					snapshot.forEach((childSnapshot) => {
+						const childKey = childSnapshot.key;
+						const userData = childSnapshot.val();
+						promises.push(
+							Promise.all([
+								get(ref(db, "admin/" + childKey)).then(
+									(snapshot) =>
+										snapshot.exists() ? "admin" : null
+								),
+								get(ref(db, "editor/" + childKey)).then(
+									(snapshot) =>
+										snapshot.exists() ? "editor" : null
+								),
+								get(ref(db, "viewer/" + childKey)).then(
+									(snapshot) =>
+										snapshot.exists() ? "viewer" : null
+								),
+							]).then(([admin, editor, viewer]) => {
+								const userRole =
+									admin || editor || viewer || "unassigned";
+								return new User(
+									childKey,
+									userData.cid,
+									userRole,
+									userData.email,
+									userData.fullName,
+									userData.lastActivity
+								);
+							})
+						);
+					});
+
+					await Promise.all(promises).then((userList) => {
+						setData(userList.filter((user) => user !== null));
+					});
+				});
+			} else {
 				const usersRef = ref(db, "companies/" + cid + "/users");
-				onValue(usersRef, (snapshot) => {
+				onValue(usersRef, async (snapshot) => {
 					const promises = [];
 					snapshot.forEach((childSnapshot) => {
 						const childKey = childSnapshot.key;
@@ -104,12 +169,13 @@ function Users({ user }) {
 									(snapshot) => snapshot.val()
 								),
 							]).then(([admin, editor, viewer, parData]) => {
-								const role =
+								const userRole =
 									admin || editor || viewer || "unassigned";
+
 								return new User(
 									childKey,
 									cid,
-									role,
+									userRole,
 									parData.email,
 									parData.fullName,
 									parData.lastActivity
@@ -122,11 +188,11 @@ function Users({ user }) {
 						setData(userList.filter((user) => user !== null));
 					});
 				});
-			});
+			}
 		}
 	}, [user]);
 
-	const columns = [
+	const commonColumns = [
 		{
 			header: "Full Name",
 			accessorKey: "fullName",
@@ -151,8 +217,23 @@ function Users({ user }) {
 		},
 	];
 
+	const columns =
+		role === "owner"
+			? [
+					{
+						header: "Company",
+						accessorKey: "companyId",
+					},
+					...commonColumns,
+			  ]
+			: commonColumns;
+
 	return (
 		<div className="flex justify-center">
+			<Head>
+				<title>Users</title>
+				<link rel="icon" href="bes_bollmann_icon_white.svg" />
+			</Head>
 			<div className="w-11/12">
 				<Table
 					data={data}
@@ -182,6 +263,23 @@ function Users({ user }) {
 									Close
 								</button>
 							</div>
+							{role === "owner" && (
+								<div className="my-4">
+									<label
+										htmlFor="companyId"
+										className="block mb-2 text-sm font-medium text-gray-900"
+									>
+										Company ID
+									</label>
+									<input
+										type="text"
+										id="companyId"
+										name="companyId"
+										className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+										defaultValue={editModalData.companyId}
+									/>
+								</div>
+							)}
 							<div className="my-4">
 								<label
 									htmlFor="fullName"
@@ -193,9 +291,13 @@ function Users({ user }) {
 									type="text"
 									id="fullName"
 									name="fullName"
-									className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed"
-									value={editModalData.fullName}
-									disabled
+									className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
+										role !== "owner"
+											? "cursor-not-allowed"
+											: ""
+									}`}
+									defaultValue={editModalData.fullName}
+									disabled={role !== "owner"}
 								/>
 							</div>
 							<div className="my-4">
@@ -209,9 +311,13 @@ function Users({ user }) {
 									type="email"
 									id="email"
 									name="email"
-									className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed"
-									value={editModalData.email}
-									disabled
+									className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
+										role !== "owner"
+											? "cursor-not-allowed"
+											: ""
+									}`}
+									defaultValue={editModalData.email}
+									disabled={role !== "owner"}
 								/>
 							</div>
 							<div className="my-4">
@@ -291,22 +397,95 @@ function Users({ user }) {
 					isOpen={addModalOpen}
 					handleClose={() => setAddModalOpen(false)}
 				>
-					<div className="flex flex-col justify-between h-full w-full">
-						<form>
-							<label htmlFor="externalID">PC ID:</label>
-							<input
-								type="text"
-								id="externalID"
-								name="externalID"
-							/>
-							<label htmlFor="controllerType">
-								Controller type:
-							</label>
-							<input
-								type="text"
-								id="controllerType"
-								name="controllerType"
-							/>
+					<div className="flex justify-between h-full w-full">
+						<form
+							onSubmit={handleAddUser}
+							className="flex flex-col w-full mx-8"
+						>
+							<div className="flex flex-row justify-between my-4">
+								<h1 className="text-3xl font-semibold text-gray-900 ">
+									Add User
+								</h1>
+								<button
+									onClick={() => setAddModalOpen(false)}
+									className="py-2 px-8 self-end font-bold border rounded"
+								>
+									Close
+								</button>
+							</div>
+							{role === "owner" && (
+								<div className="my-4">
+									<label
+										htmlFor="companyId"
+										className="block mb-2 text-sm font-medium text-gray-900"
+									>
+										Company ID
+									</label>
+									<input
+										type="text"
+										id="companyId"
+										name="companyId"
+										className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+									/>
+								</div>
+							)}
+							<div className="my-4">
+								<label
+									htmlFor="fullName"
+									className="block mb-2 text-sm font-medium text-gray-900"
+								>
+									Full Name
+								</label>
+								<input
+									type="text"
+									id="fullName"
+									name="fullName"
+									className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+								/>
+							</div>
+							<div className="my-4">
+								<label
+									htmlFor="email"
+									className="block mb-2 text-sm font-medium text-gray-900"
+								>
+									Email
+								</label>
+								<input
+									type="email"
+									id="email"
+									name="email"
+									className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+								/>
+							</div>
+							<div className="my-4">
+								<label
+									htmlFor="roles"
+									className="block mb-2 text-sm font-medium text-gray-900"
+								>
+									Role
+								</label>
+								<select
+									id="roles"
+									name="role"
+									className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+									defaultValue="viewer"
+								>
+									<option value="admin">Admin</option>
+									<option value="editor">Editor</option>
+									<option value="viewer">Viewer</option>
+									<option value="unassigned">
+										Unassigned
+									</option>
+								</select>
+							</div>
+							<div className="flex flex-col my-8">
+								<button
+									type="submit"
+									className="text-white bg-green-500 hover:bg-green-600 focus:ring-2 focus:outline-none focus:ring-green-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center mx-24 my-2"
+								>
+									Add
+								</button>
+							</div>
 						</form>
 					</div>
 				</Modal>

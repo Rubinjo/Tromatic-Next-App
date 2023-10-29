@@ -2,6 +2,7 @@
 import { withPublic } from "@/context/Route";
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 import React, { useState } from "react";
 import { FaRegEnvelope } from "react-icons/fa";
 import { MdLockOutline } from "react-icons/md";
@@ -24,17 +25,22 @@ function Login({ logIn }) {
 		}
 	};
 	return (
-		<div className="flex items-center justify-center min-h-screen py-2 bg-gray-100">
+		<div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
 			<Head>
 				<title>Login</title>
-				<link rel="icon" href="./favicon.ico" />
+				<link rel="icon" href="bes_bollmann_icon_white.svg" />
 			</Head>
 			<form
 				onSubmit={handleLogIn}
 				className="flex flex-col justify-center bg-white rounded-2xl shadow-2xl w-1/2 max-w-4xl p-5"
 			>
-				<div className="flex-1 font-bold">
-					<span className="text-secondary">App</span> Portal
+				<div className="flex-1 font-bold ml-2 mt-1">
+					<Image
+						src="bes_bollmann.svg"
+						alt="Bes Bollmann"
+						width={150}
+						height={50}
+					/>
 				</div>
 				<div className=" flex flex-col py-10 items-center">
 					<h2 className="text-3xl font-bold text-secondary mb-2">
@@ -70,10 +76,10 @@ function Login({ logIn }) {
 					</div>
 					{loading ? (
 						<div
-							class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
+							className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
 							role="status"
 						>
-							<span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+							<span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
 								Loading...
 							</span>
 						</div>
@@ -87,6 +93,14 @@ function Login({ logIn }) {
 					)}
 				</div>
 			</form>
+			<div className="flex items-end mt-32 text-secondary">
+				<Image
+					src="tromatic_next.svg"
+					alt="Tromatic Next"
+					width={320}
+					height={300}
+				/>
+			</div>
 		</div>
 	);
 }

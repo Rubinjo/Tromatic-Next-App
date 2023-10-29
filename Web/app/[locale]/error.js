@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import Head from "next/head";
 import Link from "next/link";
 
 export default function Error({ error, reset }) {
@@ -10,6 +11,10 @@ export default function Error({ error, reset }) {
 
 	return (
 		<div className="min-h-full bg-white px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
+			<Head>
+				<title>Error</title>
+				<link rel="icon" href="bes_bollmann_icon_white.svg" />
+			</Head>
 			<div className="mx-auto max-w-max">
 				<main className="sm:flex">
 					<p className="bg-secondary bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl">

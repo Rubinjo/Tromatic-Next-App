@@ -10,15 +10,14 @@ import {
 	getDatabase,
 	ref,
 	get,
-	set,
+	update,
 	remove,
 	serverTimestamp,
 } from "firebase/database";
-import { getFunctions, httpsCallable } from "firebase/functions";
+import { getFirestore, writeBatch, doc } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
 
-import { auth } from "../firebase";
-
-const functions = getFunctions();
+import { auth, functions } from "../firebase";
 
 const AuthContext = createContext();
 
@@ -55,42 +54,75 @@ export const AuthContextProvider = ({ children }) => {
 		// language,
 		role
 	) => {
-		let userRecord;
 		try {
 			const createUserMessage = httpsCallable(
 				functions,
 				"createAuthUserFunction"
 			);
-			result = await createUserMessage({
-				text: { email: email, displayName: fullName },
+			const result = await createUserMessage({
+				text: { email: email, fullName: fullName },
 			});
+
 			const db = getDatabase();
-			set(ref(db, "users/" + userRecord.uid), {
-				email: userRecord.email,
+			const fs = getFirestore();
+
+			const updates = {};
+			const batch = writeBatch(fs);
+
+			updates[`users/${result.data.uid}`] = {
+				email: email,
 				fullName: fullName,
 				cid: companyID,
 				lastActivity: serverTimestamp(),
 				// language: language,
+			};
+			batch.set(doc(fs, "users", result.data.uid), {
+				cid: companyID,
+				email: email,
+				fullName: fullName,
 			});
 			if (role !== "unassigned") {
-				set(ref(db, role + "/" + userRecord.uid), {
+				updates[`${role}/${result.data.uid}`] = {
 					assignmentDate: serverTimestamp(),
 					givenBy: auth.currentUser.uid,
+				};
+				batch.set(doc(fs, "authorization", result.data.uid), {
+					isEditor: true
+						? role === "editor" ||
+						  role === "admin" ||
+						  role === "owner"
+						: false,
+					isAdmin: true
+						? role === "admin" || role === "owner"
+						: false,
+					isOwner: true ? role === "owner" : false,
 				});
 			}
+			updates[`companies/${companyID}/users/${result.data.uid}`] = {
+				added: serverTimestamp(),
+				addedBy: auth.currentUser.uid,
+			};
+			await update(ref(db), updates);
+			await batch.commit();
 			toast.success("User was added", toastOptions);
 		} catch (error) {
 			console.log(error);
-			if (userRecord) {
+			if (
+				typeof result.data !== "undefined" &&
+				result.data.hasOwnProperty("uid")
+			) {
 				// Rollback db changes
-				const userRef = ref(db, "users/" + userRecord.uid);
-				remove(userRef);
+				const updates = {};
+				updates[`users/${result.data.uid}`] = null;
+				updates[`companies/${companyID}/users/${result.data.uid}`] =
+					null;
+				update(ref(db), updates);
 				const deleteUserMessage = httpsCallable(
 					functions,
 					"deleteAuthUserFunction"
 				);
 				result = await deleteUserMessage({
-					text: { uid: userRecord.uid },
+					text: { uid: result.data.uid },
 				});
 			}
 			toast.error(
@@ -101,53 +133,19 @@ export const AuthContextProvider = ({ children }) => {
 	};
 
 	/**
-	 * Check if user has admin privilege
-	 * @returns {boolean}
+	 * Check if user has some type of privilege
+	 * @param {string} role Privilege type
+	 * @return {Promise<boolean>} Whether the user has the specified privilege.
 	 */
-	const checkOwner = async () => {
+	const checkPrivilege = async (role) => {
 		try {
 			const db = getDatabase();
-			return await get(ref(db, "owner/" + auth.currentUser.uid)).then(
-				(snapshot) => {
-					return snapshot.exists();
-				}
+			const snapshot = await get(
+				ref(db, `${role}/${auth.currentUser.uid}`)
 			);
+			return snapshot.exists();
 		} catch (error) {
-			throw new Error("Your owner privileges couldn't be confirmed");
-		}
-	};
-
-	/**
-	 * Check if user has admin privilege
-	 * @returns {boolean}
-	 */
-	const checkAdmin = async () => {
-		try {
-			const db = getDatabase();
-			return await get(ref(db, "admin/" + auth.currentUser.uid)).then(
-				(snapshot) => {
-					return snapshot.exists();
-				}
-			);
-		} catch (error) {
-			throw new Error("Your admin privileges couldn't be confirmed");
-		}
-	};
-
-	/**
-	 * Check if user has editor privilege
-	 * @returns {boolean}
-	 */
-	const checkEditor = async () => {
-		try {
-			const db = getDatabase();
-			return await get(ref(db, "editor/" + auth.currentUser.uid)).then(
-				(snapshot) => {
-					return snapshot.exists();
-				}
-			);
-		} catch (err) {
-			throw new Error("Your editor privileges couldn't be confirmed");
+			return false;
 		}
 	};
 
@@ -160,11 +158,23 @@ export const AuthContextProvider = ({ children }) => {
 	const logIn = async (email, password) => {
 		try {
 			await signInWithEmailAndPassword(auth, email, password);
+			if (
+				!(
+					(await checkPrivilege("owner")) ||
+					(await checkPrivilege("admin"))
+				)
+			) {
+				throw new Error(
+					`Your ${role} privileges couldn't be confirmed`
+				);
+			}
 		} catch (error) {
-			console.log(error);
-			if (error.code == "auth/user-not-found") {
+			if (error.code === "auth/user-not-found") {
 				toast.error("Invalid login credentials", toastOptions);
+			} else if (error.code === "auth/wrong-password") {
+				toast.error("Invalid password", toastOptions);
 			} else {
+				console.error("Something went wrong during login:", error);
 				logOut();
 				toast.error(
 					"Something went wrong, please try again later",
@@ -207,22 +217,60 @@ export const AuthContextProvider = ({ children }) => {
 	const editUser = async (newUser, oldUser) => {
 		try {
 			const db = getDatabase();
-			if (oldUser.role !== "Unassigned") {
-				const currentRoleRef = ref(db, `${oldUser.role}/${oldUser.id}`);
-				await remove(currentRoleRef);
+			const fs = getFirestore();
+
+			const updates = {};
+			const batch = writeBatch(fs);
+
+			if (oldUser.role !== newUser.role) {
+				if (oldUser.role !== "Unassigned") {
+					updates[`${oldUser.role}/${oldUser.id}`] = null;
+				}
+				updates[`${newUser.role}/${oldUser.id}`] = {
+					assignedAt: serverTimestamp(),
+				};
+				batch.update(doc(fs, "authorization", oldUser.id), {
+					isEditor: true
+						? newUser.role === "editor" ||
+						  newUser.role === "admin" ||
+						  newUser.role === "owner"
+						: false,
+					isAdmin: true
+						? newUser.role === "admin" || newUser.role === "owner"
+						: false,
+					isOwner: true ? newUser.role === "owner" : false,
+				});
 			}
 
-			const newRoleRef = ref(db, `${newUser.role}/${oldUser.id}`);
-			await set(newRoleRef, { assignedAt: serverTimestamp() });
+			if (oldUser.fullName !== newUser.fullName) {
+				updates[`users/${oldUser.id}/fullName`] = newUser.fullName;
+				batch.update(doc(fs, "users", oldUser.id), {
+					fullName: newUser.fullName,
+				});
+			}
 
+			if (oldUser.email !== newUser.email) {
+				updates[`users/${oldUser.id}/email`] = newUser.email;
+				batch.update(doc(fs, "users", oldUser.id), {
+					email: newUser.email,
+				});
+			}
+
+			if (oldUser.companyId !== newUser.companyId) {
+				updates[`users/${oldUser.id}/cid`] = newUser.companyId;
+				updates[`companies/${oldUser.companyId}/users/${oldUser.id}`] =
+					null;
+				updates[`companies/${newUser.companyId}/users/${oldUser.id}`] =
+					{ Added: serverTimestamp() };
+				batch.update(doc(fs, "users", oldUser.id), {
+					cid: newUser.companyId,
+				});
+			}
+			await update(ref(db), updates);
+			await batch.commit();
 			toast.success("User was edited", toastOptions);
 		} catch (error) {
-			// Handle errors and perform the rollback
-			if (oldUser.role !== "Unassigned") {
-				const currentRoleRef = ref(db, `${oldUser.role}/${oldUser.id}`);
-				await set(currentRoleRef, { assignedAt: serverTimestamp() });
-			}
-
+			console.log(error);
 			toast.error(
 				"Something went wrong, please try again later",
 				toastOptions
@@ -238,22 +286,25 @@ export const AuthContextProvider = ({ children }) => {
 	const deleteUser = async (user) => {
 		try {
 			const db = getDatabase();
+			const fs = getFirestore();
+
+			const updates = {};
+			const batch = writeBatch(fs);
+
 			// Remove user role
 			if (user.role !== "Unassigned") {
-				const roleRef = ref(db, user.role + "/" + user.id);
-				const roleData = await get(roleRef);
-				await remove(roleRef);
+				updates[`${user.role}/${user.id}`] = null;
 			}
+			batch.delete(doc(fs, "authorization", user.id));
 			// Remove user from company
-			const userCompanyRef = ref(
-				db,
-				"companies/" + user.companyId + "/users/" + user.id
-			);
-			await remove(userCompanyRef);
+			updates[`companies/${user.companyId}/users/${user.id}`] = null;
 
 			// Remove user
-			const userRef = ref(db, "users/" + user.id);
-			await remove(userRef);
+			updates[`users/${user.id}`] = null;
+			batch.delete(doc(fs, "users", user.id));
+
+			await update(ref(db), updates);
+			await batch.commit();
 
 			// Remove user auth record
 			const deleteUserMessage = httpsCallable(
@@ -261,44 +312,23 @@ export const AuthContextProvider = ({ children }) => {
 				"deleteAuthUserFunction"
 			);
 			result = await deleteUserMessage({
-				text: { uid: userRecord.uid },
+				text: { uid: user.id },
 			});
 		} catch (error) {
 			console.log(error);
-			if (user.role !== "Unassigned") {
-				// Rollback user role
-				const roleRef = ref(db, `${user.role}/${user.id}`);
-				await set(roleRef, roleData.val());
-			}
-			// Rollback user association
-			const userCompanyRef = ref(
-				db,
-				`companies/${user.companyId}/users/${user.id}`
-			);
-			await set(userCompanyRef, {
-				added: "Now",
-			});
-			// Rollback user data
-			const userRef = ref(db, `users/${user.id}`);
-			await set(userRef, {
-				cid: user.companyId,
-				email: user.email,
-				fullName: fullName,
-				lastActivity: lastActivity,
-			});
 		}
 	};
 
 	useEffect(() => {
-		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+		const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
 			setUser(currentUser);
 			if (!currentUser) {
 				setRole(null);
 				setCid(null);
 			} else {
-				if (checkOwner()) {
+				if (await checkPrivilege("owner")) {
 					setRole("owner");
-				} else if (checkAdmin()) {
+				} else if (await checkPrivilege("admin")) {
 					setRole("admin");
 				} else {
 					logOut();

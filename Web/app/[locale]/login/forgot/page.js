@@ -1,7 +1,7 @@
 "use client";
 import { withPublic } from "@/context/Route";
 import Head from "next/head";
-import Link from "next/link";
+import Image from "next/image";
 import React from "react";
 import { FaRegEnvelope } from "react-icons/fa";
 
@@ -19,15 +19,20 @@ function Forgot({ passwordResetEmail }) {
 	return (
 		<div className="flex items-center justify-center min-h-screen py-2 bg-gray-100">
 			<Head>
-				<title>Login</title>
-				<link rel="icon" href="./favicon.ico" />
+				<title>Reset Password</title>
+				<link rel="icon" href="bes_bollmann_icon_white.svg" />
 			</Head>
 			<form
 				onSubmit={handlePasswordResetEmail}
 				className="flex flex-col justify-center bg-white rounded-2xl shadow-2xl w-1/2 max-w-4xl p-5"
 			>
-				<div className="flex-1 font-bold">
-					<span className="text-secondary">App</span> Portal
+				<div className="flex-1 font-bold ml-2 mt-1">
+					<Image
+						src="bes_bollmann.svg"
+						alt="Tromatic Next"
+						width={150}
+						height={50}
+					/>
 				</div>
 				<div className=" flex flex-col py-10 items-center">
 					<h2 className="text-3xl font-bold text-secondary mb-2">
