@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
 import fs from "fs";
 import md5 from "md5";
-import { ref, update, serverTimestamp } from "firebase/database";
+import { ref, update, get, set, serverTimestamp } from "firebase/database";
 import { EventLogger } from "node-windows";
 
 import setupFirebase from "./helper/auth.js";
