@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
 import fs from "fs";
 import md5 from "md5";
-import { ref, update } from "firebase/database";
+import { ref, update, serverTimestamp } from "firebase/database";
 import { EventLogger } from "node-windows";
 
 import setupFirebase from "./helper/auth.js";
@@ -49,6 +49,8 @@ const [db, auth] = await setupFirebase(
 	process.env.PASSWORD
 );
 
+const registeredMachines = [];
+
 /**
  * Send drychamber values to firebase constantly.
  * Done by watching machine outputted .json files that are located in specified folder location.
@@ -66,14 +68,14 @@ fs.watch(FOLDER, (event, filename) => {
 		}, 100);
 		// Use MD5 hash for checksum
 		// Extra protection against a file triggering multiple times for a single action
-		md5Current = md5(fs.readFileSync(FOLDER + "/" + filename));
+		md5Current = md5(fs.readFileSync(`${FOLDER}/${filename}`));
 		if (md5Current === md5Previous) {
 			return;
 		}
 		md5Previous = md5Current;
 		log.info(`${filename} file recorded`, 0);
 		try {
-			jsonString = fs.readFileSync(FOLDER + "/" + filename);
+			jsonString = fs.readFileSync(`${FOLDER}/${filename}`);
 			jsonData = JSON.parse(jsonString);
 			if (newStatus === jsonData.Status) {
 				numStatusChanges++;
@@ -84,12 +86,48 @@ fs.watch(FOLDER, (event, filename) => {
 				newStatus = jsonData.Status;
 				numStatusChanges = 0;
 			}
+			if (
+				!registeredMachines.includes(
+					`m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+				)
+			) {
+				get(
+					ref(
+						db,
+						`companies/${process.env.CID}/machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+					)
+				).then((snapshot) => {
+					if (snapshot.exists()) {
+						update(
+							ref(
+								db,
+								`companies/${process.env.CID}/machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+							),
+							{
+								lastRestart: serverTimestamp(),
+							}
+						);
+					} else {
+						set(
+							ref(
+								db,
+								`companies/${process.env.CID}/machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+							),
+							{
+								creation: serverTimestamp(),
+								type: "Demo",
+							}
+						);
+					}
+				});
+
+				registeredMachines.push(
+					`m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+				);
+			}
 			const updates = {};
 			updates[
-				"machines/m" +
-					auth.currentUser.uid +
-					"_" +
-					jsonData.DryChamberID
+				`machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
 			] = {
 				CID: process.env.CID,
 				DateTimeMessage: jsonData.DateTimeMessage,
@@ -113,38 +151,25 @@ fs.watch(FOLDER, (event, filename) => {
 				HeaterOpMode: jsonData.HeaterOpMode,
 				SprayOpMode: jsonData.SprayOpMode,
 				FansOpMode: jsonData.FansOpMode,
-				LastEditor:
-					"m" + auth.currentUser.uid + "_" + jsonData.DryChamberID,
+				LastEditor: `m${auth.currentUser.uid}_${jsonData.DryChamberID}`,
 				DeviceName: jsonData.DeviceName,
 			};
 			for (let i = 1; i <= jsonData.NumOfWmProbes; i++) {
 				updates[
-					"machines/m" +
-						auth.currentUser.uid +
-						"_" +
-						jsonData.DryChamberID
-				]["WMValue" + i] = jsonData["WMValue" + i];
+					`machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+				][`WMValue${i}`] = jsonData[`WMValue${i}`];
 				updates[
-					"machines/m" +
-						auth.currentUser.uid +
-						"_" +
-						jsonData.DryChamberID
-				]["WMActive" + i] = jsonData["WMActive" + i];
+					`machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+				][`WMActive${i}`] = jsonData[`WMActive${i}`];
 			}
 			for (let i = 1; i <= jsonData.NumOfCTProbes; i++) {
 				updates[
-					"machines/m" +
-						auth.currentUser.uid +
-						"_" +
-						jsonData.DryChamberID
-				]["CTValue" + i] = jsonData["CTValue" + i];
+					`machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+				][`CTValue${i}`] = jsonData[`CTValue${i}`];
 			}
 			if (jsonData.CurrentWM) {
 				updates[
-					"machines/m" +
-						auth.currentUser.uid +
-						"_" +
-						jsonData.DryChamberID
+					`machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
 				]["CurrentWM"] = jsonData.CurrentWM;
 			}
 			update(ref(db), updates);
