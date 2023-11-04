@@ -17,10 +17,10 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, get, update } from "firebase/database";
 
+import { UserAuth } from "../context/AuthContext";
 import Colors from "../assets/constants/colors";
 import Settings from "../assets/icons/Settings";
 import Config from "../utils/config";
-import { signOutAccount } from "../auth/firebase";
 import { updateLanguage } from "../store/slices/language";
 import i18n from "../utils/i18n";
 
@@ -73,6 +73,9 @@ const SettingsScreen = (props) => {
 	const [error, setError] = useState();
 	const [name, setName] = useState("Error");
 	const [cid, setCid] = useState("Error");
+
+	const { signOutAccount } = UserAuth();
+
 	useEffect(() => {
 		const auth = getAuth();
 		const db = getDatabase();

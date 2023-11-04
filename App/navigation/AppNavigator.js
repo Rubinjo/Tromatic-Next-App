@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import i18n from "../utils/i18n";
+import { UserAuth } from "../context/AuthContext";
 
 import DetailsScreen from "../screens/DetailsScreen";
 import OverviewScreen, {
@@ -57,22 +57,10 @@ const OverviewStackNav = (props) => {
 };
 
 const AppNavigator = (props) => {
-	// Create userSigned in variable that triggers different navigation stack
-	const [userSignedIn, setUserSignedIn] = useState(false);
-	useEffect(() => {
-		const auth = getAuth();
-		onAuthStateChanged(auth, (user) => {
-			if (user) {
-				setUserSignedIn(true);
-			} else {
-				setUserSignedIn(false);
-			}
-		});
-	});
-
+	const { user } = UserAuth();
 	return (
 		<NavigationContainer>
-			{userSignedIn ? (
+			{user ? (
 				<Tab.Navigator screenOptions={defaultTabOptions}>
 					<Tab.Screen
 						name="OverviewStack"

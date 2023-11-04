@@ -11,9 +11,9 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
+import { UserAuth } from "../context/AuthContext";
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
-import { resetPasswordAccount } from "../auth/firebase";
 import i18n from "../utils/i18n";
 import TromaticNextLogo from "../assets/logos/Tromatic_Next";
 import BesBollmannLogo from "../assets/logos/Bes_Bollmann";
@@ -22,6 +22,8 @@ const ResetPasswordScreen = (props) => {
 	const [email, setEmail] = useState("");
 	const [error, setError] = useState();
 	const [isLoading, setIsLoading] = useState(false);
+
+	const { resetPasswordAccount } = UserAuth;
 
 	// Show alert when error occurs
 	useEffect(() => {

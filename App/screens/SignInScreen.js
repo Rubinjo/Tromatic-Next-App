@@ -15,11 +15,11 @@ import { useSelector, useDispatch } from "react-redux";
 import DropDownPicker from "react-native-dropdown-picker";
 import { MaterialIcons } from "@expo/vector-icons";
 
+import { UserAuth } from "../context/AuthContext";
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import { updateLanguage } from "../store/slices/language";
 import i18n from "../utils/i18n";
-import { signInAccount } from "../auth/firebase";
 import TromaticNextLogo from "../assets/logos/Tromatic_Next";
 import BesBollmannLogo from "../assets/logos/Bes_Bollmann";
 
@@ -72,6 +72,8 @@ const SignInScreen = (props) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState();
 
+	const { signInAccount } = UserAuth();
+
 	// Update language setting when redux store is loaded
 	useEffect(() => {
 		setValue(language);
@@ -109,7 +111,7 @@ const SignInScreen = (props) => {
 				setEmail("");
 				setPassword("");
 				setIsLoading(false);
-				setError(i18n.t("authentication.error.incorrectSignIn"));
+				setError(err.message);
 			}
 		}
 	};

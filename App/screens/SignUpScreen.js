@@ -12,10 +12,10 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
+import { UserAuth } from "../context/AuthContext";
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
 import i18n from "../utils/i18n";
-import { registration } from "../auth/firebase";
 import TromaticNextLogo from "../assets/logos/Tromatic_Next";
 import BesBollmannLogo from "../assets/logos/Bes_Bollmann";
 
@@ -27,6 +27,8 @@ const SignUpScreen = (props) => {
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState();
+
+	const { registration } = UserAuth;
 
 	// Show alert when error occurs
 	useEffect(() => {

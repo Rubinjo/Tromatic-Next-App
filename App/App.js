@@ -12,6 +12,7 @@ import { initializeAuth } from "firebase/auth";
 import { getReactNativePersistence } from "firebase/auth/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { AuthContextProvider } from "./context/AuthContext";
 import AppNavigator from "./navigation/AppNavigator";
 import { store, persistor } from "./store/store";
 
@@ -51,8 +52,8 @@ export default function App() {
 					persistence: getReactNativePersistence(AsyncStorage),
 				});
 				console.log("Connected with Firebase");
-			} catch (e) {
-				console.warn(e);
+			} catch (error) {
+				console.warn(error);
 			} finally {
 				// Tell the application to render
 				setAppIsReady(true);
@@ -76,8 +77,10 @@ export default function App() {
 		<Provider store={store}>
 			<PersistGate loading={null} persistor={persistor}>
 				<View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-					<StatusBar style="auto" />
-					<AppNavigator />
+					<AuthContextProvider>
+						<StatusBar style="auto" />
+						<AppNavigator />
+					</AuthContextProvider>
 				</View>
 			</PersistGate>
 		</Provider>

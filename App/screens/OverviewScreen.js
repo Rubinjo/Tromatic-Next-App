@@ -10,6 +10,7 @@ import { getDatabase, ref, onValue, update } from "firebase/database";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 
+import { UserAuth } from "../context/AuthContext";
 import Gauge from "../assets/icons/Gauge";
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
@@ -65,6 +66,10 @@ const OverviewScreen = (props) => {
 	const notificationListener = useRef();
 	const responseListener = useRef();
 
+	const { cid } = UserAuth();
+
+	console.log(cid);
+
 	useEffect(() => {
 		registerForPushNotificationsAsync().then((token) =>
 			setExpoPushToken(token)
@@ -104,96 +109,91 @@ const OverviewScreen = (props) => {
 	}, [expoPushToken]);
 
 	useEffect(() => {
-		const auth = getAuth();
 		const db = getDatabase();
-		const userRef = ref(db, "users/" + auth.currentUser.uid + "/cid");
-		onValue(userRef, (snapshot) => {
-			const cid = snapshot.val();
-			const machinesRef = ref(db, "companies/" + cid + "/machines");
-			onValue(machinesRef, (snapshot) => {
-				const fetchedData = [];
-				snapshot.forEach((childSnapshot) => {
-					const childKey = childSnapshot.key;
-					const childData = childSnapshot.val();
-					const parsRef = ref(db, "machines/" + childKey);
-					onValue(parsRef, (snapshot) => {
-						const parData = snapshot.val();
-						const machineData = new Machine(
-							childKey,
-							cid,
-							parData.DeviceName,
-							childData.Creation,
-							parData.CurrentHum,
-							parData.CurrentTemp,
-							parData.DamperPos,
-							parData.EMCOffset,
-							parData.FanDirection,
-							parData.HeatingValvePos,
-							parData.NumOfWmProbes,
-							parData.RPM,
-							parData.RemainingTime,
-							parData.TotalTime,
-							parData.SetPointHum,
-							parData.SetPointTemp,
-							parData.SprayPos,
-							new Status(parData.Status),
-							parData.TempOffset,
-							new Date(parData.DateTimeMessage),
-							parData.NumOfCTProbes,
-							parData.DamperOpMode,
-							parData.HeaterOpMode,
-							parData.SprayOpMode,
-							parData.FansOpMode,
-							parData.WMValue1,
-							parData.WMValue2,
-							parData.WMValue3,
-							parData.WMValue4,
-							parData.WMValue5,
-							parData.WMValue6,
-							parData.WMValue7,
-							parData.WMValue8,
-							parData.WMValue9,
-							parData.WMValue10,
-							parData.WMActive1,
-							parData.WMActive2,
-							parData.WMActive3,
-							parData.WMActive4,
-							parData.WMActive5,
-							parData.WMActive6,
-							parData.WMActive7,
-							parData.WMActive8,
-							parData.WMActive9,
-							parData.WMActive10,
-							parData.CurrentWM,
-							parData.CTValue1,
-							parData.CTValue2,
-							parData.CTValue3,
-							parData.CTValue4,
-							parData.CTValue5,
-							parData.CTValue6,
-							parData.CTValue7,
-							parData.CTValue8,
-							parData.CTValue9,
-							parData.CTValue10,
-							parData.CTValue11,
-							parData.CTValue12
-						);
+		const machinesRef = ref(db, "companies/" + cid + "/machines");
+		onValue(machinesRef, (snapshot) => {
+			const fetchedData = [];
+			snapshot.forEach((childSnapshot) => {
+				const childKey = childSnapshot.key;
+				const childData = childSnapshot.val();
+				const parsRef = ref(db, "machines/" + childKey);
+				onValue(parsRef, (snapshot) => {
+					const parData = snapshot.val();
+					const machineData = new Machine(
+						childKey,
+						cid,
+						parData.DeviceName,
+						childData.Creation,
+						parData.CurrentHum,
+						parData.CurrentTemp,
+						parData.DamperPos,
+						parData.EMCOffset,
+						parData.FanDirection,
+						parData.HeatingValvePos,
+						parData.NumOfWmProbes,
+						parData.RPM,
+						parData.RemainingTime,
+						parData.TotalTime,
+						parData.SetPointHum,
+						parData.SetPointTemp,
+						parData.SprayPos,
+						new Status(parData.Status),
+						parData.TempOffset,
+						new Date(parData.DateTimeMessage),
+						parData.NumOfCTProbes,
+						parData.DamperOpMode,
+						parData.HeaterOpMode,
+						parData.SprayOpMode,
+						parData.FansOpMode,
+						parData.WMValue1,
+						parData.WMValue2,
+						parData.WMValue3,
+						parData.WMValue4,
+						parData.WMValue5,
+						parData.WMValue6,
+						parData.WMValue7,
+						parData.WMValue8,
+						parData.WMValue9,
+						parData.WMValue10,
+						parData.WMActive1,
+						parData.WMActive2,
+						parData.WMActive3,
+						parData.WMActive4,
+						parData.WMActive5,
+						parData.WMActive6,
+						parData.WMActive7,
+						parData.WMActive8,
+						parData.WMActive9,
+						parData.WMActive10,
+						parData.CurrentWM,
+						parData.CTValue1,
+						parData.CTValue2,
+						parData.CTValue3,
+						parData.CTValue4,
+						parData.CTValue5,
+						parData.CTValue6,
+						parData.CTValue7,
+						parData.CTValue8,
+						parData.CTValue9,
+						parData.CTValue10,
+						parData.CTValue11,
+						parData.CTValue12
+					);
 
-						const index = fetchedData.findIndex(
-							(i) => i.id === childKey
-						);
-						if (index > -1) {
-							fetchedData.splice(index, 1, machineData);
-						} else {
-							fetchedData.push(machineData);
-						}
+					const index = fetchedData.findIndex(
+						(i) => i.id === childKey
+					);
+					if (index > -1) {
+						fetchedData.splice(index, 1, machineData);
+					} else {
+						fetchedData.push(machineData);
+					}
 
-						setData([...fetchedData]);
-					});
+					setData([...fetchedData]);
 				});
 			});
 		});
-	}, []);
+	}, [cid]);
 
 	// useEffect(() => {
 	// 	props.navigation.setOptions({
