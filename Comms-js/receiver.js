@@ -22,7 +22,7 @@ function sendData(mid, dateTime, lastEditor, changeItem, changeValue) {
 	} else {
 		machineData[changeItem] = changeValue;
 	}
-	const jsonString = JSON.stringify(machineData);
+	const jsonString = JSON.stringify(machineData, null, " ");
 	fs.writeFile(
 		"../receiver/" +
 			mid +
