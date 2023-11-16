@@ -28,7 +28,7 @@ let mids;
 
 function sendData(mid, dateTime, lastEditor, changedDict) {
 	const machineData = {
-		DryChamberID: mid,
+		DryChamberID: parseInt(mid),
 		DateTimeMessage: dateTime.toISOString(),
 		LastEditor: lastEditor,
 	};
