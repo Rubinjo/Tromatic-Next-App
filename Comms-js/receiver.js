@@ -26,6 +26,52 @@ const log = new EventLogger("Tromatic Next Receiver");
 
 let mids;
 
+function stringifyCRLF(obj, indent = 0) {
+	const crlf = "\r\n";
+	const spaces = " ".repeat(indent);
+
+	let result = "{" + crlf;
+
+	const keys = Object.keys(obj);
+
+	for (const key in obj) {
+		let keyString;
+		let valueString;
+
+		if (typeof key === "string") {
+			keyString = `\"${key}\"`;
+		} else {
+			keyString = key;
+		}
+
+		if (typeof obj[key] === "string") {
+			valueString = `\"${obj[key]}\"`;
+		} else {
+			valueString = obj[key];
+		}
+
+		if (typeof obj[key] === "object") {
+			result +=
+				spaces + keyString + ": " + stringifyCRLF(obj[key], indent + 2);
+		} else {
+			result += spaces + keyString + ": " + valueString;
+		}
+		const isLastKey = key === keys[keys.length - 1];
+		if (!isLastKey) {
+			result += "," + crlf;
+		} else {
+			result += crlf;
+		}
+	}
+	if (spaces.length >= 2) {
+		result += spaces.slice(0, -2) + "}";
+	} else {
+		result += "}";
+	}
+
+	return result;
+}
+
 function sendData(mid, dateTime, lastEditor, changedDict) {
 	const machineData = {
 		DryChamberID: parseInt(mid),
@@ -36,11 +82,8 @@ function sendData(mid, dateTime, lastEditor, changedDict) {
 		machineData["stop_program"] = true;
 		delete changedDict["RemainingTime"];
 	}
-	const jsonString = JSON.stringify(
-		{ ...machineData, ...changedDict },
-		null,
-		" "
-	);
+
+	const jsonString = stringifyCRLF({ ...machineData, ...changedDict });
 	fs.writeFile(
 		`../receiver/${mid}_${dateTime
 			.toJSON()
