@@ -28,7 +28,7 @@ const SignUpScreen = (props) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState();
 
-	const { registration } = UserAuth;
+	const { registration } = UserAuth();
 
 	// Show alert when error occurs
 	useEffect(() => {
@@ -36,13 +36,13 @@ const SignUpScreen = (props) => {
 			Alert.alert(i18n.t("general.error.error"), error, [
 				{ text: i18n.t("general.okAllCaps") },
 			]);
+			setError(null);
 		}
 	}, [error]);
 
 	// Register user
 	// uses Firebase Auth
 	const signUp = async () => {
-		setError(null);
 		if (!companyID) {
 			setError(i18n.t("authentication.error.companyId"));
 		} else if (!fullName) {
@@ -69,7 +69,6 @@ const SignUpScreen = (props) => {
 					i18n.locale
 				);
 			} catch (err) {
-				console.log(err.message);
 				setIsLoading(false);
 				setError(i18n.t("authentication.error.databaseError"));
 			}
