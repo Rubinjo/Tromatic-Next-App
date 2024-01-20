@@ -40,6 +40,7 @@ export default {
 	ios: {
 		supportsTablet: true,
 		buildNumber: "1.0.7",
+		bundleIdentifier: "nl.bes-bollmann.tromatic-next",
 	},
 	android: {
 		package: "nl.bes_bollmann.tromatic_next",
