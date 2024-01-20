@@ -1,16 +1,11 @@
 import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import React, { useCallback, useEffect, useState } from "react";
-import Constants from "expo-constants";
 import { View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { initializeApp } from "firebase/app";
-import { initializeAuth } from "firebase/auth";
-import { getReactNativePersistence } from "firebase/auth/react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { AuthContextProvider } from "./context/AuthContext";
 import AppNavigator from "./navigation/AppNavigator";
@@ -37,21 +32,6 @@ export default function App() {
 			try {
 				await fetchFonts();
 				console.log("Loaded fonts");
-
-				const app = initializeApp({
-					apiKey: Constants.expoConfig.extra.APIKEY,
-					authDomain: Constants.expoConfig.extra.AUTHDOMAIN,
-					databaseURL: Constants.expoConfig.extra.DATABASEURL,
-					projectId: Constants.expoConfig.extra.PROJECTID,
-					storageBucket: Constants.expoConfig.extra.STORAGEBUCKET,
-					messagingSenderId:
-						Constants.expoConfig.extra.MESSAGINGSENDERID,
-					appId: Constants.expoConfig.extra.APPID,
-				});
-				initializeAuth(app, {
-					persistence: getReactNativePersistence(AsyncStorage),
-				});
-				console.log("Connected with Firebase");
 			} catch (error) {
 				console.warn(error);
 			} finally {
