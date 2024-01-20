@@ -1,3 +1,5 @@
+"use client";
+
 import { useContext, createContext, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import {
@@ -6,18 +8,11 @@ import {
 	onAuthStateChanged,
 	sendPasswordResetEmail,
 } from "firebase/auth";
-import {
-	getDatabase,
-	ref,
-	get,
-	update,
-	remove,
-	serverTimestamp,
-} from "firebase/database";
-import { getFirestore, writeBatch, doc } from "firebase/firestore";
+import { ref, get, update, remove, serverTimestamp } from "firebase/database";
+import { writeBatch, doc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 
-import { auth, functions } from "../firebase";
+import { firebase, firestore, auth, functions } from "../firebase";
 
 const AuthContext = createContext();
 
@@ -36,6 +31,13 @@ export const AuthContextProvider = ({ children }) => {
 	const [user, setUser] = useState(null);
 	const [role, setRole] = useState(null);
 	const [cid, setCid] = useState(null);
+
+	/**
+	 * Logs out the currently authenticated user.
+	 */
+	const logOut = () => {
+		signOut(auth);
+	};
 
 	/**
 	 * Register user account
@@ -63,11 +65,8 @@ export const AuthContextProvider = ({ children }) => {
 				text: { email: email, fullName: fullName },
 			});
 
-			const db = getDatabase();
-			const fs = getFirestore();
-
 			const updates = {};
-			const batch = writeBatch(fs);
+			const batch = writeBatch(firestore);
 
 			updates[`users/${result.data.uid}`] = {
 				email: email,
@@ -76,7 +75,7 @@ export const AuthContextProvider = ({ children }) => {
 				lastActivity: serverTimestamp(),
 				// language: language,
 			};
-			batch.set(doc(fs, "users", result.data.uid), {
+			batch.set(doc(firestore, "users", result.data.uid), {
 				cid: companyID,
 				email: email,
 				fullName: fullName,
@@ -86,7 +85,7 @@ export const AuthContextProvider = ({ children }) => {
 					assignmentDate: serverTimestamp(),
 					givenBy: auth.currentUser.uid,
 				};
-				batch.set(doc(fs, "authorization", result.data.uid), {
+				batch.set(doc(firestore, "authorization", result.data.uid), {
 					isEditor: true
 						? role === "editor" ||
 						  role === "admin" ||
@@ -102,12 +101,13 @@ export const AuthContextProvider = ({ children }) => {
 				added: serverTimestamp(),
 				addedBy: auth.currentUser.uid,
 			};
-			await update(ref(db), updates);
+			await update(ref(firebase), updates);
 			await batch.commit();
 			toast.success("User was added", toastOptions);
 		} catch (error) {
 			console.log(error);
 			if (
+				typeof result !== "undefined" &&
 				typeof result.data !== "undefined" &&
 				result.data.hasOwnProperty("uid")
 			) {
@@ -139,9 +139,8 @@ export const AuthContextProvider = ({ children }) => {
 	 */
 	const checkPrivilege = async (role) => {
 		try {
-			const db = getDatabase();
 			const snapshot = await get(
-				ref(db, `${role}/${auth.currentUser.uid}`)
+				ref(firebase, `${role}/${auth.currentUser.uid}`)
 			);
 			return snapshot.exists();
 		} catch (error) {
@@ -185,13 +184,6 @@ export const AuthContextProvider = ({ children }) => {
 	};
 
 	/**
-	 * Logs out the currently authenticated user.
-	 */
-	const logOut = () => {
-		signOut(auth);
-	};
-
-	/**
 	 * Sends a password reset email to the specified email address.
 	 *
 	 * @param {string} email - The email address associated with the user account.
@@ -216,11 +208,8 @@ export const AuthContextProvider = ({ children }) => {
 	 */
 	const editUser = async (newUser, oldUser) => {
 		try {
-			const db = getDatabase();
-			const fs = getFirestore();
-
 			const updates = {};
-			const batch = writeBatch(fs);
+			const batch = writeBatch(firestore);
 
 			if (oldUser.role !== newUser.role) {
 				if (oldUser.role !== "Unassigned") {
@@ -229,7 +218,7 @@ export const AuthContextProvider = ({ children }) => {
 				updates[`${newUser.role}/${oldUser.id}`] = {
 					assignedAt: serverTimestamp(),
 				};
-				batch.update(doc(fs, "authorization", oldUser.id), {
+				batch.update(doc(firestore, "authorization", oldUser.id), {
 					isEditor: true
 						? newUser.role === "editor" ||
 						  newUser.role === "admin" ||
@@ -244,14 +233,14 @@ export const AuthContextProvider = ({ children }) => {
 
 			if (oldUser.fullName !== newUser.fullName) {
 				updates[`users/${oldUser.id}/fullName`] = newUser.fullName;
-				batch.update(doc(fs, "users", oldUser.id), {
+				batch.update(doc(firestore, "users", oldUser.id), {
 					fullName: newUser.fullName,
 				});
 			}
 
 			if (oldUser.email !== newUser.email) {
 				updates[`users/${oldUser.id}/email`] = newUser.email;
-				batch.update(doc(fs, "users", oldUser.id), {
+				batch.update(doc(firestore, "users", oldUser.id), {
 					email: newUser.email,
 				});
 			}
@@ -262,11 +251,11 @@ export const AuthContextProvider = ({ children }) => {
 					null;
 				updates[`companies/${newUser.companyId}/users/${oldUser.id}`] =
 					{ Added: serverTimestamp() };
-				batch.update(doc(fs, "users", oldUser.id), {
+				batch.update(doc(firestore, "users", oldUser.id), {
 					cid: newUser.companyId,
 				});
 			}
-			await update(ref(db), updates);
+			await update(ref(firebase), updates);
 			await batch.commit();
 			toast.success("User was edited", toastOptions);
 		} catch (error) {
@@ -285,25 +274,22 @@ export const AuthContextProvider = ({ children }) => {
 	 */
 	const deleteUser = async (user) => {
 		try {
-			const db = getDatabase();
-			const fs = getFirestore();
-
 			const updates = {};
-			const batch = writeBatch(fs);
+			const batch = writeBatch(firestore);
 
 			// Remove user role
 			if (user.role !== "Unassigned") {
 				updates[`${user.role}/${user.id}`] = null;
 			}
-			batch.delete(doc(fs, "authorization", user.id));
+			batch.delete(doc(firestore, "authorization", user.id));
 			// Remove user from company
 			updates[`companies/${user.companyId}/users/${user.id}`] = null;
 
 			// Remove user
 			updates[`users/${user.id}`] = null;
-			batch.delete(doc(fs, "users", user.id));
+			batch.delete(doc(firestore, "users", user.id));
 
-			await update(ref(db), updates);
+			await update(ref(firebase), updates);
 			await batch.commit();
 
 			// Remove user auth record
@@ -337,8 +323,7 @@ export const AuthContextProvider = ({ children }) => {
 						toastOptions
 					);
 				}
-				const db = getDatabase();
-				get(ref(db, `users/${auth.currentUser.uid}/cid`)).then(
+				get(ref(firebase, `users/${auth.currentUser.uid}/cid`)).then(
 					(snapshot) => {
 						setCid(snapshot.val());
 					}

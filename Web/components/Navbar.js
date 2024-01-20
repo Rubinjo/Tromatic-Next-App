@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState, Fragment } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -6,6 +8,8 @@ import { getCookie, setCookie } from "cookies-next";
 import { UserAuth } from "../context/AuthContext";
 import { Listbox, Transition } from "@headlessui/react";
 import { FaChevronDown, FaCheck } from "react-icons/fa";
+
+import BesBollmannIcon from "@/public/BesBollmannIcon";
 
 const languages = [
 	{
@@ -88,28 +92,36 @@ const Navbar = () => {
 	}, [user]);
 
 	return (
-		<div className="flex justify-center py-4 bg-primary">
-			<div className="flex justify-between w-5/6">
-				<ul className="flex items-center">
+		<div className="flex justify-center h-14 bg-primary">
+			<div className="flex w-5/6">
+				<ul className="flex justify-between items-center w-1/3">
 					{user ? (
 						<>
-							<li className="pl-4 pr-8 cursor-pointer">
+							<li className="flex cursor-pointer">
 								<Link
-									href="/"
+									href="/portal"
 									className="text-white font-semibold"
 								>
-									<Image
-										src="bes_bollmann_icon_white.svg"
-										alt="Tromatic Next"
-										width={30}
-										height={30}
-										layout="responsive"
+									<BesBollmannIcon
+										className="px-2"
+										width={32}
+										height={32}
 									/>
+
+									{/* <Image
+										src="/bes_bollmann_icon_white.svg"
+										alt="Tromatic Next"
+										fill
+										style={{ objectFit: "contain" }}
+										// width={110}
+										// height={50}
+										// layout="responsive"
+									/> */}
 								</Link>
 							</li>
-							<li className="px-4 cursor-pointer">
+							<li className="flex cursor-pointer">
 								<Link
-									href="/machines"
+									href="/portal/machines"
 									className="text-white font-semibold"
 								>
 									Machines
@@ -117,7 +129,7 @@ const Navbar = () => {
 							</li>
 							<li className="px-4 cursor-pointer">
 								<Link
-									href="/users"
+									href="/portal/users"
 									className="text-white font-semibold"
 								>
 									Users
@@ -128,17 +140,17 @@ const Navbar = () => {
 						<li />
 					)}
 				</ul>
-
-				<ul className="flex items-center">
+				<ul className="w-1/2" />
+				<ul className="flex justify-between items-center w-1/6">
 					<Listbox
 						value={selectedLanguage}
 						onChange={setSelectedLanguage}
 					>
-						<Listbox.Button className="px-4 flex items-center">
-							<span className="block truncate text-white font-semibold pr-0.5">
+						<Listbox.Button className="px-4 flex">
+							<span className="text-white font-semibold">
 								Language
 							</span>
-							<span className="pointer-events-none flex items-center pl-0.5">
+							<span className="pointer-events-none flex items-center">
 								<FaChevronDown
 									className="h-4 w-4 text-white"
 									aria-hidden="true"

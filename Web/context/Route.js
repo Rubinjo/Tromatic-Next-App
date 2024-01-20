@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import { UserAuth } from "./AuthContext";
 import { useRouter } from "next/navigation";
 
-export function withPublic(Component) {
-	return function WithPublic(props) {
+export const withPublic = (Component) => {
+	return (props) => {
 		const [loading, setLoading] = useState(true);
 		const {
 			user,
@@ -35,7 +35,7 @@ export function withPublic(Component) {
 
 		// If the user is already authenticated, perform the redirection
 		if (user) {
-			router.replace("/machines");
+			router.replace("/portal/machines");
 			return null; // Prevent rendering
 		}
 
@@ -54,10 +54,10 @@ export function withPublic(Component) {
 			/>
 		);
 	};
-}
+};
 
-export function withProtected(Component) {
-	return function WithProtected(props) {
+export const withProtected = (Component) => {
+	return (props) => {
 		const [loading, setLoading] = useState(true);
 		const {
 			user,
@@ -87,7 +87,7 @@ export function withProtected(Component) {
 
 		// If the user is not authenticated, perform the redirection
 		if (!user) {
-			router.replace("/login");
+			router.replace("/portal/login");
 			return null; // Prevent rendering
 		}
 
@@ -106,4 +106,4 @@ export function withProtected(Component) {
 			/>
 		);
 	};
-}
+};
