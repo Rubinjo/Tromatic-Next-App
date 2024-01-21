@@ -1,18 +1,32 @@
 const {setGlobalOptions} = require("firebase-functions/v2");
 const {onSchedule} = require("firebase-functions/v2/scheduler");
-const {onValueUpdated} = require("firebase-functions/v2/database");
+const {
+  onValueUpdated,
+  onValueCreated,
+} = require("firebase-functions/v2/database");
 const {onCall, HttpsError} = require("firebase-functions/v2/https");
 
 const {initializeApp} = require("firebase-admin/app");
 const {getAuth} = require("firebase-admin/auth");
 const {getDatabase} = require("firebase-admin/database");
 const {getFirestore} = require("firebase-admin/firestore");
-const {ref, get, child} = require("firebase/database");
+const {ref, get, child, set, remove, serverTimestamp} = require("firebase/database");
 
 const {Expo} = require("expo-server-sdk");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 require("dotenv").config();
 
 const expo = new Expo({accessToken: process.env.EXPO_ACCESS_TOKEN});
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure: true,
+  auth: {
+    user: process.env.SMTP_USERNAME,
+    pass: process.env.SMTP_PASSWORD,
+  },
+});
 
 const app = initializeApp();
 const firebase = getDatabase(app);
@@ -157,43 +171,27 @@ exports.statusChangedFunction = onValueUpdated(
                             ),
                         );
                         if (userDeviceSnapshot.exists()) {
-                          const deviceName =
-                            userDeviceSnapshot.val();
+                          const deviceName = userDeviceSnapshot.val();
                           for (const [uid, _] of Object.entries(
                               users,
                           )) {
                             try {
-                              const userTokenSnapshot =
-                                await get(
-                                    child(
-                                        ref(firebase),
-                                        `users/${uid}/expoPushToken`,
-                                    ),
-                                );
+                              const userTokenSnapshot = await get(child(ref(firebase), `users/${uid}/expoPushToken`),
+                              );
                               if (
                                 userTokenSnapshot.exists()
                               ) {
-                                const expoPushToken =
-                                  userTokenSnapshot.val();
+                                const expoPushToken = userTokenSnapshot.val();
                                 if (
                                   Expo.isExpoPushToken(
                                       expoPushToken,
                                   )
                                 ) {
-                                  const userLanguageSnapshot =
-                                    await get(
-                                        child(
-                                            ref(
-                                                firebase,
-                                            ),
-                                            `users/${uid}/language`,
-                                        ),
-                                    );
+                                  const userLanguageSnapshot = await get(child(ref(firebase)`users/${uid}/language`));
                                   if (
                                     userLanguageSnapshot.exists()
                                   ) {
-                                    const userLanguage =
-                                      userLanguageSnapshot.val();
+                                    const userLanguage = userLanguageSnapshot.val();
                                     messages.push({
                                       to: expoPushToken,
                                       sound: "default",
@@ -222,16 +220,12 @@ exports.statusChangedFunction = onValueUpdated(
                         } else {
                           console.log("No device name found");
                         }
-                        const chunks =
-                          expo.chunkPushNotifications(messages);
+                        const chunks = expo.chunkPushNotifications(messages);
                         const tickets = [];
                         (async () => {
                           for (const chunk of chunks) {
                             try {
-                              const ticketChunk =
-                                await expo.sendPushNotificationsAsync(
-                                    chunk,
-                                );
+                              const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
                               tickets.push(...ticketChunk);
                             } catch (error) {
                               console.error(error);
@@ -256,15 +250,497 @@ exports.statusChangedFunction = onValueUpdated(
     },
 );
 
+const subjectDict = {
+  en: {
+    app: "Welcome to Tromatic NEXT",
+    web: "New User Registration Notification",
+  },
+  nl: {
+    app: "Welkom bij Tromatic NEXT",
+    web: "Nieuwe gebruikersregistratie notificatie",
+  },
+  de: {
+    app: "Willkommen bei Tromatic NEXT",
+    web: "Benachrichtigung über die Registrierung eines neuen Benutzers",
+  },
+};
+
+const welcomeDict = {
+  en: "Welcome to",
+  nl: "Welkom bij",
+  de: "Willkommen bei",
+};
+
+const greetingDict = {
+  en: "Hello",
+  nl: "Hallo",
+  de: "Hallo",
+};
+
+const linkDict = {
+  en: "Welcome to Tromatic NEXT! We're excited to have you join our platform. To set up your account and create a password, please follow the link to set your password:",
+  nl: "Welkom bij Tromatic NEXT! We zijn verheugd dat u zich bij ons platform heeft aangesloten. Om uw account in te stellen en een wachtwoord aan te maken, volgt u de link om uw wachtwoord in te stellen:",
+  de: "Willkommen bei Tromatic NEXT! Wir freuen uns, dass Sie sich unserer Plattform angeschlossen haben. Um Ihr Konto einzurichten und ein Passwort zu erstellen, folgen Sie bitte dem Link, um Ihr Passwort einzurichten:",
+};
+
+const unwantedDict = {
+  en: "If you did not request this e-mail, please ignore this e-mail.",
+  nl: "Als u deze e-mail niet heeft aangevraagd, negeer dan deze e-mail.",
+  de: "Wenn Sie diese E-Mail nicht angefordert haben, ignorieren Sie bitte diese E-Mail.",
+};
+
+const timeDict = {
+  en: "The link provided in this e-mail will remain active and accessible for a period of three days from the date of this message.",
+  nl: "De link die in deze e-mail wordt verstrekt, blijft actief en toegankelijk gedurende een periode van drie dagen vanaf de datum van dit bericht.",
+  de: "Der in dieser E-Mail bereitgestellte Link bleibt ab dem Datum dieser Nachricht drei Tage lang aktiv und zugänglich.",
+};
+
+const thanksDict = {
+  en: "Thank you for choosing Tromatic NEXT.",
+  nl: "Bedankt dat u voor Tromatic NEXT heeft gekozen.",
+  de: "Vielen Dank, dass Sie sich für Tromatic NEXT entschieden haben.",
+};
+
+const goodbyeDict = {
+  en: "Best regards,",
+  nl: "Met vriendelijke groet,",
+  de: "Mit freundlichen Grüßen,",
+};
+
+const registerDict = {
+  en: "We are pleased to inform you that a new user has registered with your company on the Tromatic NEXT platform. Below are the details of the new user:",
+  nl: "We zijn verheugd u te kunnen meedelen dat er een nieuwe gebruiker is geregistreerd bij uw bedrijf op het Tromatic NEXT platform. Hieronder vindt u de gegevens van de nieuwe gebruiker:",
+  de: "Wir freuen uns, Ihnen mitteilen zu können, dass sich ein neuer Benutzer auf der Tromatic NEXT-Plattform in Ihrem Unternehmen registriert hat. Nachfolgend finden Sie die Details des neuen Benutzers:",
+};
+
+const nameDict = {
+  en: "Name",
+  nl: "Naam",
+  de: "Name",
+};
+
+const optionsDict = {
+  en: "You have the following options for managing this user's role:",
+  nl: "U heeft de volgende opties voor het beheren van de rol van deze gebruiker:",
+  de: "Sie haben die folgenden Optionen, um die Rolle dieses Benutzers zu verwalten:",
+};
+
+const adminDict = {
+  en: "Add as Admin.",
+  nl: "Toevoegen als Admin.",
+  de: "Als Administrator hinzufügen.",
+};
+
+const editorDict = {
+  en: "Add as Editor.",
+  nl: "Toevoegen als Editor.",
+  de: "Als Editor hinzufügen.",
+};
+
+const viewerDict = {
+  en: "Add as Viewer.",
+  nl: "Toevoegen als Viewer.",
+  de: "Als Viewer hinzufügen.",
+};
+
+const deleteDict = {
+  en: "Delete User.",
+  nl: "Gebruiker verwijderen.",
+  de: "Benutzer löschen.",
+};
+
+const newUserDict = {
+  en: "New User on",
+  nl: "Nieuwe gebruiker op",
+  de: "Neuer Benutzer auf",
+};
+
+const buttonDict = {
+  en: "Set Password",
+  nl: "Wachtwoord instellen",
+  de: "Passwort festlegen",
+};
+
+const companyAdminDict = {
+  en: "Company Admin",
+  nl: "Bedrijfsbeheerder",
+  de: "Unternehmensadministrator",
+};
+
+exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
+  // Get user details
+  const uid = event.params.uid;
+  const userRecord = await auth.getUser(uid);
+  const userRef = firestore.collection("users").doc(uid);
+
+  // Generate a temporary key of 32 characters (256 bits)
+  const tempToken = crypto.randomBytes(32).toString("hex");
+  const dateExpiration = new Date();
+  dateExpiration.setDate(dateExpiration.getDate() + 3);
+
+  const cidSnapshot = await get(ref(firebase, `users/${uid}/cid`));
+  const cid = cidSnapshot.val();
+
+  const languageSnapshot = await get(ref(firebase, `companies/${cid}/language`));
+  let language = "en";
+  if (languageSnapshot.exists()) {
+    language = languageSnapshot.val();
+  }
+
+  set(
+      ref(
+          firebase,
+          `companies/${cid}/users/${uid}`,
+      ),
+      {added: serverTimestamp()},
+  );
+
+  // Check if user created via Web or App
+  if (userRecord.metadata.lastSignInTime === null) {
+    userRef.update(
+        {passwordToken: tempToken, tokenExpiration: dateExpiration},
+    );
+    const info = await transporter.sendMail({
+      from: `"Tromatic NEXT Team" <${process.env.SMTP_USERNAME}>`,
+      to: `${userRecord.displayName}, ${userRecord.email}`,
+      subject: subjectDict[language]["app"],
+      text: `${greetingDict[language]} ${userRecord.displayName},
+
+      ${linkDict[language]}
+
+      https://tromatic.app/users/${userRecord.uid}/set-password/${tempToken}
+
+      ${unwantedDict[language]}
+
+      ${timeDict[language]}
+
+      ${thanksDict[language]}
+
+      ${goodbyeDict[language]}
+      Tromatic NEXT Team
+      `,
+      html: `<!DOCTYPE html>
+      <html>
+      <head>
+          <title>${welcomeDict[language]} Tromatic NEXT</title>
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+              }
+              .container {
+                  max-width: 600px;
+                  margin: 0 auto;
+                  padding: 20px;
+                  background-color: #f7f7f7;
+              }
+              .header {
+                  background-color: #0F7BCA;
+                  color: #fff;
+                  text-align: center;
+                  padding: 10px;
+              }
+              .content {
+                  background-color: #fff;
+                  padding: 20px;
+                  border-radius: 5px;
+              }
+              .button-container {
+                  text-align: center;
+              }
+              .button {
+                  display: inline-block;
+                  padding: 10px 20px;
+                  background-color: #1AA3FF;
+                  color: #fff;
+                  text-decoration: none;
+                  border-radius: 5px;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <div class="header">
+                  <h1>${welcomeDict[language]} Tromatic NEXT</h1>
+              </div>
+              <div class="content">
+                  <p>${greetingDict[language]} ${userRecord.displayName},</p>
+                  <p>${linkDict[language]}</p>
+
+                  <div class="button-container">
+                      <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-password/${tempToken}">${buttonDict[language]}</a>
+                  </div>
+
+                  <p>${unwantedDict[language]}</p>
+                  <p>${timeDict[language]}</p>
+                  <p>${thanksDict[language]}</p>
+                  <p>${goodbyeDict[language]}<br>Tromatic NEXT Team</p>
+              </div>
+          </div>
+      </body>
+      </html>
+      `,
+    });
+  } else {
+    userRef.update(
+        {verificationToken: tempToken, tokenExpiration: dateExpiration},
+    );
+    const usersSnapshot = await get(
+        ref(firebase, `companies/${cid}/users`),
+    );
+
+    // Get user details
+    const userDetails = [];
+    const users = usersSnapshot.val();
+    // loop through keys
+    for (const userKey in users) {
+      if (Object.prototype.hasOwnProperty.call(users, userKey)) {
+        const adminSnapshot = await get(
+            ref(firebase, `admin/${userKey}`),
+        );
+        const ownerSnapshot = await get(
+            ref(firebase, `owner/${userKey}`),
+        );
+        if (adminSnapshot.exists() || ownerSnapshot.exists()) {
+          const userSnapshot = await get(
+              ref(firebase, `users/${userKey}`),
+          );
+          if (userSnapshot.exists()) {
+            userDetails.push(userSnapshot.val());
+          }
+        }
+      }
+    }
+    const info = await transporter.sendMail({
+      from: `"Tromatic NEXT Team" <${process.env.SMTP_USERNAME}>`,
+      to: Object.values(userDetails).map(
+          (userDetail) => `"${userDetail.fullName}" <${userDetail.email}>`,
+      ),
+      subject: subjectDict[language]["web"],
+      text: `${greetingDict[language]} ${companyAdminDict[language]},
+
+      ${registerDict[language]}
+
+      ${nameDict[language]}: ${userRecord.displayName}
+      E-mail: ${userRecord.email}
+
+      ${optionsDict[language]}
+
+      1. ${adminDict[language]}
+        https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=admin&cid=${cid}
+
+      2. ${editorDict[language]}
+        https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=editor&cid=${cid}
+
+      3. ${viewerDict[language]}
+        https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=viewer&cid=${cid}
+
+      4. ${deleteDict[language]}
+        https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=delete&cid=${cid}
+
+      ${timeDict[language]}
+
+      ${thanksDict[language]}
+
+      ${goodbyeDict[language]}
+      Tromatic NEXT Team
+      `,
+      html: `<!DOCTYPE html>
+      <html>
+      <head>
+          <title>New User on Tromatic NEXT</title>
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+              }
+              .container {
+                  max-width: 600px;
+                  margin: 0 auto;
+                  padding: 20px;
+                  background-color: #f7f7f7;
+              }
+              .header {
+                  background-color: #0F7BCA;
+                  color: #fff;
+                  text-align: center;
+                  padding: 10px;
+              }
+              .content {
+                  background-color: #fff;
+                  padding: 20px;
+                  border-radius: 5px;
+              }
+              .button {
+                  display: block;
+                  padding: 10px 20px;
+                  margin: 15px;
+                  background-color: #1AA3FF;
+                  color: #fff;
+                  text-decoration: none;
+                  border-radius: 5px;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <div class="header">
+                  <h1>${newUserDict[language]} Tromatic NEXT</h1>
+              </div>
+              <div class="content">
+                  <p>${greetingDict[language]} ${userRecord.displayName},</p>
+                  <p>${registerDict[language]}</p>
+
+                  <ul>
+                      <li>${nameDict[language]}: ${userRecord.displayName}</li>
+                      <li>E-mail: ${userRecord.email}</li>
+                  </ul>
+
+                  <p>${optionsDict[language]}</p>
+
+                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=admin&cid=${cid}">${adminDict[language]}</a>
+
+                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=editor&cid=${cid}">${editorDict[language]}</a>
+
+                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=viewer&cid=${cid}">${viewerDict[language]}</a>
+
+                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=delete&cid=${cid}">${deleteDict[language]}</a>
+
+                  <p>${timeDict[language]}</p>
+                  <p>${thanksDict[language]}</p>
+                  <p>${goodbyeDict[language]}<br>Tromatic NEXT Team</p>
+              </div>
+          </div>
+      </body>
+      </html>
+
+      `,
+    });
+  }
+});
+
+exports.setAuthUserPasswordFunction = onCall(
+    // {cors: ["tromatic.app"]},
+    {cors: true},
+    async (request) => {
+      try {
+        const userRecord = await firestore
+            .collection("users")
+            .doc(request.data.text.uid)
+            .get();
+        if (userRecord.exists) {
+          if (
+            userRecord.data().passwordToken === request.data.text.passwordToken
+          ) {
+            await auth.updateUser(request.data.text.uid, {
+              password: request.data.text.password,
+            });
+            await firestore
+                .collection("users")
+                .doc(request.data.text.uid)
+                .update({
+                  passwordToken: null,
+                  tokenExpiration: null,
+                });
+            return {status: "success"};
+          } else {
+            throw new HttpsError(
+                "invalid-argument",
+                "The password token is invalid",
+            );
+          }
+        } else {
+          throw new HttpsError(
+              "not-found",
+              "The user record could not be found",
+          );
+        }
+      } catch (error) {
+        console.log(error);
+        throw new HttpsError(
+            "internal",
+            "Something went wrong when processing your request",
+        );
+      }
+    },
+);
+
+exports.setAuthUserRoleToken = onCall(
+    // {cors: ["tromatic.app"]},
+    {cors: true},
+    async (request) => {
+      try {
+        const userRecord = await firestore
+            .collection("users")
+            .doc(request.data.text.uid)
+            .get();
+        if (userRecord.exists) {
+          if (
+            userRecord.data().verificationToken === request.data.text.verificationToken
+          ) {
+            if (request.data.text.role === "delete") {
+              firestore
+                  .collection("users")
+                  .doc(request.data.text.uid)
+                  .delete();
+              remove(ref(firebase, `users/${request.data.text.uid}`));
+              remove(ref(firebase, `companies/${request.data.text.cid}/users/${request.data.text.uid}`));
+              await auth.deleteUser(request.data.text.uid);
+            } else {
+              await firestore.collection("authorization").doc(request.data.text.uid).set(
+                  {
+                    isOwner: false,
+                    isAdmin: request.data.text.role === "admin",
+                    isEditor: request.data.text.role === "editor" || request.data.text.role === "admin",
+                    isViewer: request.data.text.role === "viewer" || request.data.text.role === "editor" || request.data.text.role === "admin",
+                  },
+              );
+              set(
+                  ref(
+                      firebase,
+                      `${request.data.text.role === "admin" ? "admin" : (request.data.text.role === "editor" ? "editor" : "viewer")}/${request.data.text.uid}`,
+                  ),
+                  {assignedAt: serverTimestamp()},
+              );
+              await firestore
+                  .collection("users")
+                  .doc(request.data.text.uid)
+                  .update({
+                    verificationToken: null,
+                    tokenExpiration: null,
+                  });
+            }
+            return {status: "success"};
+          } else {
+            throw new HttpsError(
+                "invalid-argument",
+                "The password token is invalid",
+            );
+          }
+        } else {
+          throw new HttpsError(
+              "not-found",
+              "The user record could not be found",
+          );
+        }
+      } catch (error) {
+        console.log(error);
+        throw new HttpsError(
+            "internal",
+            "Something went wrong when processing your request",
+        );
+      }
+    },
+);
+
 exports.createAuthUserFunction = onCall(
     // {cors: ["tromatic.app"]},
     async (request) => {
       try {
-        if (await checkPrivilege(request.auth.uid, "admin") || await checkPrivilege(request.auth.uid, "owner")) {
+        if (
+          (await checkPrivilege(request.auth.uid, "admin")) || (await checkPrivilege(request.auth.uid, "owner"))
+        ) {
           const userRecord = await auth.createUser({
             email: request.data.text.email,
             emailVerified: false,
-            password: "test123",
             displayName: request.data.text.fullName,
             disabled: false,
           });
@@ -276,6 +752,7 @@ exports.createAuthUserFunction = onCall(
           );
         }
       } catch (error) {
+        console.log(error);
         throw new HttpsError(
             "internal",
             "Something went wrong when processing your request",
@@ -288,7 +765,9 @@ exports.deleteAuthUserFunction = onCall(
     // {cors: ["tromatic.app"]},
     async (request) => {
       try {
-        if (await checkPrivilege(request.auth.uid, "admin") || await checkPrivilege(request.auth.uid, "owner")) {
+        if (
+          (await checkPrivilege(request.auth.uid, "admin")) || (await checkPrivilege(request.auth.uid, "owner"))
+        ) {
           await auth.deleteUser(request.data.text.uid);
         } else {
           throw new HttpsError(
