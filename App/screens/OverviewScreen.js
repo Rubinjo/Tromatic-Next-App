@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, SafeAreaView, FlatList, View } from "react-native";
-import {
-	NavigationContainer,
-	CommonActions,
-	useNavigation,
-} from "@react-navigation/native";
+import { StyleSheet, SafeAreaView, FlatList, Platform } from "react-native";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, onValue, update } from "firebase/database";
 import * as Device from "expo-device";
@@ -67,8 +62,6 @@ const OverviewScreen = (props) => {
 	const responseListener = useRef();
 
 	const { cid } = UserAuth();
-
-	console.log(cid);
 
 	useEffect(() => {
 		registerForPushNotificationsAsync().then((token) =>

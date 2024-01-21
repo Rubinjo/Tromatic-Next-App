@@ -8,6 +8,7 @@ import {
 	Alert,
 	ActivityIndicator,
 	SafeAreaView,
+	Platform,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -72,6 +73,19 @@ const SignUpScreen = (props) => {
 				setIsLoading(false);
 				setError(i18n.t("authentication.error.databaseError"));
 			}
+			setIsLoading(false);
+			Alert.alert(
+				i18n.t("authentication.error.notApprovedTitle"),
+				i18n.t("authentication.error.notApprovedMessage"),
+				[
+					{
+						text: "OK",
+						onPress: () => console.log("OK Pressed"),
+					},
+				],
+				{ cancelable: true }
+			);
+			props.navigation.navigate("SignIn");
 		}
 	};
 

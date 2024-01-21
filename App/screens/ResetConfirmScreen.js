@@ -5,6 +5,7 @@ import {
 	TouchableOpacity,
 	View,
 	SafeAreaView,
+	Platform,
 } from "react-native";
 
 import Config from "../utils/config";

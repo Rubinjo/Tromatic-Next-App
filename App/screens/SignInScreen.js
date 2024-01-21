@@ -83,7 +83,7 @@ const SignInScreen = (props) => {
 	// Show alert when error occurs
 	useEffect(() => {
 		if (error) {
-			Alert.alert(i18n.t("autentication.error.signInError"), error, [
+			Alert.alert(i18n.t("authentication.error.signInTitle"), error, [
 				{ text: i18n.t("general.okAllCaps") },
 			]);
 		}

@@ -8,6 +8,7 @@ import {
 	Alert,
 	ActivityIndicator,
 	SafeAreaView,
+	Platform,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
