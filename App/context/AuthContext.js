@@ -1,22 +1,17 @@
 import React, { useContext, createContext, useState, useEffect } from "react";
 import { Alert } from "react-native";
 import {
-	getAuth,
 	signInWithEmailAndPassword,
 	createUserWithEmailAndPassword,
+	updateProfile,
 	signOut,
 	sendPasswordResetEmail,
 	onAuthStateChanged,
 } from "firebase/auth";
-import {
-	getDatabase,
-	ref,
-	set,
-	update,
-	serverTimestamp,
-	get,
-} from "firebase/database";
+import { ref, set, update, serverTimestamp, get } from "firebase/database";
+import { setDoc, doc } from "firebase/firestore";
 
+import { firebase, firestore, auth } from "../firebaseConfig";
 import i18n from "../utils/i18n";
 
 const AuthContext = createContext();
@@ -26,7 +21,7 @@ export const AuthContextProvider = ({ children }) => {
 	const [role, setRole] = useState(null);
 	const [cid, setCid] = useState(null);
 
-	const auth = getAuth();
+	let deactivateListener = false;
 
 	/**
 	 * Register user account
@@ -45,20 +40,33 @@ export const AuthContextProvider = ({ children }) => {
 		language
 	) => {
 		try {
+			deactivateListener = true;
 			const newUser = await createUserWithEmailAndPassword(
 				auth,
 				email,
 				password
 			);
-			const db = getDatabase();
-			set(ref(db, `users/${newUser.user.uid}`), {
-				email: newUser.user.email,
-				fullName: fullName,
-				cid: companyID,
-				lastActivity: serverTimestamp(),
-				language: language,
-			});
+			await Promise.all([
+				updateProfile(newUser.user, {
+					displayName: fullName,
+				}),
+				set(ref(firebase, `users/${newUser.user.uid}`), {
+					email: email,
+					fullName: fullName,
+					cid: companyID,
+					lastActivity: serverTimestamp(),
+					language: language,
+				}),
+				setDoc(doc(firestore, "users", newUser.user.uid), {
+					cid: companyID,
+					email: email,
+					fullName: fullName,
+				}),
+			]);
+			await signOutAccount();
+			deactivateListener = false;
 		} catch (error) {
+			console.log(error.message);
 			throw new Error(error.message);
 		}
 	};
@@ -77,9 +85,8 @@ export const AuthContextProvider = ({ children }) => {
 				email,
 				password
 			);
-			const db = getDatabase();
 			if (currentUser && currentUser.user) {
-				update(ref(db, `users/${currentUser.user.uid}`), {
+				update(ref(firebase, `users/${currentUser.user.uid}`), {
 					lastActivity: serverTimestamp(),
 					language: language,
 				});
@@ -105,18 +112,20 @@ export const AuthContextProvider = ({ children }) => {
 						(await checkPrivilege("viewer"))
 					)
 				) {
-					signOutAccount();
-					Alert.alert(
-						i18n.t("authentication.error.notApprovedTitle"),
-						i18n.t("authentication.error.notApprovedMessage"),
-						[
-							{
-								text: "OK",
-								onPress: () => console.log("OK Pressed"),
-							},
-						],
-						{ cancelable: true }
-					);
+					setTimeout(() => {
+						signOutAccount();
+						Alert.alert(
+							i18n.t("authentication.error.notApprovedTitle"),
+							i18n.t("authentication.error.notApprovedMessage"),
+							[
+								{
+									text: "OK",
+									onPress: () => console.log("OK Pressed"),
+								},
+							],
+							{ cancelable: true }
+						);
+					}, 500);
 				}
 			}
 		} catch (error) {
@@ -129,8 +138,7 @@ export const AuthContextProvider = ({ children }) => {
 	 */
 	const signOutAccount = async () => {
 		try {
-			const db = getDatabase();
-			await update(ref(db, "users/" + auth.currentUser.uid), {
+			await update(ref(firebase, "users/" + auth.currentUser.uid), {
 				lastActivity: serverTimestamp(),
 			});
 			await signOut(auth);
@@ -161,9 +169,8 @@ export const AuthContextProvider = ({ children }) => {
 	 */
 	const checkPrivilege = async (role) => {
 		try {
-			const db = getDatabase();
 			const snapshot = await get(
-				ref(db, `${role}/${auth.currentUser.uid}`)
+				ref(firebase, `${role}/${auth.currentUser.uid}`)
 			);
 			return snapshot.exists();
 		} catch (error) {
@@ -173,32 +180,42 @@ export const AuthContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-			setUser(currentUser);
-			if (!currentUser) {
-				setRole(null);
-				setCid(null);
-			} else {
-				if (await checkPrivilege("owner")) {
-					setRole("owner");
-				} else if (await checkPrivilege("admin")) {
-					setRole("admin");
-				} else if (await checkPrivilege("editor")) {
-					setRole("editor");
-				} else if (await checkPrivilege("viewer")) {
-					setRole("editor");
+			if (!deactivateListener) {
+				setUser(currentUser);
+				if (!currentUser) {
+					setRole(null);
+					setCid(null);
 				} else {
-					logOut();
-					toast.warn(
-						"Your account does not have the required privileges",
-						toastOptions
-					);
-				}
-				const db = getDatabase();
-				get(ref(db, `users/${auth.currentUser.uid}/cid`)).then(
-					(snapshot) => {
-						setCid(snapshot.val());
+					if (await checkPrivilege("owner")) {
+						setRole("owner");
+					} else if (await checkPrivilege("admin")) {
+						setRole("admin");
+					} else if (await checkPrivilege("editor")) {
+						setRole("editor");
+					} else if (await checkPrivilege("viewer")) {
+						setRole("editor");
+					} else {
+						// Wait for all other code to run before signing out
+
+						signOutAccount();
+						Alert.alert(
+							i18n.t("authentication.error.notApprovedTitle"),
+							i18n.t("authentication.error.notApprovedMessage"),
+							[
+								{
+									text: "OK",
+									onPress: () => console.log("OK Pressed"),
+								},
+							],
+							{ cancelable: true }
+						);
 					}
-				);
+					get(
+						ref(firebase, `users/${auth.currentUser.uid}/cid`)
+					).then((snapshot) => {
+						setCid(snapshot.val());
+					});
+				}
 			}
 		});
 		return () => unsubscribe();
