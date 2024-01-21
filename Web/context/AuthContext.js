@@ -52,8 +52,6 @@ export const AuthContextProvider = ({ children }) => {
 		companyID,
 		fullName,
 		email,
-		// password,
-		// language,
 		role
 	) => {
 		try {
@@ -73,7 +71,6 @@ export const AuthContextProvider = ({ children }) => {
 				fullName: fullName,
 				cid: companyID,
 				lastActivity: serverTimestamp(),
-				// language: language,
 			};
 			batch.set(doc(firestore, "users", result.data.uid), {
 				cid: companyID,

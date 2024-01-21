@@ -30,15 +30,17 @@ const RoleToken = () => {
 			const roleToken = splitPath[4];
 			const userSnap = await getDoc(doc(firestore, `users/${uid}`));
 			const role = searchParams.get("role");
-
+			const cid = searchParams.get("cid");
 			if (
 				userSnap.exists() &&
 				["admin", "editor", "viewer", "delete"].includes(role)
 			) {
 				const userData = userSnap.data();
+				console.log("userData")
+				console.log(userData)
 				if (
-					!userData.passwordToken ||
-					userData.passwordToken !== roleToken
+					!userData.verificationToken ||
+					userData.verificationToken !== roleToken
 				) {
 					redirect("/404");
 				} else {
@@ -51,15 +53,19 @@ const RoleToken = () => {
 					const result = await setAuthUserRoleToken({
 						text: {
 							uid: uid,
-							passwordToken: passwordToken,
+							verificationToken: userData.verificationToken,
 							role: role,
+							cid: cid,
 						},
 					});
+					console.log(result)
 					if (result.data.status === "success") {
-						window.close();
+						toast.success(
+							"User successfully updated, you can close this window", toastOptions
+						);
 					} else {
 						toast.error(
-							"Something went wrong, please try again later"
+							"Something went wrong, please try again later", toastOptions
 						);
 					}
 				}

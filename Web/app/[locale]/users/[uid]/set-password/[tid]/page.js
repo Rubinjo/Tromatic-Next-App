@@ -73,11 +73,6 @@ const PasswordToken = () => {
 						passwordToken: passwordToken,
 						password: e.target.password.value,
 					},
-				},
-				{
-					headers: {
-						"Access-Control-Allow-Origin": "*",
-					},
 				}
 			);
 
