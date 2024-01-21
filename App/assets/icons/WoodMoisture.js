@@ -12,6 +12,7 @@ const WoodMoisture = (props) => (
 			width="100%"
 			height="100%"
 			viewBox={`0 0 ${originalWidth} ${originalHeight}`}
+			fill="none"
 		>
 			<G
 				stroke={props.color}
