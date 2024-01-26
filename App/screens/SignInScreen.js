@@ -263,25 +263,27 @@ const SignInScreen = (props) => {
 					color={Colors.PrimaryLight}
 				/>
 			</View>
-			<View style={{ flexDirection: "row", marginTop: "auto" }}>
-				<Text style={styles.text}>
-					{i18n.t("authentication.account")}
-				</Text>
-				<TouchableOpacity
-					onPress={() => {
-						props.navigation.navigate("SignUp");
-					}}
-				>
-					<Text
-						style={[
-							styles.headText,
-							{ color: Colors.SecondaryLight },
-						]}
-					>
-						{i18n.t("authentication.signUp")}
+			{Platform.OS == "android" && (
+				<View style={{ flexDirection: "row", marginTop: "auto" }}>
+					<Text style={styles.text}>
+						{i18n.t("authentication.account")}
 					</Text>
-				</TouchableOpacity>
-			</View>
+					<TouchableOpacity
+						onPress={() => {
+							props.navigation.navigate("SignUp");
+						}}
+					>
+						<Text
+							style={[
+								styles.headText,
+								{ color: Colors.SecondaryLight },
+							]}
+						>
+							{i18n.t("authentication.signUp")}
+						</Text>
+					</TouchableOpacity>
+				</View>
+			)}
 		</SafeAreaView>
 	);
 };
