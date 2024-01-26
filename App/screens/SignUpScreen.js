@@ -115,7 +115,7 @@ const SignUpScreen = (props) => {
 					<View style={styles.textInputBox}>
 						<View style={styles.textInputIconBox}>
 							<Ionicons
-								name="ios-business-outline"
+								name="business-outline"
 								size={Config.deviceWidth * 0.075}
 								color={Colors.Secondary}
 							/>
