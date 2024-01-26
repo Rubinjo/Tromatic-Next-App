@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
-import {
-	getFirestore,
-	query,
-	collection,
-	where,
-	getDocs,
-} from "firebase/firestore";
+import { query, collection, where, getDocs } from "firebase/firestore";
 import { VictoryChart, VictoryAxis, VictoryLine } from "victory-native";
+import { AntDesign } from "@expo/vector-icons";
 
 import Config from "../utils/config";
 import i18n from "../utils/i18n";
@@ -15,8 +10,7 @@ import Colors from "../assets/constants/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Thermometer from "../assets/icons/Thermometer";
 import Humidity from "../assets/icons/Humidity";
-
-import { AntDesign } from "@expo/vector-icons";
+import { firestore } from "../firebaseConfig";
 
 const GraphScreen = (props) => {
 	const [loading, setLoading] = useState(true);
@@ -55,12 +49,10 @@ const GraphScreen = (props) => {
 		endTime.setTime(endTime.getTime() - timeOffsets[loaded]);
 
 		try {
-			// Setup connection to database
-			const db = getFirestore();
 			// Query for history data from machine that is between already loaded and needed times
 			const q = query(
 				collection(
-					db,
+					firestore,
 					"machines",
 					props.route.params.machineId,
 					"history"

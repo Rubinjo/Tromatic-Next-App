@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, SafeAreaView, FlatList, Platform } from "react-native";
-import { getAuth } from "firebase/auth";
-import { getDatabase, ref, onValue, update } from "firebase/database";
+import { ref, onValue, update } from "firebase/database";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 
+import { firebase } from "../firebaseConfig";
 import { UserAuth } from "../context/AuthContext";
 import Gauge from "../assets/icons/Gauge";
 import Config from "../utils/config";
@@ -61,7 +61,7 @@ const OverviewScreen = (props) => {
 	const notificationListener = useRef();
 	const responseListener = useRef();
 
-	const { cid } = UserAuth();
+	const { user, cid } = UserAuth();
 
 	useEffect(() => {
 		registerForPushNotificationsAsync().then((token) =>
@@ -92,24 +92,20 @@ const OverviewScreen = (props) => {
 
 	useEffect(() => {
 		if (expoPushToken) {
-			const db = getDatabase();
-			const auth = getAuth();
-
-			update(ref(db, `users/${auth.currentUser.uid}`), {
+			update(ref(firebase, `users/${user.uid}`), {
 				expoPushToken: expoPushToken,
 			});
 		}
 	}, [expoPushToken]);
 
 	useEffect(() => {
-		const db = getDatabase();
-		const machinesRef = ref(db, "companies/" + cid + "/machines");
+		const machinesRef = ref(firebase, "companies/" + cid + "/machines");
 		onValue(machinesRef, (snapshot) => {
 			const fetchedData = [];
 			snapshot.forEach((childSnapshot) => {
 				const childKey = childSnapshot.key;
 				const childData = childSnapshot.val();
-				const parsRef = ref(db, "machines/" + childKey);
+				const parsRef = ref(firebase, "machines/" + childKey);
 				onValue(parsRef, (snapshot) => {
 					const parData = snapshot.val();
 					const machineData = new Machine(

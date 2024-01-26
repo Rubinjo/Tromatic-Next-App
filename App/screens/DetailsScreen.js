@@ -11,9 +11,8 @@ import {
 	Alert,
 } from "react-native";
 
-import { getAuth } from "firebase/auth";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { getDatabase, ref, onValue, update } from "firebase/database";
+import { ref, onValue, update } from "firebase/database";
 import {
 	BottomSheetModal,
 	BottomSheetModalProvider,
@@ -22,7 +21,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
-// import { CHAMBERS } from "../data/dummy-data";
+import { UserAuth } from "../context/AuthContext";
+import { firebase } from "../firebaseConfig";
 import Config from "../utils/config";
 import i18n from "../utils/i18n";
 import Colors from "../assets/constants/colors";
@@ -104,9 +104,13 @@ const DetailsScreen = (props) => {
 	const bottomSheetCTModalRef = useRef(null);
 	const bottomSheetWMModalRef = useRef(null);
 
+	const { user, role } = UserAuth();
+
 	useEffect(() => {
-		const db = getDatabase();
-		const machineRef = ref(db, "machines/" + props.route.params.machineId);
+		const machineRef = ref(
+			firebase,
+			"machines/" + props.route.params.machineId
+		);
 		onValue(machineRef, (snapshot) => {
 			const machine = snapshot.val();
 			setDataFB({
@@ -213,7 +217,7 @@ const DetailsScreen = (props) => {
 	useEffect(() => {
 		props.navigation.setOptions({
 			headerRight: (props) =>
-				areChanges ? (
+				areChanges && (role === "owner" || role === "editor") ? (
 					<TouchableOpacity
 						onPress={sendData}
 						style={{ marginRight: 12 }}
@@ -224,7 +228,8 @@ const DetailsScreen = (props) => {
 							color={"white"}
 						/>
 					</TouchableOpacity>
-				) : data.remainingTime > 0 ? (
+				) : data.remainingTime > 0 &&
+				  (role === "owner" || role === "editor") ? (
 					<TouchableOpacity
 						onPress={() =>
 							Alert.alert(
@@ -282,7 +287,6 @@ const DetailsScreen = (props) => {
 	};
 
 	const sendData = () => {
-		const db = getDatabase();
 		const updates = {};
 		if (data.setPointTemp != dataFB.setPointTemp) {
 			updates[
@@ -337,26 +341,23 @@ const DetailsScreen = (props) => {
 		updates[
 			"machines/" + props.route.params.machineId + "/DateTimeMessage"
 		] = new Date().toISOString();
-		const auth = getAuth();
 		updates["machines/" + props.route.params.machineId + "/LastEditor"] =
-			"u" + auth.currentUser.uid;
-		update(ref(db), updates);
+			"u" + user.uid;
+		update(ref(firebase), updates);
 		setAreChanges(false);
 	};
 
 	const sendStop = () => {
-		const db = getDatabase();
 		const updates = {};
-		const auth = getAuth();
 		updates["machines/" + props.route.params.machineId + "/LastEditor"] =
-			"u" + auth.currentUser.uid;
+			"u" + user.uid;
 		updates[
 			"machines/" + props.route.params.machineId + "/DateTimeMessage"
 		] = new Date().toISOString();
 		updates[
 			"machines/" + props.route.params.machineId + "/RemainingTime"
 		] = 0;
-		update(ref(db), updates);
+		update(ref(firebase), updates);
 	};
 
 	function handleCTModal() {
