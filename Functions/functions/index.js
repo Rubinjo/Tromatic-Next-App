@@ -21,7 +21,7 @@ const expo = new Expo({accessToken: process.env.EXPO_ACCESS_TOKEN});
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
-  secure: true,
+  secure: false,
   auth: {
     user: process.env.SMTP_USERNAME,
     pass: process.env.SMTP_PASSWORD,
@@ -277,6 +277,18 @@ const greetingDict = {
   de: "Hallo",
 };
 
+const resetDict = {
+  en: "Password Reset",
+  nl: "Wachtwoord reset",
+  de: "Passwort zurücksetzen",
+};
+
+const resetlinkDict = {
+  en: "You have requested a password reset for your account on the Tromatic NEXT platform. To set a new password, please follow the link to set your password:",
+  nl: "U heeft een wachtwoord reset aangevraagd voor uw account op het Tromatic NEXT platform. Om een nieuw wachtwoord in te stellen, volgt u de link om uw wachtwoord in te stellen:",
+  de: "Sie haben eine Passwortzurücksetzung für Ihr Konto auf der Tromatic NEXT-Plattform angefordert. Um ein neues Passwort festzulegen, folgen Sie bitte dem Link, um Ihr Passwort festzulegen:",
+};
+
 const linkDict = {
   en: "Welcome to Tromatic NEXT! We're excited to have you join our platform. To set up your account and create a password, please follow the link to set your password:",
   nl: "Welkom bij Tromatic NEXT! We zijn verheugd dat u zich bij ons platform heeft aangesloten. Om uw account in te stellen en een wachtwoord aan te maken, volgt u de link om uw wachtwoord in te stellen:",
@@ -319,6 +331,12 @@ const nameDict = {
   de: "Name",
 };
 
+const companyDict = {
+  en: "Company",
+  nl: "Bedrijf",
+  de: "Unternehmen",
+};
+
 const optionsDict = {
   en: "You have the following options for managing this user's role:",
   nl: "U heeft de volgende opties voor het beheren van de rol van deze gebruiker:",
@@ -355,16 +373,40 @@ const newUserDict = {
   de: "Neuer Benutzer auf",
 };
 
-const buttonDict = {
+const buttonAccountDict = {
   en: "Set Password",
   nl: "Wachtwoord instellen",
   de: "Passwort festlegen",
+};
+
+const buttonResetDict = {
+  en: "Reset Password",
+  nl: "Wachtwoord resetten",
+  de: "Passwort zurücksetzen",
+};
+
+const buttonMailDict = {
+  en: "Verify E-mail",
+  nl: "E-mail verifiëren",
+  de: "E-Mail bestätigen",
 };
 
 const companyAdminDict = {
   en: "Company Admin",
   nl: "Bedrijfsbeheerder",
   de: "Unternehmensadministrator",
+};
+
+const addedDict = {
+  en: "You have been added as a user to the Tromatic NEXT platform by your company administrator.",
+  nl: "U bent door uw bedrijfsbeheerder toegevoegd als gebruiker aan het Tromatic NEXT platform.",
+  de: "Sie wurden von Ihrem Unternehmensadministrator als Benutzer auf der Tromatic NEXT-Plattform hinzugefügt.",
+};
+
+const verifyDict = {
+  en: "Please follow the link to verify your e-mail address.",
+  nl: "Volg de link om uw e-mailadres te verifiëren.",
+  de: "Bitte folgen Sie dem Link, um Ihre E-Mail-Adresse zu bestätigen.",
 };
 
 exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
@@ -374,7 +416,7 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
   const userRef = firestore.collection("users").doc(uid);
 
   // Generate a temporary key of 32 characters (256 bits)
-  const tempToken = crypto.randomBytes(32).toString("hex");
+  const tempTokenAccount = crypto.randomBytes(32).toString("hex");
   const dateExpiration = new Date();
   dateExpiration.setDate(dateExpiration.getDate() + 3);
 
@@ -398,9 +440,9 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
   // Check if user created via Web or App
   if (userRecord.metadata.lastSignInTime === null) {
     userRef.update(
-        {passwordToken: tempToken, tokenExpiration: dateExpiration},
+        {passwordToken: tempTokenAccount, tokenExpiration: dateExpiration},
     );
-    const info = await transporter.sendMail({
+    const accountInfo = await transporter.sendMail({
       from: `"Tromatic NEXT Team" <${process.env.SMTP_USERNAME}>`,
       to: `${userRecord.displayName}, ${userRecord.email}`,
       subject: subjectDict[language]["app"],
@@ -408,7 +450,7 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
 
       ${linkDict[language]}
 
-      https://tromatic.app/users/${userRecord.uid}/set-password/${tempToken}
+      https://tromatic.app/users/${userRecord.uid}/set-password/${tempTokenAccount}
 
       ${unwantedDict[language]}
 
@@ -467,7 +509,7 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
                   <p>${linkDict[language]}</p>
 
                   <div class="button-container">
-                      <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-password/${tempToken}">${buttonDict[language]}</a>
+                      <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-password/${tempTokenAccount}">${buttonAccountDict[language]}</a>
                   </div>
 
                   <p>${unwantedDict[language]}</p>
@@ -481,8 +523,9 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
       `,
     });
   } else {
+    const tempTokenVerification = crypto.randomBytes(32).toString("hex");
     userRef.update(
-        {verificationToken: tempToken, tokenExpiration: dateExpiration},
+        {verificationToken: tempTokenAccount, emailToken: tempTokenVerification, tokenExpiration: dateExpiration},
     );
     const usersSnapshot = await get(
         ref(firebase, `companies/${cid}/users`),
@@ -510,7 +553,7 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
         }
       }
     }
-    const info = await transporter.sendMail({
+    const accountInfo = await transporter.sendMail({
       from: `"Tromatic NEXT Team" <${process.env.SMTP_USERNAME}>`,
       to: Object.values(userDetails).map(
           (userDetail) => `"${userDetail.fullName}" <${userDetail.email}>`,
@@ -526,16 +569,16 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
       ${optionsDict[language]}
 
       1. ${adminDict[language]}
-        https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=admin&cid=${cid}
+        https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=admin&cid=${cid}
 
       2. ${editorDict[language]}
-        https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=editor&cid=${cid}
+        https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=editor&cid=${cid}
 
       3. ${viewerDict[language]}
-        https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=viewer&cid=${cid}
+        https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=viewer&cid=${cid}
 
       4. ${deleteDict[language]}
-        https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=delete&cid=${cid}
+        https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=delete&cid=${cid}
 
       ${timeDict[language]}
 
@@ -596,13 +639,13 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
 
                   <p>${optionsDict[language]}</p>
 
-                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=admin&cid=${cid}">${adminDict[language]}</a>
+                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=admin&cid=${cid}">${adminDict[language]}</a>
 
-                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=editor&cid=${cid}">${editorDict[language]}</a>
+                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=editor&cid=${cid}">${editorDict[language]}</a>
 
-                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=viewer&cid=${cid}">${viewerDict[language]}</a>
+                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=viewer&cid=${cid}">${viewerDict[language]}</a>
 
-                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempToken}?role=delete&cid=${cid}">${deleteDict[language]}</a>
+                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=delete&cid=${cid}">${deleteDict[language]}</a>
 
                   <p>${timeDict[language]}</p>
                   <p>${thanksDict[language]}</p>
@@ -614,8 +657,273 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
 
       `,
     });
+    // Send verification e-mail to user
+    const verificationInfo = await transporter.sendMail({
+      from: `"Tromatic NEXT Team" <${process.env.SMTP_USERNAME}>`,
+      to: `${userRecord.displayName}, ${userRecord.email}`,
+      subject: subjectDict[language]["app"],
+      text: `${greetingDict[language]} ${userRecord.displayName},
+
+      ${addedDict[language]}
+
+      ${nameDict[language]}: ${userRecord.displayName}
+      ${companyDict[language]}: ${cid}
+
+      ${verifyDict[language]}
+
+      https://tromatic.app/users/${userRecord.uid}/set-email/${tempTokenVerification}
+
+      ${unwantedDict[language]}
+
+      ${timeDict[language]}
+
+      ${thanksDict[language]}
+
+      ${goodbyeDict[language]}
+      Tromatic NEXT Team
+      `,
+      html: `<!DOCTYPE html>
+      <html>
+      <head>
+          <title>${welcomeDict[language]} Tromatic NEXT</title>
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+              }
+              .container {
+                  max-width: 600px;
+                  margin: 0 auto;
+                  padding: 20px;
+                  background-color: #f7f7f7;
+              }
+              .header {
+                  background-color: #0F7BCA;
+                  color: #fff;
+                  text-align: center;
+                  padding: 10px;
+              }
+              .content {
+                  background-color: #fff;
+                  padding: 20px;
+                  border-radius: 5px;
+              }
+              .button-container {
+                  text-align: center;
+              }
+              .button {
+                  display: inline-block;
+                  padding: 10px 20px;
+                  background-color: #1AA3FF;
+                  color: #fff;
+                  text-decoration: none;
+                  border-radius: 5px;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <div class="header">
+                  <h1>${welcomeDict[language]} Tromatic NEXT</h1>
+              </div>
+              <div class="content">
+                  <p>${greetingDict[language]} ${userRecord.displayName},</p>
+                  <p>${addedDict[language]}</p>
+
+                  <ul>
+                      <li>${nameDict[language]}: ${userRecord.displayName}</li>
+                      <li>${companyDict[language]}: ${cid}</li>
+                  </ul>
+
+                  <p>${verifyDict[language]}</p>
+
+                  <div class="button-container">
+                      <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-email/${tempTokenVerification}">${buttonMailDict[language]}</a>
+                  </div>
+
+                  <p>${unwantedDict[language]}</p>
+                  <p>${timeDict[language]}</p>
+                  <p>${thanksDict[language]}</p>
+                  <p>${goodbyeDict[language]}<br>Tromatic NEXT Team</p>
+              </div>
+          </div>
+      </body>
+      </html>
+      `,
+    });
   }
 });
+
+exports.sendResetPasswordEmailFunction = onCall(
+    // {cors: ["tromatic.app"]},
+    {cors: true},
+    async (request) => {
+      try {
+        console.log(request.data.text.email);
+        console.log("Look for user");
+        const userRecord = await auth.getUserByEmail(request.data.text.email);
+        if (userRecord) {
+          console.log(userRecord);
+          const languageSnapshot = await get(ref(firebase, `users/${userRecord.uid}/language`));
+          let language = "en";
+          if (languageSnapshot.exists()) {
+            language = languageSnapshot.val();
+          }
+          const resetToken = crypto.randomBytes(32).toString("hex");
+          const dateExpiration = new Date();
+          dateExpiration.setDate(dateExpiration.getDate() + 3);
+          console.log("Insert into firestore");
+          await firestore
+              .collection("users")
+              .doc(userRecord.uid)
+              .update({
+                resetToken: resetToken,
+                resetTokenExpiration: dateExpiration,
+              });
+          console.log("Send e-mail");
+          const info = await transporter.sendMail({
+            from: `"Tromatic NEXT Team" <${process.env.SMTP_USERNAME}>`,
+            to: `${userRecord.displayName}, ${userRecord.email}`,
+            subject: resetDict[language],
+            text: `${greetingDict[language]} ${userRecord.displayName},
+
+            ${resetlinkDict[language]}
+
+            https://tromatic.app/users/${userRecord.uid}/reset-password/${resetToken}
+
+            ${unwantedDict[language]}
+
+            ${timeDict[language]}
+
+            ${thanksDict[language]}
+
+            ${goodbyeDict[language]}
+            Tromatic NEXT Team
+            `,
+            html: `<!DOCTYPE html>
+            <html>
+            <head>
+                <title>${welcomeDict[language]} Tromatic NEXT</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        background-color: #f7f7f7;
+                    }
+                    .header {
+                        background-color: #0F7BCA;
+                        color: #fff;
+                        text-align: center;
+                        padding: 10px;
+                    }
+                    .content {
+                        background-color: #fff;
+                        padding: 20px;
+                        border-radius: 5px;
+                    }
+                    .button-container {
+                        text-align: center;
+                    }
+                    .button {
+                        display: inline-block;
+                        padding: 10px 20px;
+                        background-color: #1AA3FF;
+                        color: #fff;
+                        text-decoration: none;
+                        border-radius: 5px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>${welcomeDict[language]} Tromatic NEXT</h1>
+                    </div>
+                    <div class
+                    ="content">
+                        <p>${greetingDict[language]} ${userRecord.displayName},</p>
+                        <p>${resetlinkDict[language]}</p>
+
+                        <div class="button-container">
+                            <a class="button" href="https://tromatic.app/users/${userRecord.uid}/reset-password/${resetToken}">${buttonResetDict[language]}</a>
+                        </div>
+
+                        <p>${unwantedDict[language]}</p>
+                        <p>${timeDict[language]}</p>
+                        <p>${thanksDict[language]}</p>
+                        <p>${goodbyeDict[language]}<br>Tromatic NEXT Team</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            `,
+          });
+          return {status: "success"};
+        } else {
+          throw new HttpsError(
+              "not-found",
+              "The user record could not be found",
+          );
+        }
+      } catch (error) {
+        console.log(error);
+        throw new HttpsError(
+            "not-found",
+            "The user record could not be found",
+        );
+      }
+    },
+);
+
+exports.resetPassword = onCall(
+    // {cors: ["tromatic.app"]},
+    {cors: true},
+    async (request) => {
+      try {
+        const userRecord = await firestore
+            .collection("users")
+            .doc(request.data.text.uid)
+            .get();
+        if (userRecord.exists()) {
+          const userData = userRecord.data();
+          if (
+            (userData.resetToken === request.data.text.resetToken) && (userData.resetTokenExpiration > new Date())
+          ) {
+            await auth.updateUser(request.data.text.uid, {
+              password: request.data.text.password,
+            });
+            await firestore
+                .collection("users")
+                .doc(request.data.text.uid)
+                .update({
+                  resetToken: null,
+                  resetTokenExpiration: null,
+                });
+            return {status: "success"};
+          } else {
+            throw new HttpsError(
+                "invalid-argument",
+                "The reset token is invalid",
+            );
+          }
+        } else {
+          throw new HttpsError(
+              "not-found",
+              "The user record could not be found",
+          );
+        }
+      } catch (error) {
+        console.log(error);
+        throw new HttpsError(
+            "not-found",
+            "The user record could not be found",
+        );
+      }
+    },
+);
 
 exports.setAuthUserPasswordFunction = onCall(
     // {cors: ["tromatic.app"]},
@@ -632,13 +940,14 @@ exports.setAuthUserPasswordFunction = onCall(
           ) {
             await auth.updateUser(request.data.text.uid, {
               password: request.data.text.password,
+              emailVerified: true,
             });
             await firestore
                 .collection("users")
                 .doc(request.data.text.uid)
                 .update({
                   passwordToken: null,
-                  tokenExpiration: null,
+                  accountTokenExpiration: null,
                 });
             return {status: "success"};
           } else {
@@ -673,8 +982,9 @@ exports.setAuthUserRoleToken = onCall(
             .doc(request.data.text.uid)
             .get();
         if (userRecord.exists) {
+          const userData = userRecord.data();
           if (
-            userRecord.data().verificationToken === request.data.text.verificationToken
+            userData.verificationToken === request.data.text.verificationToken
           ) {
             if (request.data.text.role === "delete") {
               firestore
@@ -700,13 +1010,22 @@ exports.setAuthUserRoleToken = onCall(
                   ),
                   {assignedAt: serverTimestamp()},
               );
-              await firestore
-                  .collection("users")
-                  .doc(request.data.text.uid)
-                  .update({
-                    verificationToken: null,
-                    tokenExpiration: null,
-                  });
+              if (userData.emailToken === null) {
+                await firestore
+                    .collection("users")
+                    .doc(request.data.text.uid)
+                    .update({
+                      verificationToken: null,
+                      tokenExpiration: null,
+                    });
+              } else {
+                await firestore
+                    .collection("users")
+                    .doc(request.data.text.uid)
+                    .update({
+                      verificationToken: null,
+                    });
+              }
             }
             return {status: "success"};
           } else {
@@ -730,6 +1049,64 @@ exports.setAuthUserRoleToken = onCall(
       }
     },
 );
+
+exports.setAuthVerified = onCall(
+    // {cors: ["tromatic.app"]},
+    {cors: true},
+    async (request) => {
+      try {
+        const userRecord = await firestore
+            .collection("users")
+            .doc(request.data.text.uid)
+            .get();
+        if (userRecord.exists) {
+          const userData = userRecord.data();
+          if (
+            userData.emailToken === request.data.text.emailToken
+          ) {
+            await auth.updateUser(request.data.text.uid, {
+              emailVerified: true,
+            });
+            if (userData.passwordToken === null) {
+              await firestore
+                  .collection("users")
+                  .doc(request.data.text.uid)
+                  .update({
+                    emailToken: null,
+                    tokenExpiration: null,
+                  });
+            } else {
+              await firestore
+                  .collection("users")
+                  .doc(request.data.text.uid)
+                  .update({
+                    emailToken: null,
+                  });
+            }
+
+            return {status: "success"};
+          } else {
+            throw new HttpsError(
+                "invalid-argument",
+                "The email token is invalid",
+            );
+          }
+        } else {
+          throw new HttpsError(
+              "not-found",
+              "The user record could not be found",
+          );
+        }
+      } catch (error) {
+        console.log(error);
+        throw new HttpsError(
+            "internal",
+            "Something went wrong when processing your request",
+        );
+      }
+    },
+);
+
 
 exports.createAuthUserFunction = onCall(
     // {cors: ["tromatic.app"]},
