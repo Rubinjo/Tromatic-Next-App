@@ -185,11 +185,22 @@ export const AuthContextProvider = ({ children }) => {
 	 *
 	 * @param {string} email - The email address associated with the user account.
 	 */
-	const passwordResetEmail = (email) => {
+	const passwordResetEmail = async (email) => {
 		try {
-			sendPasswordResetEmail(auth, email);
+			const sendResetPasswordEmailFunction = httpsCallable(
+				functions,
+				"sendResetPasswordEmailFunction"
+			);
+			const result = await sendResetPasswordEmailFunction(
+				{
+					text: {
+						email: email,
+					},
+				}
+			);
 			toast.success("Reset password email was send", toastOptions);
 		} catch (error) {
+			console.log(error);
 			toast.error(
 				"Reset password email couldn't be send, please try again later",
 				toastOptions

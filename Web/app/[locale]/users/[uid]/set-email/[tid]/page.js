@@ -1,16 +1,15 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { usePathname, useSearchParams, redirect } from "next/navigation";
+import { usePathname, redirect } from "next/navigation";
 import { getDoc, doc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { toast } from "react-toastify";
 
 import { firestore, functions } from "@/firebase";
 
-const RoleToken = () => {
+const EmailToken = () => {
 	const pathname = usePathname();
-	const searchParams = useSearchParams();
 
 	const toastOptions = {
 		position: "top-center",
@@ -27,37 +26,29 @@ const RoleToken = () => {
 		async function fetchData() {
 			const splitPath = pathname.split("/");
 			const uid = splitPath[2];
-			const roleToken = splitPath[4];
+			const emailToken = splitPath[4];
 			const userSnap = await getDoc(doc(firestore, `users/${uid}`));
-			const role = searchParams.get("role");
-			const cid = searchParams.get("cid");
-			if (
-				userSnap.exists() &&
-				["admin", "editor", "viewer", "delete"].includes(role)
-			) {
+			if (userSnap.exists()) {
 				const userData = userSnap.data();
 				if (
-					!userData.verificationToken ||
-					userData.verificationToken !== roleToken
+					!userData.emailToken ||
+					userData.emailToken !== emailToken
 				) {
 					redirect("/404");
 				} else {
-					const setAuthUserRoleToken = httpsCallable(
+					const setAuthVerified = httpsCallable(
 						functions,
-						"setAuthUserRoleToken"
+						"setAuthVerified"
 					);
-					const result = await setAuthUserRoleToken({
+					const result = await setAuthVerified({
 						text: {
 							uid: uid,
-							verificationToken: userData.verificationToken,
-							role: role,
-							cid: cid,
+							emailToken: userData.emailToken,
 						},
 					});
-					console.log(result)
 					if (result.data.status === "success") {
 						toast.success(
-							"User successfully updated, you can close this window", toastOptions
+							"Email verified, you can close this window", toastOptions
 						);
 					} else {
 						toast.error(
@@ -73,7 +64,7 @@ const RoleToken = () => {
 		fetchData();
 	}, []);
 
-	return <> </>;
+	return <></>;
 };
 
-export default RoleToken;
+export default EmailToken;

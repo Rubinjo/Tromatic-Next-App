@@ -8,9 +8,9 @@ import { toast } from "react-toastify";
 
 import { firestore, functions } from "@/firebase";
 
-const PasswordToken = () => {
+const ResetToken = () => {
 	const [uid, setUid] = useState("");
-	const [passwordToken, setPasswordToken] = useState("");
+	const [resetToken, setResetToken] = useState("");
 
 	const pathname = usePathname();
 
@@ -29,20 +29,22 @@ const PasswordToken = () => {
 		async function fetchData() {
 			const splitPath = pathname.split("/");
 			const uid = splitPath[2];
-			const passwordToken = splitPath[4];
+			const resetToken = splitPath[4];
 			const userSnap = await getDoc(doc(firestore, `users/${uid}`));
 
 			if (userSnap.exists()) {
 				const userData = userSnap.data();
-				// if userData does not contain a passwordToken or the passwordToken does not the passwordToken of the path redirect user to 404 page
+				// if userData does not contain a resetToken or the resetToken does not the passwordToken of the path redirect user to 404 page
 				if (
-					!userData.passwordToken ||
-					userData.passwordToken !== passwordToken
+					userData.resetToken &&
+                    userData.resetTokenExpiration &&
+					userData.resetToken === resetToken &&
+                    userData.resetTokenExpiration > Date.now()
 				) {
-					redirect("/404");
+                    setUid(uid);
+					setResetToken(passwordToken);
 				} else {
-					setUid(uid);
-					setPasswordToken(passwordToken);
+					redirect("/404");
 				}
 			} else {
 				redirect("/404");
@@ -60,22 +62,19 @@ const PasswordToken = () => {
 			toast.error("Passwords do not match", toastOptions);
 			e.target.reset();
 		} else {
-			const setAuthUserPasswordFunction = httpsCallable(
+			const resetPassword = httpsCallable(
 				functions,
-				"setAuthUserPasswordFunction"
+				"resetPassword"
 			);
-
-			// Add Access-Control-Allow-Origin header
-			const result = await setAuthUserPasswordFunction(
+			const result = await resetPassword(
 				{
 					text: {
 						uid: uid,
-						passwordToken: passwordToken,
+						resetToken: resetToken,
 						password: e.target.password.value,
 					},
 				}
 			);
-
 			if (result.data.status === "success") {
 				window.close();
 			} else {
@@ -85,7 +84,7 @@ const PasswordToken = () => {
 	};
 
 	return (
-		<div className="flex justify-center items-center h-screen">
+        <div className="flex justify-center items-center h-screen">
             <div className="w-96 p-8 bg-white rounded shadow">
                 <h1 className="text-2xl font-bold mb-4">Set Password</h1>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -104,4 +103,4 @@ const PasswordToken = () => {
 	);
 };
 
-export default PasswordToken;
+export default ResetToken;
