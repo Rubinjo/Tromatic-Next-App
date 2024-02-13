@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import {useTranslations} from "next-intl";
+
 import BesBollmannLogo from "@/public/BesBollmannLogo";
 import TromaticNext from "@/public/TromaticNext";
 import { FaRegEnvelope } from "react-icons/fa";
@@ -9,6 +11,8 @@ import { withPublic } from "@/context/Route";
 const ForgotForm = ({ passwordResetEmail }) => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState();
+
+	const t = useTranslations("ForgotForm");
 
 	const handlePasswordResetEmail = async (event) => {
 		event.preventDefault();

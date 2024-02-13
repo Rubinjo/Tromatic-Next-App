@@ -1,5 +1,49 @@
 {
-    "Index": {
-        "title": "Hello World!"
+    "Navbar": {
+        "machines": "Maschinen",
+        "users": "Benutzer",
+        "language": "Sprache",
+        "logout": "Abmelden"
+    },
+    "Table": {
+        "lastEdited": "Zuletzt bearbeitet",
+        "creation": "Erstellung",
+        "company": "Firma",
+        "companyID": "Firmen-ID",
+        "lastActivity": "Letzte Aktivität",
+        "addCaps": "HINZUFÜGEN",
+        "add": "Hinzufügen",
+        "search": "Suche",
+        "firstPage": "Erste Seite",
+        "previousPage": "Vorherige Seite",
+        "nextPage": "Nächste Seite",
+        "lastPage": "Letzte Seite",
+        "editUser": "Benutzer bearbeiten",
+        "close": "Schließen",
+        "fullName": "Vollständiger Name",
+        "email": "Email",
+        "role": "Rolle",
+        "admin": "Admin",
+        "editor": "Editor",
+        "viewer": "Viewer",
+        "unassigned": "Nicht zugewiesen",
+        "deleteConfirmation": "Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?",
+        "cancel": "Abbrechen",
+        "confirmDelete": "Löschen bestätigen",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "addUser": "Benutzer hinzufügen"
+    },
+    "LoginForm": {
+        "signInAccount": "Anmelden bei Ihrem Konto",
+        "email": "Email",
+        "password": "Passwort",
+        "forgotPassword": "Passwort vergessen?",
+        "signIn": "Anmelden"
+    },
+    "ForgotPasswordForm": {
+        "forgotPassword": "Passwort vergessen",
+        "email": "Email",
+        "resetPassword": "Passwort zurücksetzen"
     }
 }

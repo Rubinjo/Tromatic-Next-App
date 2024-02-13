@@ -1,17 +1,20 @@
 import Table from "@/components/Table";
+import { useTranslations } from "next-intl";
 
 const Users = () => {
+	const t = useTranslations("Table");
+
 	const columns = [
 		{
-			header: "Full Name",
+			header: t("fullName"),
 			accessorKey: "fullName",
 		},
 		{
-			header: "Email",
+			header: t("email"),
 			accessorKey: "email",
 		},
 		{
-			header: "Role",
+			header: t("role"),
 			accessorKey: "role",
 		},
 	];

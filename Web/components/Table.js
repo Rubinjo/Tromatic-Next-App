@@ -11,6 +11,7 @@ import {
 } from "@tanstack/react-table";
 import { FaPlus, FaMagnifyingGlass } from "react-icons/fa6";
 import { ref, get, onValue } from "firebase/database";
+import { useTranslations } from "next-intl";
 
 import Modal from "./Modal";
 import { firebase } from "@/firebase";
@@ -39,11 +40,13 @@ const Table = ({
 	const [sorting, setSorting] = useState([]);
 	const [filtering, setFiltering] = useState("");
 
+	const t = useTranslations("Table");
+
 	let columns =
 		role === "owner"
 			? [
 					{
-						header: "Company",
+						header: t("company"),
 						accessorKey: "companyId",
 					},
 					...commonColumns,
@@ -54,7 +57,7 @@ const Table = ({
 		type === "machines"
 			? [
 					{
-						header: "Last Edited",
+						header: t("lastEdited"),
 						accessorKey: "dateTimeMessage",
 						cell: (info) =>
 							new Date(info.getValue()).toLocaleDateString(
@@ -67,7 +70,7 @@ const Table = ({
 							),
 					},
 					{
-						header: "Creation",
+						header: t("creation"),
 						accessorKey: "creation",
 						cell: (info) =>
 							new Date(info.getValue()).toLocaleDateString(
@@ -83,7 +86,7 @@ const Table = ({
 			  ]
 			: [
 					{
-						header: "Last Activity",
+						header: t("lastActivity"),
 						accessorKey: "lastActivity",
 						cell: (info) => (
 							"use server",
@@ -522,7 +525,7 @@ const Table = ({
 								className="block py-2 pl-4 mr-5 text-sm text-green-200 transition-colors bg-green-600 rounded-lg w-24 focus:shadow-outline hover:bg-green-700"
 								onClick={() => setAddModalOpen(true)}
 							>
-								ADD
+								{t("addCaps")}
 							</button>
 						</div>
 					)}
@@ -539,7 +542,7 @@ const Table = ({
 						<input
 							id="table-search"
 							type="text"
-							placeholder="Search"
+							placeholder={t("search")}
 							className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-secondary focus:border-secondary"
 							value={filtering}
 							onChange={(e) => setFiltering(e.target.value)}
@@ -604,7 +607,7 @@ const Table = ({
 						className="px-4 py-2 my-4 shadow text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-l"
 						onClick={() => table.setPageIndex(0)}
 					>
-						First page
+						{t("firstPage")}
 					</button>
 					<button
 						className={
@@ -616,7 +619,7 @@ const Table = ({
 						disabled={!table.getCanPreviousPage()}
 						onClick={() => table.previousPage()}
 					>
-						Previous page
+						{t("previousPage")}
 					</button>
 					<button
 						className={
@@ -628,7 +631,7 @@ const Table = ({
 						disabled={!table.getCanNextPage()}
 						onClick={() => table.nextPage()}
 					>
-						Next page
+						{t("nextPage")}
 					</button>
 					<button
 						className="px-4 py-2 my-4 shadow text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-r"
@@ -636,7 +639,7 @@ const Table = ({
 							table.setPageIndex(table.getPageCount() - 1)
 						}
 					>
-						Last page
+						{t("lastPage")}
 					</button>
 				</div>
 			</div>
@@ -652,13 +655,13 @@ const Table = ({
 						>
 							<div className="flex flex-row justify-between my-4">
 								<h1 className="text-3xl font-semibold text-gray-900 ">
-									Edit User
+									{t("editUser")}
 								</h1>
 								<button
 									onClick={() => setEditModalOpen(false)}
 									className="py-2 px-8 self-end font-bold border rounded"
 								>
-									Close
+									{t("close")}
 								</button>
 							</div>
 							{role === "owner" && (
@@ -667,7 +670,7 @@ const Table = ({
 										htmlFor="companyId"
 										className="block mb-2 text-sm font-medium text-gray-900"
 									>
-										Company ID
+										{t("companyID")}
 									</label>
 									<input
 										type="text"
@@ -683,7 +686,7 @@ const Table = ({
 									htmlFor="fullName"
 									className="block mb-2 text-sm font-medium text-gray-900"
 								>
-									Full Name
+									{t("fullName")}
 								</label>
 								<input
 									type="text"
@@ -703,7 +706,7 @@ const Table = ({
 									htmlFor="email"
 									className="block mb-2 text-sm font-medium text-gray-900"
 								>
-									Email
+									{t("email")}
 								</label>
 								<input
 									type="email"
@@ -723,7 +726,7 @@ const Table = ({
 									htmlFor="roles"
 									className="block mb-2 text-sm font-medium text-gray-900"
 								>
-									Role
+									{t("role")}
 								</label>
 								<select
 									id="roles"
@@ -731,20 +734,21 @@ const Table = ({
 									className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
 									defaultValue={editModalData.role}
 								>
-									<option value="admin">Admin</option>
-									<option value="editor">Editor</option>
-									<option value="viewer">Viewer</option>
+									<option value="admin">{t("admin")}</option>
+									<option value="editor">
+										{t("editor")}
+									</option>
+									<option value="viewer">
+										{t("viewer")}
+									</option>
 									<option value="unassigned">
-										Unassigned
+										{t("unassigned")}
 									</option>
 								</select>
 							</div>
 							{isDeleteConfirmationOpen ? (
 								<div className="flex flex-col justify-center items-center my-8">
-									<p>
-										Are you sure you want to delete this
-										user?
-									</p>
+									<p>{t("deleteConfirmation")}</p>
 									<div className="flex flex-row justify-center">
 										<button
 											type="button"
@@ -755,14 +759,14 @@ const Table = ({
 											}}
 											className="text-white bg-gray-400 hover:bg-gray-500 focus:ring-2 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 										>
-											Cancel
+											{t("cancel")}
 										</button>
 										<button
 											type="button"
 											onClick={handleDeleteUser}
 											className="text-white bg-red-500 hover:bg-red-600 focus:ring-2 focus:outline-none focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 										>
-											Confirm Delete
+											{t("confirmDelete")}
 										</button>
 									</div>
 								</div>
@@ -772,7 +776,7 @@ const Table = ({
 										type="submit"
 										className="text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-2 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mx-24 my-2"
 									>
-										Edit
+										{t("edit")}
 									</button>
 									<button
 										type="button"
@@ -781,7 +785,7 @@ const Table = ({
 										}
 										className="text-white bg-red-500 hover:bg-red-600 focus:ring-2 focus:outline-none focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center mx-24 my-2"
 									>
-										Delete
+										{t("delete")}
 									</button>
 								</div>
 							)}
@@ -802,13 +806,13 @@ const Table = ({
 						>
 							<div className="flex flex-row justify-between my-4">
 								<h1 className="text-3xl font-semibold text-gray-900 ">
-									Add User
+									{t("addUser")}
 								</h1>
 								<button
 									onClick={() => setAddModalOpen(false)}
 									className="py-2 px-8 self-end font-bold border rounded"
 								>
-									Close
+									{t("close")}
 								</button>
 							</div>
 							{role === "owner" && (
@@ -817,7 +821,7 @@ const Table = ({
 										htmlFor="companyId"
 										className="block mb-2 text-sm font-medium text-gray-900"
 									>
-										Company ID
+										{t("companyID")}
 									</label>
 									<input
 										type="text"
@@ -832,7 +836,7 @@ const Table = ({
 									htmlFor="fullName"
 									className="block mb-2 text-sm font-medium text-gray-900"
 								>
-									Full Name
+									{t("fullName")}
 								</label>
 								<input
 									type="text"
@@ -846,7 +850,7 @@ const Table = ({
 									htmlFor="email"
 									className="block mb-2 text-sm font-medium text-gray-900"
 								>
-									Email
+									{t("email")}
 								</label>
 								<input
 									type="email"
@@ -860,7 +864,7 @@ const Table = ({
 									htmlFor="roles"
 									className="block mb-2 text-sm font-medium text-gray-900"
 								>
-									Role
+									{t("role")}
 								</label>
 								<select
 									id="roles"
@@ -868,11 +872,15 @@ const Table = ({
 									className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
 									defaultValue="viewer"
 								>
-									<option value="admin">Admin</option>
-									<option value="editor">Editor</option>
-									<option value="viewer">Viewer</option>
+									<option value="admin">{t("admin")}</option>
+									<option value="editor">
+										{t("editor")}
+									</option>
+									<option value="viewer">
+										{t("viewer")}
+									</option>
 									<option value="unassigned">
-										Unassigned
+										{t("unassigned")}
 									</option>
 								</select>
 							</div>
@@ -881,7 +889,7 @@ const Table = ({
 									type="submit"
 									className="text-white bg-green-500 hover:bg-green-600 focus:ring-2 focus:outline-none focus:ring-green-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center mx-24 my-2"
 								>
-									Add
+									{t("add")}
 								</button>
 							</div>
 						</form>

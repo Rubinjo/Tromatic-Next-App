@@ -4,6 +4,7 @@ import React, { useEffect, useState, Fragment } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { getCookie, setCookie } from "cookies-next";
+import {useTranslations} from "next-intl";
 
 import { UserAuth } from "../context/AuthContext";
 import { Listbox, Transition } from "@headlessui/react";
@@ -71,6 +72,8 @@ const Navbar = () => {
 		)
 	);
 
+	const t = useTranslations("Navbar");
+
 	const handleLogOut = async () => {
 		try {
 			await logOut();
@@ -107,16 +110,6 @@ const Navbar = () => {
 										width={32}
 										height={32}
 									/>
-
-									{/* <Image
-										src="/bes_bollmann_icon_white.svg"
-										alt="Tromatic Next"
-										fill
-										style={{ objectFit: "contain" }}
-										// width={110}
-										// height={50}
-										// layout="responsive"
-									/> */}
 								</Link>
 							</li>
 							<li className="flex cursor-pointer">
@@ -124,7 +117,7 @@ const Navbar = () => {
 									href="/portal/machines"
 									className="text-white font-semibold"
 								>
-									Machines
+									{t("machines")}
 								</Link>
 							</li>
 							<li className="px-4 cursor-pointer">
@@ -132,7 +125,7 @@ const Navbar = () => {
 									href="/portal/users"
 									className="text-white font-semibold"
 								>
-									Users
+									{t("users")}
 								</Link>
 							</li>
 						</>
@@ -148,7 +141,7 @@ const Navbar = () => {
 					>
 						<Listbox.Button className="px-4 flex">
 							<span className="text-white font-semibold">
-								Language
+								{t("language")}
 							</span>
 							<span className="pointer-events-none flex items-center">
 								<FaChevronDown
@@ -220,7 +213,7 @@ const Navbar = () => {
 							className="px-4 cursor-pointer text-white font-semibold"
 							onClick={handleLogOut}
 						>
-							Logout
+							{t("logout")}
 						</li>
 					) : (
 						<li />

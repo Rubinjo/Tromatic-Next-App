@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import {useTranslations} from 'next-intl';
 
 import { withPublic } from "@/context/Route";
 import BesBollmannLogo from "@/public/BesBollmannLogo";
@@ -12,6 +13,8 @@ import { MdLockOutline } from "react-icons/md";
 const LoginForm = ({ logIn }) => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState();
+
+	const t = useTranslations("LoginForm");
 
 	const handleLogIn = async (event) => {
 		event.preventDefault();
@@ -39,7 +42,7 @@ const LoginForm = ({ logIn }) => {
 					className=" flex flex-col py-10 items-center"
 				>
 					<h2 className="text-3xl font-bold text-secondary mb-2">
-						Sign in to Account
+						{t("signInAccount")}
 					</h2>
 					<div className="border-2 w-10 border-secondary inline-block mb-2" />
 					<div className="flex flex-col items-center">
@@ -48,7 +51,7 @@ const LoginForm = ({ logIn }) => {
 							<input
 								type="email"
 								name="email"
-								placeholder="Email"
+								placeholder={t("email")}
 								className="bg-gray-100 outline-none text-sm flex-1"
 								required
 							/>
@@ -58,7 +61,7 @@ const LoginForm = ({ logIn }) => {
 							<input
 								type="password"
 								name="password"
-								placeholder="Password"
+								placeholder={t("password")}
 								className="bg-gray-100 outline-none text-sm flex-1"
 								required
 							/>
@@ -66,7 +69,7 @@ const LoginForm = ({ logIn }) => {
 					</div>
 					<div className="flex flex-row-reverse w-64 mb-5">
 						<Link href="/portal/login/forgot" className="text-xs">
-							Forgot Password?
+							{t("forgotPassword")}
 						</Link>
 					</div>
 					{loading ? (
@@ -83,7 +86,7 @@ const LoginForm = ({ logIn }) => {
 							type="submit"
 							className="border-2 border-secondary text-secondary rounded-full px-12 py-2 inline-block font-semibold hover:bg-secondary hover:text-white"
 						>
-							Sign In
+							{t("signIn")}
 						</button>
 					)}
 				</form>

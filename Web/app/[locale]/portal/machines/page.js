@@ -1,9 +1,12 @@
 import Table from "@/components/Table";
+import { useTranslations } from "next-intl";
 
 const Machines = () => {
+	const t = useTranslations("Machines");
+
 	const columns = [
 		{
-			header: "Active",
+			header: t("active"),
 			accessorKey: "active",
 		},
 		{
@@ -11,15 +14,15 @@ const Machines = () => {
 			accessorKey: "id",
 		},
 		{
-			header: "Display Name",
+			header: t("displayName"),
 			accessorKey: "machineName",
 		},
 		{
-			header: "Status Code",
+			header: t("statusCode"),
 			accessorKey: "status",
 		},
 		{
-			header: "Last Editor",
+			header: t("lastEditor"),
 			accessorKey: "lastEditor",
 		},
 	];

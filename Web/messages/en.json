@@ -1,5 +1,55 @@
 {
-    "Index": {
-        "title": "Hello World!"
+    "Navbar": {
+        "machines": "Machines",
+        "users": "Users",
+        "language": "Language",
+        "logout": "Logout"
+    },
+    "Machines": {
+        "active": "Active",
+        "displayName": "Display Name",
+        "statusCode": "Status Code",
+        "lastEditor": "Last Editor"
+    },
+    "Table": {
+        "lastEdited": "Last Edited",
+        "creation": "Creation",
+        "company": "Company",
+        "companyID": "Company ID",
+        "lastActivity": "Last Activity",
+        "addCaps": "ADD",
+        "add": "Add",
+        "search": "Search",
+        "firstPage": "First Page",
+        "previousPage": "Previous Page",
+        "nextPage": "Next Page",
+        "lastPage": "Last Page",
+        "editUser": "Edit User",
+        "close": "Close",
+        "fullName": "Full Name",
+        "email": "Email",
+        "role": "Role",
+        "admin": "Admin",
+        "editor": "Editor",
+        "viewer": "Viewer",
+        "unassigned": "Unassigned",
+        "deleteConfirmation": "Are you sure you want to delete this user?",
+        "cancel": "Cancel",
+        "confirmDelete": "Confirm Delete",
+        "edit": "Edit",
+        "delete": "Delete",
+        "addUser": "Add User"
+    },
+    "LoginForm": {
+        "signInAccount": "Sign in to Account",
+        "email": "Email",
+        "password": "Password",
+        "forgotPassword": "Forgot Password?",
+        "signIn": "Sign In"
+    },
+    "ForgotPasswordForm": {
+        "forgotPassword": "Forgot Password",
+        "email": "Email",
+        "resetPassword": "Reset Password"
     }
 }

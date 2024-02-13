@@ -1,5 +1,49 @@
 {
-    "Index": {
-        "title": "Hello World!"
+    "Navbar": {
+        "machines": "Machines",
+        "users": "Gebruikers",
+        "language": "Taal",
+        "logout": "Uitloggen"
+    },
+    "Table": {
+        "lastEdited": "Laatst bewerkt",
+        "creation": "Aanmaak",
+        "company": "Bedrijf",
+        "companyID": "Bedrijfs ID",
+        "lastActivity": "Laatste activiteit",
+        "addCaps": "TOEVOEGEN",
+        "add": "Toevoegen",
+        "search": "Zoeken",
+        "firstPage": "Eerste Pagina",
+        "previousPage": "Vorige Pagina",
+        "nextPage": "Volgende Pagina",
+        "lastPage": "Laatste Pagina",
+        "editUser": "Gebruiker bewerken",
+        "close": "Sluiten",
+        "fullName": "Volledige naam",
+        "email": "Email",
+        "role": "Rol",
+        "admin": "Admin",
+        "editor": "Editor",
+        "viewer": "Viewer",
+        "unassigned": "Niet toegewezen",
+        "deleteConfirmation": "Weet je zeker dat je deze gebruiker wilt verwijderen?",
+        "cancel": "Annuleren",
+        "confirmDelete": "Verwijderen",
+        "edit": "Bewerken",
+        "delete": "Verwijderen",
+        "addUser": "Gebruiker toevoegen"
+    },
+    "LoginForm": {
+        "signInAccount": "Inloggen op uw account",
+        "email": "Email",
+        "password": "Wachtwoord",
+        "forgotPassword": "Wachtwoord vergeten?",
+        "signIn": "Inloggen"
+    },
+    "ForgotPasswordForm": {
+        "forgotPassword": "Wachtwoord vergeten",
+        "email": "Email",
+        "resetPassword": "Wachtwoord Resetten"
     }
 }
