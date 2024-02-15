@@ -5,6 +5,12 @@
         "language": "Taal",
         "logout": "Uitloggen"
     },
+    "Machines": {
+        "active": "Actief",
+        "displayName": "Weergave Naam",
+        "statusCode": "Status Code",
+        "lastEditor": "Laatste bewerker"
+    },
     "Table": {
         "lastEdited": "Laatst bewerkt",
         "creation": "Aanmaak",

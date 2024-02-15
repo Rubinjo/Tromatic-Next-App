@@ -4,7 +4,7 @@ import React, { useEffect, useState, Fragment } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { getCookie, setCookie } from "cookies-next";
-import {useTranslations} from "next-intl";
+import { useTranslations } from "next-intl";
 
 import { UserAuth } from "../context/AuthContext";
 import { Listbox, Transition } from "@headlessui/react";
@@ -82,9 +82,17 @@ const Navbar = () => {
 		}
 	};
 
-	useEffect(() => {
-		setCookie("NEXT_LOCALE", selectedLanguage.locale, { sameSite: true });
-	}, [selectedLanguage]);
+	const handleLanguageChange = (language) => {
+		setSelectedLanguage(language);
+		setCookie("NEXT_LOCALE", language.locale, {
+			path: "/",
+			maxAge: 31536000, // 1 year
+			sameSite: "lax",
+		});
+		setTimeout(() => {
+			window.location.reload();
+		}, 500);
+	};
 
 	useEffect(() => {
 		const checkAuthentication = async () => {
@@ -137,7 +145,7 @@ const Navbar = () => {
 				<ul className="flex justify-between items-center w-1/6">
 					<Listbox
 						value={selectedLanguage}
-						onChange={setSelectedLanguage}
+						onChange={handleLanguageChange}
 					>
 						<Listbox.Button className="px-4 flex">
 							<span className="text-white font-semibold">

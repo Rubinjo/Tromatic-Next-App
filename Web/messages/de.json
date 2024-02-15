@@ -5,6 +5,12 @@
         "language": "Sprache",
         "logout": "Abmelden"
     },
+    "Machines": {
+        "active": "Aktiv",
+        "displayName": "Anzeigename",
+        "statusCode": "Statuscode",
+        "lastEditor": "Letzter Bearbeiter"
+    },
     "Table": {
         "lastEdited": "Zuletzt bearbeitet",
         "creation": "Erstellung",
