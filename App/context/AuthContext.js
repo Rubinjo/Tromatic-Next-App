@@ -11,7 +11,7 @@ import {
 import { ref, set, update, serverTimestamp, get } from "firebase/database";
 import { setDoc, doc } from "firebase/firestore";
 
-import { firebase, firestore, auth } from "../firebaseConfig";
+import { firebase, firestore, auth, functions } from "../firebaseConfig";
 import i18n from "../utils/i18n";
 
 const AuthContext = createContext();
@@ -46,23 +46,21 @@ export const AuthContextProvider = ({ children }) => {
 				email,
 				password
 			);
-			await Promise.all([
-				updateProfile(newUser.user, {
-					displayName: fullName,
-				}),
-				set(ref(firebase, `users/${newUser.user.uid}`), {
-					email: email,
-					fullName: fullName,
-					cid: companyID,
-					lastActivity: serverTimestamp(),
-					language: language,
-				}),
-				setDoc(doc(firestore, "users", newUser.user.uid), {
-					cid: companyID,
-					email: email,
-					fullName: fullName,
-				}),
-			]);
+			await updateProfile(newUser.user, {
+				displayName: fullName,
+			});
+			await setDoc(doc(firestore, "users", newUser.user.uid), {
+				cid: companyID,
+				email: email,
+				fullName: fullName,
+			});
+			await set(ref(firebase, `users/${newUser.user.uid}`), {
+				email: email,
+				fullName: fullName,
+				cid: companyID,
+				lastActivity: serverTimestamp(),
+				language: language,
+			});
 			loading = false;
 		} catch (error) {
 			loading = false;
@@ -155,10 +153,19 @@ export const AuthContextProvider = ({ children }) => {
 	 * @param {string} email - Email of concerned user
 	 * @param {string} language - Language to receive the reset email in
 	 */
-	const resetPasswordAccount = async (email, language) => {
+	const resetPasswordAccount = async (email) => {
 		try {
-			auth.languageCode = language;
-			await sendPasswordResetEmail(auth, email);
+			const sendResetPasswordEmailFunction = httpsCallable(
+				functions,
+				"sendResetPasswordEmailFunction"
+			);
+			const result = await sendResetPasswordEmailFunction(
+				{
+					text: {
+						email: email,
+					},
+				}
+			);
 		} catch (error) {
 			throw new Error(error.message);
 		}
@@ -212,11 +219,11 @@ export const AuthContextProvider = ({ children }) => {
 							{ cancelable: true }
 						);
 					}
-					get(ref(firebase, `users/${auth.currentUser.uid}/cid`)).then(
-						(snapshot) => {
-							setCid(snapshot.val());
-						}
-					);
+					get(
+						ref(firebase, `users/${auth.currentUser.uid}/cid`)
+					).then((snapshot) => {
+						setCid(snapshot.val());
+					});
 				}
 			}
 		});
