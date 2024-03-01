@@ -263,7 +263,7 @@ const SignInScreen = (props) => {
 					color={Colors.PrimaryLight}
 				/>
 			</View>
-			{Platform.OS == "android" ? (
+			{/* {Platform.OS == "android" ? (
 				<View style={{ flexDirection: "row", marginTop: "auto" }}>
 					<Text style={styles.text}>
 						{i18n.t("authentication.account")}
@@ -298,7 +298,7 @@ const SignInScreen = (props) => {
 						{i18n.t("authentication.demo")}
 					</Text>
 				</View>
-			)}
+			)} */}
 		</SafeAreaView>
 	);
 };
