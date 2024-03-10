@@ -1,9 +1,14 @@
-## Setup Environment
+## Create admin account
+1. Go to [tromatic.app](https://tromatic.app)
+2. Go to the `Users` tab
+3. Create a new admin account for the company admin
 
-1. Install Node.js from the internet
-2. Install all node modules by running the `npm install` command in the `Comms-js` directory
-3. Create a `.env` file in the `Comms-js` directory
-4. Add the following firebase api key details, company name and login credentials for the company of choice:
+## Setup Environment
+1. Install [Node.js](https://nodejs.org)
+2. Copy the `Comms-js` directory (without `node-modules` and `.env`) to the designated folder
+3. Install all node modules by running the `npm install` command in the `Comms-js` directory
+4. Create a `.env` file in the `Comms-js` directory
+5. Add the following firebase api key details, company name and login credentials for the company (see `Create admin account`):
     - APIKEY
     - AUTHDOMAIN
     - DATABASEURL
