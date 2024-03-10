@@ -513,19 +513,19 @@ const Table = ({
 							<label htmlFor="add" className="sr-only">
 								Add
 							</label>
-							<div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-								<FaPlus
-									className="w-4 h-4 text-green-200"
-									aria-hidden="true"
-								/>
-							</div>
 							<button
 								id="add"
 								type="button"
-								className="block py-2 pl-4 mr-5 text-sm text-green-200 transition-colors bg-green-600 rounded-lg w-24 focus:shadow-outline hover:bg-green-700"
+								className="flex justify-between items-center p-2 mr-5 text-sm text-green-200 transition-colors bg-green-600 rounded-lg focus:shadow-outline hover:bg-green-700"
 								onClick={() => setAddModalOpen(true)}
 							>
-								{t("addCaps")}
+								<div className="px-1">
+									<FaPlus
+										className="w-4 h-4 text-green-200"
+										aria-hidden="true"
+									/>
+								</div>
+								<div className="px-1">{t("addCaps")}</div>
 							</button>
 						</div>
 					)}
