@@ -123,6 +123,101 @@ const checkPrivilege = async (uid, role) => {
   }
 };
 
+const sendVerificationEmail = async (language, userRecord, cid, emailToken) => {
+  const verificationInfo = await transporter.sendMail({
+    from: `"Tromatic NEXT Team" <${process.env.SMTP_USERNAME}>`,
+    to: `${userRecord.displayName}, ${userRecord.email}`,
+    subject: subjectDict[language]["app"],
+    text: `${greetingDict[language]} ${userRecord.displayName},
+
+  ${addedDict[language]}
+
+  ${nameDict[language]}: ${userRecord.displayName}
+  ${companyDict[language]}: ${cid}
+
+  ${verifyDict[language]}
+
+  https://tromatic.app/users/${userRecord.uid}/set-email/${emailToken}
+
+  ${unwantedDict[language]}
+
+  ${timeDict[language]}
+
+  ${thanksDict[language]}
+
+  ${goodbyeDict[language]}
+  Tromatic NEXT Team
+  `,
+    html: `<!DOCTYPE html>
+  <html>
+  <head>
+      <title>${welcomeDict[language]} Tromatic NEXT</title>
+      <style>
+          body {
+              font-family: Arial, sans-serif;
+          }
+          .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #f7f7f7;
+          }
+          .header {
+              background-color: #0F7BCA;
+              color: #fff;
+              text-align: center;
+              padding: 10px;
+          }
+          .content {
+              background-color: #fff;
+              padding: 20px;
+              border-radius: 5px;
+          }
+          .button-container {
+              text-align: center;
+          }
+          .button {
+              display: inline-block;
+              padding: 10px 20px;
+              background-color: #1AA3FF;
+              color: #fff;
+              text-decoration: none;
+              border-radius: 5px;
+          }
+      </style>
+  </head>
+  <body>
+      <div class="container">
+          <div class="header">
+              <h1>${welcomeDict[language]} Tromatic NEXT</h1>
+          </div>
+          <div class="content">
+              <p>${greetingDict[language]} ${userRecord.displayName},</p>
+              <p>${addedDict[language]}</p>
+
+              <ul>
+                  <li>${nameDict[language]}: ${userRecord.displayName}</li>
+                  <li>${companyDict[language]}: ${cid}</li>
+              </ul>
+
+              <p>${verifyDict[language]}</p>
+
+              <div class="button-container">
+                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-email/${emailToken}">${buttonMailDict[language]}</a>
+              </div>
+
+              <p>${unwantedDict[language]}</p>
+              <p>${timeDict[language]}</p>
+              <p>${thanksDict[language]}</p>
+              <p>${goodbyeDict[language]}<br>Tromatic NEXT Team</p>
+          </div>
+      </div>
+  </body>
+  </html>
+  `,
+  });
+};
+
 setGlobalOptions({region: "europe-west1", maxInstances: 10});
 
 exports.scheduledFbToFsFunction = onSchedule(
@@ -658,111 +753,50 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
       `,
     });
     // Send verification e-mail to user
-    const verificationInfo = await transporter.sendMail({
-      from: `"Tromatic NEXT Team" <${process.env.SMTP_USERNAME}>`,
-      to: `${userRecord.displayName}, ${userRecord.email}`,
-      subject: subjectDict[language]["app"],
-      text: `${greetingDict[language]} ${userRecord.displayName},
-
-      ${addedDict[language]}
-
-      ${nameDict[language]}: ${userRecord.displayName}
-      ${companyDict[language]}: ${cid}
-
-      ${verifyDict[language]}
-
-      https://tromatic.app/users/${userRecord.uid}/set-email/${tempTokenVerification}
-
-      ${unwantedDict[language]}
-
-      ${timeDict[language]}
-
-      ${thanksDict[language]}
-
-      ${goodbyeDict[language]}
-      Tromatic NEXT Team
-      `,
-      html: `<!DOCTYPE html>
-      <html>
-      <head>
-          <title>${welcomeDict[language]} Tromatic NEXT</title>
-          <style>
-              body {
-                  font-family: Arial, sans-serif;
-              }
-              .container {
-                  max-width: 600px;
-                  margin: 0 auto;
-                  padding: 20px;
-                  background-color: #f7f7f7;
-              }
-              .header {
-                  background-color: #0F7BCA;
-                  color: #fff;
-                  text-align: center;
-                  padding: 10px;
-              }
-              .content {
-                  background-color: #fff;
-                  padding: 20px;
-                  border-radius: 5px;
-              }
-              .button-container {
-                  text-align: center;
-              }
-              .button {
-                  display: inline-block;
-                  padding: 10px 20px;
-                  background-color: #1AA3FF;
-                  color: #fff;
-                  text-decoration: none;
-                  border-radius: 5px;
-              }
-          </style>
-      </head>
-      <body>
-          <div class="container">
-              <div class="header">
-                  <h1>${welcomeDict[language]} Tromatic NEXT</h1>
-              </div>
-              <div class="content">
-                  <p>${greetingDict[language]} ${userRecord.displayName},</p>
-                  <p>${addedDict[language]}</p>
-
-                  <ul>
-                      <li>${nameDict[language]}: ${userRecord.displayName}</li>
-                      <li>${companyDict[language]}: ${cid}</li>
-                  </ul>
-
-                  <p>${verifyDict[language]}</p>
-
-                  <div class="button-container">
-                      <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-email/${tempTokenVerification}">${buttonMailDict[language]}</a>
-                  </div>
-
-                  <p>${unwantedDict[language]}</p>
-                  <p>${timeDict[language]}</p>
-                  <p>${thanksDict[language]}</p>
-                  <p>${goodbyeDict[language]}<br>Tromatic NEXT Team</p>
-              </div>
-          </div>
-      </body>
-      </html>
-      `,
-    });
+    await sendVerificationEmail(language, userRecord, cid, tempTokenVerification);
   }
 });
+
+exports.sendOnlyVerificationEmailFunction = onCall(
+    // {cors: ["tromatic.app"]},
+    {cors: true},
+    async (request) => {
+      try {
+        const userRecord = await auth.getUserByEmail(request.data.text.email);
+        if (userRecord) {
+          const languageSnapshot = await get(ref(firebase, `users/${userRecord.uid}/language`));
+          let language = "en";
+          if (languageSnapshot.exists()) {
+            language = languageSnapshot.val();
+          }
+          // Get verificationToken from firestore users uid
+          const fsUserRecord = await firestore.collection("users").doc(userRecord.uid).get();
+          const fsUserData = fsUserRecord.data();
+          await sendVerificationEmail(language, userRecord, fsUserData.cid, fsUserData.emailToken);
+          return {status: "success"};
+        } else {
+          throw new HttpsError(
+              "not-found",
+              "The user record could not be found",
+          );
+        }
+      } catch (error) {
+        console.error(error);
+        throw new HttpsError(
+            "not-found",
+            "The user record could not be found",
+        );
+      }
+    },
+);
 
 exports.sendResetPasswordEmailFunction = onCall(
     // {cors: ["tromatic.app"]},
     {cors: true},
     async (request) => {
       try {
-        console.log(request.data.text.email);
-        console.log("Look for user");
         const userRecord = await auth.getUserByEmail(request.data.text.email);
         if (userRecord) {
-          console.log(userRecord);
           const languageSnapshot = await get(ref(firebase, `users/${userRecord.uid}/language`));
           let language = "en";
           if (languageSnapshot.exists()) {
@@ -771,7 +805,6 @@ exports.sendResetPasswordEmailFunction = onCall(
           const resetToken = crypto.randomBytes(32).toString("hex");
           const dateExpiration = new Date();
           dateExpiration.setDate(dateExpiration.getDate() + 3);
-          console.log("Insert into firestore");
           await firestore
               .collection("users")
               .doc(userRecord.uid)
@@ -779,7 +812,6 @@ exports.sendResetPasswordEmailFunction = onCall(
                 resetToken: resetToken,
                 resetTokenExpiration: dateExpiration,
               });
-          console.log("Send e-mail");
           const info = await transporter.sendMail({
             from: `"Tromatic NEXT Team" <${process.env.SMTP_USERNAME}>`,
             to: `${userRecord.displayName}, ${userRecord.email}`,
