@@ -6,7 +6,6 @@ import {
 	signInWithEmailAndPassword,
 	signOut,
 	onAuthStateChanged,
-	sendPasswordResetEmail,
 } from "firebase/auth";
 import { ref, get, update, remove, serverTimestamp } from "firebase/database";
 import { writeBatch, doc } from "firebase/firestore";
@@ -48,12 +47,7 @@ export const AuthContextProvider = ({ children }) => {
 	 * @param {string} language - Language of concerned user
 	 * @param {string} role - Role of concerned user
 	 */
-	const registration = async (
-		companyID,
-		fullName,
-		email,
-		role
-	) => {
+	const registration = async (companyID, fullName, email, role) => {
 		try {
 			const createUserMessage = httpsCallable(
 				functions,
@@ -191,13 +185,11 @@ export const AuthContextProvider = ({ children }) => {
 				functions,
 				"sendResetPasswordEmailFunction"
 			);
-			const result = await sendResetPasswordEmailFunction(
-				{
-					text: {
-						email: email,
-					},
-				}
-			);
+			const result = await sendResetPasswordEmailFunction({
+				text: {
+					email: email,
+				},
+			});
 			toast.success("Reset password email was send", toastOptions);
 		} catch (error) {
 			console.log(error);
