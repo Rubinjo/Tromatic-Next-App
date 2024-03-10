@@ -89,7 +89,8 @@
         "notVerifiedTitle": "Account niet geverifieerd",
         "notVerifiedMessage": "Controleer uw e-mailadres om in te loggen",
         "notApprovedTitle": "Account nog niet goedgekeurd",
-        "notApprovedMessage": "Uw account wacht op goedkeuring door de bedrijfsbeheerder"
+        "notApprovedMessage": "Uw account wacht op goedkeuring door de bedrijfsbeheerder",
+        "notVerifiedResend": "Versturen"
       }
     },
     "status": {

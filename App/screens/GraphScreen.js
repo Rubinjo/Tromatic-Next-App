@@ -270,7 +270,7 @@ const GraphScreen = (props) => {
 														Math.floor(
 															data.length * 0.2
 														)
-												  ]["label"] === " Current Temp"
+												  ]["label"] === "Current Temp"
 													? Colors.Red
 													: data[
 															Math.floor(
@@ -278,7 +278,7 @@ const GraphScreen = (props) => {
 																	0.4
 															)
 													  ]["label"] ===
-													  " Set Point Temp"
+													  "Set Point Temp"
 													? Colors.Orange
 													: data[
 															Math.floor(
@@ -286,7 +286,7 @@ const GraphScreen = (props) => {
 																	0.6
 															)
 													  ]["label"] ===
-													  " Current Hum"
+													  "Current Hum"
 													? Colors.Primary
 													: Colors.Secondary
 												: null,

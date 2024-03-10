@@ -27,7 +27,11 @@ const ResetConfirmScreen = (props) => {
 				}}
 			>
 				<TromaticNextLogo
-					height={Config.deviceWidth * 0.2}
+					height={
+						Config.deviceWidth < 768
+							? Config.deviceWidth * 0.2
+							: 142 + (Config.deviceWidth * 0.05 - 39)
+					}
 					color={Colors.PrimaryLight}
 				/>
 			</View>
@@ -47,7 +51,18 @@ const ResetConfirmScreen = (props) => {
 								: 0,
 					}}
 				>
-					<Text style={styles.headText}>
+					<Text
+						style={[
+							styles.headText,
+							{
+								fontSize:
+									Config.deviceWidth < 768
+										? Config.deviceWidth * 0.07
+										: 54 +
+										  (Config.deviceWidth * 0.025 - 20),
+							},
+						]}
+					>
 						{i18n.t("authentication.resetHead")}
 					</Text>
 				</View>

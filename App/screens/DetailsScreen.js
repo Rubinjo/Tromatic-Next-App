@@ -597,7 +597,10 @@ const DetailsScreen = (props) => {
 									}}
 								>
 									<Valve
-										width={Config.deviceWidth * 0.1}
+										width={
+											Config.deviceHeight * 0.04 +
+											Config.deviceWidth * 0.03
+										}
 										color={Colors.Secondary}
 									/>
 								</View>
@@ -665,7 +668,7 @@ const DetailsScreen = (props) => {
 									}}
 								>
 									<Heating
-										width={Config.deviceWidth * 0.07}
+										width={Config.deviceHeight * 0.035}
 										color={Colors.Secondary}
 									/>
 								</View>
@@ -733,7 +736,10 @@ const DetailsScreen = (props) => {
 									}}
 								>
 									<Sprayer
-										width={Config.deviceWidth * 0.08}
+										width={
+											Config.deviceHeight * 0.028 +
+											Config.deviceWidth * 0.028
+										}
 										color={Colors.Secondary}
 									/>
 								</View>
@@ -804,7 +810,10 @@ const DetailsScreen = (props) => {
 									}}
 								>
 									<FanDirection
-										width={Config.deviceWidth * 0.12}
+										width={
+											Config.deviceHeight * 0.04 +
+											Config.deviceWidth * 0.06
+										}
 										color={Colors.Secondary}
 									/>
 								</View>
@@ -912,6 +921,7 @@ const DetailsScreen = (props) => {
 								<Text
 									style={{
 										fontFamily: "noto-sans-jp-regular",
+										fontSize: Config.deviceWidth * 0.035,
 									}}
 								>
 									{i18n.t("general.measurements")}
@@ -945,7 +955,10 @@ const DetailsScreen = (props) => {
 							}}
 						>
 							<Text
-								style={{ fontFamily: "noto-sans-jp-regular" }}
+								style={{
+									fontFamily: "noto-sans-jp-regular",
+									fontSize: Config.deviceWidth * 0.035,
+								}}
 							>
 								{i18n.t("general.viewGraph")}
 							</Text>
@@ -1048,7 +1061,13 @@ const DetailsScreen = (props) => {
 			<BottomSheetModal
 				ref={bottomSheetCTModalRef}
 				index={0}
-				snapPoints={[`${9.5 + data.numOfCTProbes * 5.7}%`]}
+				snapPoints={[
+					`${
+						Config.deviceHeight < 720
+							? 12 + data.numOfWmProbes * 7.5
+							: 9.5 + data.numOfWmProbes * 6.9
+					}%`,
+				]}
 				backgroundStyle={{
 					borderRadius: Config.deviceWidth * 0.08,
 					elevation: 4,
@@ -1056,7 +1075,12 @@ const DetailsScreen = (props) => {
 				onDismiss={() => setModalOpen(false)}
 			>
 				<View style={{ flex: 1, alignItems: "center" }}>
-					<Text style={{ fontFamily: "noto-sans-jp-bold" }}>
+					<Text
+						style={{
+							fontFamily: "noto-sans-jp-bold",
+							fontSize: Config.deviceWidth * 0.035,
+						}}
+					>
 						{i18n.t("general.coreTemperatures")}
 					</Text>
 					{data.CTs?.slice(0, data.numOfCTProbes).map((ct) => {
@@ -1081,6 +1105,8 @@ const DetailsScreen = (props) => {
 									<Text
 										style={{
 											fontFamily: "noto-sans-jp-regular",
+											fontSize:
+												Config.deviceWidth * 0.035,
 										}}
 									>
 										{i18n.t("general.coreT")}
@@ -1089,6 +1115,8 @@ const DetailsScreen = (props) => {
 									<Text
 										style={{
 											fontFamily: "noto-sans-jp-regular",
+											fontSize:
+												Config.deviceWidth * 0.035,
 										}}
 									>
 										{typeof ct.value !== "undefined"
@@ -1112,7 +1140,13 @@ const DetailsScreen = (props) => {
 			<BottomSheetModal
 				ref={bottomSheetWMModalRef}
 				index={0}
-				snapPoints={[`${9.5 + data.numOfWmProbes * 6.9}%`]}
+				snapPoints={[
+					`${
+						Config.deviceHeight < 720
+							? 12 + data.numOfWmProbes * 7.5
+							: 9.5 + data.numOfWmProbes * 6.9
+					}%`,
+				]}
 				backgroundStyle={{
 					borderRadius: Config.deviceWidth * 0.08,
 					elevation: 4,
@@ -1120,7 +1154,12 @@ const DetailsScreen = (props) => {
 				onDismiss={() => setModalOpen(false)}
 			>
 				<View style={{ flex: 1, alignItems: "center" }}>
-					<Text style={{ fontFamily: "noto-sans-jp-bold" }}>
+					<Text
+						style={{
+							fontFamily: "noto-sans-jp-bold",
+							fontSize: Config.deviceWidth * 0.035,
+						}}
+					>
 						{i18n.t("general.measurements")}
 					</Text>
 					{data.WMs?.slice(0, data.numOfWmProbes).map((wm) => {
@@ -1142,8 +1181,22 @@ const DetailsScreen = (props) => {
 										justifyContent: "space-between",
 									}}
 								>
-									<Text>M{wm.id}</Text>
-									<Text>
+									<Text
+										style={{
+											fontFamily: "noto-sans-jp-regular",
+											fontSize:
+												Config.deviceWidth * 0.035,
+										}}
+									>
+										M{wm.id}
+									</Text>
+									<Text
+										style={{
+											fontFamily: "noto-sans-jp-regular",
+											fontSize:
+												Config.deviceWidth * 0.035,
+										}}
+									>
 										{typeof wm.value !== "undefined"
 											? wm.value.toFixed(1)
 											: "-"}

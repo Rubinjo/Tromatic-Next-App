@@ -5,11 +5,11 @@ import {
 	createUserWithEmailAndPassword,
 	updateProfile,
 	signOut,
-	sendPasswordResetEmail,
 	onAuthStateChanged,
 } from "firebase/auth";
 import { ref, set, update, serverTimestamp, get } from "firebase/database";
 import { setDoc, doc } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
 
 import { firebase, firestore, auth, functions } from "../firebaseConfig";
 import i18n from "../utils/i18n";
@@ -90,21 +90,38 @@ export const AuthContextProvider = ({ children }) => {
 					lastActivity: serverTimestamp(),
 					language: language,
 				});
-				// if (!currentUser.user.emailVerified) {
-				// 	signOutAccount();
-				// 	Alert.alert(
-				// 		i18n.t("authentication.error.notVerifiedTitle"),
-				// 		i18n.t("authentication.error.notVerifiedMessage"),
-				// 		[
-				// 			{
-				// 				text: "OK",
-				// 				onPress: () => console.log("OK Pressed"),
-				// 			},
-				// 		],
-				// 		{ cancelable: true }
-				// 	);
-				// }
-				if (
+				if (!currentUser.user.emailVerified) {
+					signOutAccount();
+					Alert.alert(
+						i18n.t("authentication.error.notVerifiedTitle"),
+						i18n.t("authentication.error.notVerifiedMessage"),
+						[
+							{
+								text: i18n.t(
+									"authentication.error.notVerifiedResend"
+								),
+								onPress: async () => {
+									const sendVerificationEmailFunction =
+										httpsCallable(
+											functions,
+											"sendOnlyVerificationEmailFunction"
+										);
+									const result =
+										await sendVerificationEmailFunction({
+											text: {
+												email: email,
+											},
+										});
+								},
+							},
+							{
+								text: "OK",
+								onPress: () => console.log("OK Pressed"),
+							},
+						],
+						{ cancelable: true }
+					);
+				} else if (
 					!(
 						(await checkPrivilege("owner")) ||
 						(await checkPrivilege("admin")) ||
@@ -159,13 +176,11 @@ export const AuthContextProvider = ({ children }) => {
 				functions,
 				"sendResetPasswordEmailFunction"
 			);
-			const result = await sendResetPasswordEmailFunction(
-				{
-					text: {
-						email: email,
-					},
-				}
-			);
+			const result = await sendResetPasswordEmailFunction({
+				text: {
+					email: email,
+				},
+			});
 		} catch (error) {
 			throw new Error(error.message);
 		}
@@ -203,9 +218,8 @@ export const AuthContextProvider = ({ children }) => {
 						setRole("editor");
 					} else if (await checkPrivilege("viewer")) {
 						setRole("editor");
-					} else {
+					} else if (auth.currentUser) {
 						// Wait for all other code to run before signing out
-
 						signOutAccount();
 						Alert.alert(
 							i18n.t("authentication.error.notApprovedTitle"),

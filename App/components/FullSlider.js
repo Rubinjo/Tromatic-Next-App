@@ -47,7 +47,13 @@ const FullSlider = (props) => {
 					flexDirection: "row",
 					alignSelf: "center",
 					marginTop:
-						Platform.OS === "ios" ? Config.deviceHeight * 0.01 : 0,
+						Platform.OS === "ios"
+							? Config.deviceHeight < 768
+								? Config.deviceHeight * 0.014
+								: Config.deviceHeight < 1024
+								? Config.deviceHeight * 0.009
+								: 0
+							: 0,
 				}}
 			>
 				<View
@@ -59,7 +65,11 @@ const FullSlider = (props) => {
 				>
 					{props.remainingTime > 0 && (
 						<Stopwatch
-							width={Config.deviceWidth * 0.052}
+							width={
+								Config.deviceWidth < 720
+									? Config.deviceWidth * 0.052
+									: 37 + Config.deviceWidth * 0.005 - 3.5
+							}
 							color={Colors.PrimaryLight}
 							style={{
 								alignSelf: "center",
@@ -77,6 +87,10 @@ const FullSlider = (props) => {
 								props.remainingTime == 0
 									? Colors.Active
 									: Colors.PrimaryLight,
+							fontSize:
+								Config.deviceWidth < 720
+									? Config.deviceWidth * 0.035
+									: 26 + Config.deviceWidth * 0.005 - 3.5,
 							paddingHorizontal: Config.deviceWidth * 0.02,
 						}}
 					>
@@ -93,6 +107,10 @@ const FullSlider = (props) => {
 							fontFamily: "noto-sans-jp-bold",
 							color: Colors.PrimaryLight,
 							paddingHorizontal: 3 + Config.deviceWidth * 0.03,
+							fontSize:
+								Config.deviceWidth < 720
+									? Config.deviceWidth * 0.035
+									: 26 + Config.deviceWidth * 0.005 - 3.5,
 						}}
 					>
 						{fancyTimeFormat(props.remainingTime)}
@@ -105,14 +123,13 @@ const FullSlider = (props) => {
 
 const styles = StyleSheet.create({
 	sliderContainer: {
-		// flex: 1,
 		width: Config.deviceWidth * 0.84,
 		alignItems: "stretch",
 		justifyContent: "center",
 		marginLeft: Config.deviceWidth * 0.02, // Fix unaccurate track bug
 	},
 	track: {
-		height: Config.deviceHeight * 0.045,
+		height: Config.deviceHeight < 768 ? 34 : Config.deviceHeight * 0.045,
 		borderRadius: 24,
 		marginRight: Config.deviceWidth * 0.02, // Fix unaccurate track bug
 	},

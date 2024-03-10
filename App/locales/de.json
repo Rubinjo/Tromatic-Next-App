@@ -89,7 +89,8 @@
         "notVerifiedTitle": "Konto nicht verifiziert",
         "notVerifiedMessage": "Bitte bestätigen Sie Ihre E-Mail-Adresse, um sich anzumelden",
         "notApprovedTitle": "Konto nicht genehmigt",
-        "notApprovedMessage": "Ihr Konto muss noch vom Unternehmensadministrator genehmigt werden"
+        "notApprovedMessage": "Ihr Konto muss noch vom Unternehmensadministrator genehmigt werden",
+        "notVerifiedResend": "Senden"
       }
     },
     "status": {

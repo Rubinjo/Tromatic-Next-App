@@ -224,10 +224,19 @@ export const tabOptions = (navData) => {
 			let iconColor;
 			iconColor = props.focused ? Colors.Primary : Colors.PrimaryDark;
 			return (
-				<Gauge width={Config.deviceWidth * 0.075} color={iconColor} />
+				<Gauge
+					width={
+						Platform.isPad
+							? 38
+							: Config.deviceWidth * 0.032 +
+							  Config.deviceHeight * 0.022
+					}
+					color={iconColor}
+				/>
 			);
 		},
 		tabBarLabel: i18n.t("general.overview"),
+		tabBarLabelPosition: "below-icon",
 		headerShown: false,
 	};
 };

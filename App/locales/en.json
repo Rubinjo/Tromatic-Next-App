@@ -89,7 +89,8 @@
         "notVerifiedTitle": "Account not verified",
         "notVerifiedMessage": "Please verify your email to log in",
         "notApprovedTitle": "Account not approved",
-        "notApprovedMessage": "Your account is pending approval by the company admin"
+        "notApprovedMessage": "Your account is pending approval by the company admin",
+        "notVerifiedResend": "Resend"
       }
     },
     "status": {

@@ -28,10 +28,38 @@ const SignInScreen = (props) => {
 	const [value, setValue] = useState(null);
 	const [items, setItems] = useState([
 		{
-			label: "English",
+			label: (
+				<View
+					style={{
+						flex: 1,
+						justifyContent: "center",
+						paddingTop:
+							Platform.OS == "ios"
+								? Config.deviceHeight * 0.005
+								: 0,
+					}}
+				>
+					<Text
+						style={{
+							fontFamily: "noto-sans-jp-regular",
+							fontSize:
+								Config.deviceHeight < 756
+									? Config.deviceHeight * 0.016
+									: Config.deviceHeight * 0.013,
+						}}
+					>
+						English
+					</Text>
+				</View>
+			),
 			value: "en",
 			icon: () => (
-				<View style={{ flexDirection: "row" }}>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+					}}
+				>
 					<Image
 						source={require("../assets/flags/united-kingdom.png")}
 						style={[
@@ -47,7 +75,30 @@ const SignInScreen = (props) => {
 			),
 		},
 		{
-			label: "Deutsch",
+			label: (
+				<View
+					style={{
+						flex: 1,
+						justifyContent: "center",
+						paddingTop:
+							Platform.OS == "ios"
+								? Config.deviceHeight * 0.005
+								: 0,
+					}}
+				>
+					<Text
+						style={{
+							fontFamily: "noto-sans-jp-regular",
+							fontSize:
+								Config.deviceHeight < 756
+									? Config.deviceHeight * 0.016
+									: Config.deviceHeight * 0.013,
+						}}
+					>
+						Deutsch
+					</Text>
+				</View>
+			),
 			value: "de",
 			icon: () => (
 				<Image
@@ -57,7 +108,30 @@ const SignInScreen = (props) => {
 			),
 		},
 		{
-			label: "Nederlands",
+			label: (
+				<View
+					style={{
+						flex: 1,
+						justifyContent: "center",
+						paddingTop:
+							Platform.OS == "ios"
+								? Config.deviceHeight * 0.005
+								: 0,
+					}}
+				>
+					<Text
+						style={{
+							fontFamily: "noto-sans-jp-regular",
+							fontSize:
+								Config.deviceHeight < 756
+									? Config.deviceHeight * 0.016
+									: Config.deviceHeight * 0.013,
+						}}
+					>
+						Nederlands
+					</Text>
+				</View>
+			),
 			value: "nl",
 			icon: () => (
 				<Image
@@ -128,7 +202,11 @@ const SignInScreen = (props) => {
 				}}
 			>
 				<TromaticNextLogo
-					height={Config.deviceWidth * 0.2}
+					height={
+						Config.deviceWidth < 768
+							? Config.deviceWidth * 0.2
+							: 142 + (Config.deviceWidth * 0.05 - 39)
+					}
 					color={Colors.PrimaryLight}
 				/>
 			</View>
@@ -143,7 +221,11 @@ const SignInScreen = (props) => {
 						<View style={styles.textInputIconBox}>
 							<MaterialIcons
 								name="alternate-email"
-								size={Config.deviceWidth * 0.075}
+								size={
+									Config.deviceWidth < 768
+										? Config.deviceWidth * 0.075
+										: 58 + (Config.deviceWidth * 0.025 - 20)
+								}
 								color={Colors.Secondary}
 							/>
 						</View>
@@ -168,7 +250,11 @@ const SignInScreen = (props) => {
 						<View style={styles.textInputIconBox}>
 							<MaterialIcons
 								name="lock-outline"
-								size={Config.deviceWidth * 0.075}
+								size={
+									Config.deviceWidth < 768
+										? Config.deviceWidth * 0.075
+										: 58 + (Config.deviceWidth * 0.025 - 20)
+								}
 								color={Colors.Secondary}
 							/>
 						</View>
@@ -204,7 +290,14 @@ const SignInScreen = (props) => {
 							<Text
 								style={[
 									styles.headText,
-									{ fontSize: Config.deviceWidth * 0.07 },
+									{
+										fontSize:
+											Config.deviceWidth < 768
+												? Config.deviceWidth * 0.07
+												: 54 +
+												  (Config.deviceWidth * 0.025 -
+														20),
+									},
 								]}
 							>
 								{i18n.t("authentication.signIn")}
@@ -215,8 +308,26 @@ const SignInScreen = (props) => {
 						onPress={() => {
 							props.navigation.navigate("ResetPassword");
 						}}
+						style={{
+							marginVertical:
+								Platform.OS === "ios"
+									? Config.deviceHeight * 0.005
+									: 0,
+						}}
 					>
-						<Text style={styles.headText}>
+						<Text
+							style={[
+								styles.headText,
+								,
+								{
+									fontSize:
+										Config.deviceWidth < 768
+											? Config.deviceWidth * 0.03
+											: 23 +
+											  (Config.deviceWidth * 0.01 - 7.5),
+								},
+							]}
+						>
 							{i18n.t("authentication.forgot")}
 						</Text>
 					</TouchableOpacity>
@@ -224,6 +335,7 @@ const SignInScreen = (props) => {
 				<DropDownPicker
 					style={{
 						width: Config.deviceWidth * 0.5,
+						height: Config.deviceHeight * 0.05,
 						marginTop: Config.deviceHeight * 0.01,
 						borderColor: "darkgrey",
 					}}
@@ -252,18 +364,19 @@ const SignInScreen = (props) => {
 			</View>
 			<View
 				style={{
-					marginBottom:
-						Platform.OS == "android"
-							? Config.deviceHeight * 0.02
-							: 0,
+					marginBottom: Config.deviceHeight * 0.02,
 				}}
 			>
 				<BesBollmannLogo
-					height={Config.deviceWidth * 0.07}
+					height={
+						Config.deviceWidth < 768
+							? Config.deviceWidth * 0.07
+							: 56 + (Config.deviceWidth * 0.025 - 20)
+					}
 					color={Colors.PrimaryLight}
 				/>
 			</View>
-			{/* {Platform.OS == "android" ? (
+			{Platform.OS == "android" && (
 				<View style={{ flexDirection: "row", marginTop: "auto" }}>
 					<Text style={styles.text}>
 						{i18n.t("authentication.account")}
@@ -283,22 +396,7 @@ const SignInScreen = (props) => {
 						</Text>
 					</TouchableOpacity>
 				</View>
-			) : (
-				<View
-					style={{
-						marginTop: "auto",
-					}}
-				>
-					<Text
-						style={[
-							styles.headText,
-							{ color: Colors.SecondaryLight },
-						]}
-					>
-						{i18n.t("authentication.demo")}
-					</Text>
-				</View>
-			)} */}
+			)}
 		</SafeAreaView>
 	);
 };
@@ -319,7 +417,7 @@ const styles = StyleSheet.create({
 	textInputContainer: {
 		height: Config.deviceHeight * 0.225,
 		marginTop: Config.deviceHeight * 0.04,
-		marginBottom: Config.deviceWidth * 0.1,
+		marginBottom: Config.deviceHeight * 0.08,
 	},
 	textInputBox: {
 		flex: 1,
@@ -329,8 +427,8 @@ const styles = StyleSheet.create({
 		width: Config.deviceWidth * 0.15,
 		height: "80%",
 		backgroundColor: Colors.SecondaryLight,
-		borderTopLeftRadius: 6,
-		borderBottomLeftRadius: 6,
+		borderTopLeftRadius: Config.deviceWidth * 0.012,
+		borderBottomLeftRadius: Config.deviceWidth * 0.012,
 		alignItems: "center",
 		justifyContent: "center",
 	},
@@ -340,8 +438,8 @@ const styles = StyleSheet.create({
 		backgroundColor: "white",
 		paddingHorizontal: Config.deviceWidth * 0.04,
 		fontSize: Config.deviceWidth * 0.05,
-		borderBottomRightRadius: 6,
-		borderTopRightRadius: 6,
+		borderBottomRightRadius: Config.deviceWidth * 0.012,
+		borderTopRightRadius: Config.deviceWidth * 0.012,
 	},
 	headText: {
 		fontFamily: "noto-sans-jp-bold",
@@ -355,13 +453,14 @@ const styles = StyleSheet.create({
 
 	button: {
 		backgroundColor: Colors.Secondary,
-		borderRadius: 8,
+		borderRadius: Config.deviceWidth * 0.018,
 		paddingHorizontal: Config.deviceWidth * 0.2,
 		paddingVertical: Platform.OS == "ios" ? Config.deviceHeight * 0.015 : 0,
+		marginVertical: Platform.OS === "ios" ? Config.deviceHeight * 0.005 : 0,
 	},
 	icon: {
-		width: 25,
-		height: 25,
+		width: Config.deviceHeight * 0.032,
+		height: Config.deviceHeight * 0.032,
 	},
 });
 

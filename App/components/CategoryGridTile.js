@@ -149,6 +149,7 @@ const CategoryGridTile = (props) => {
 								style={{
 									marginBottom: -Config.deviceHeight * 0.007,
 									fontFamily: "noto-sans-jp-regular",
+									fontSize: 10 + Config.deviceHeight * 0.006,
 									color:
 										props.item.remainingTime == 0
 											? Colors.ThirdlyDark
@@ -164,6 +165,7 @@ const CategoryGridTile = (props) => {
 								style={{
 									margin: -Config.deviceHeight * 0.007,
 									fontFamily: "noto-sans-jp-regular",
+									fontSize: 10 + Config.deviceHeight * 0.006,
 									color:
 										props.item.remainingTime == 0
 											? Colors.ThirdlyDark
@@ -202,6 +204,7 @@ const CategoryGridTile = (props) => {
 								style={{
 									margin: -Config.deviceHeight * 0.007,
 									fontFamily: "noto-sans-jp-regular",
+									fontSize: 10 + Config.deviceHeight * 0.006,
 									color:
 										props.item.remainingTime == 0
 											? Colors.ThirdlyDark
@@ -217,6 +220,7 @@ const CategoryGridTile = (props) => {
 								style={{
 									margin: -Config.deviceHeight * 0.007,
 									fontFamily: "noto-sans-jp-regular",
+									fontSize: 10 + Config.deviceHeight * 0.006,
 									color:
 										props.item.remainingTime == 0
 											? Colors.ThirdlyDark
@@ -258,6 +262,9 @@ const CategoryGridTile = (props) => {
 											margin:
 												-Config.deviceHeight * 0.007,
 											fontFamily: "noto-sans-jp-regular",
+											fontSize:
+												10 +
+												Config.deviceHeight * 0.006,
 											color:
 												props.item.remainingTime == 0
 													? Colors.ThirdlyDark
@@ -314,6 +321,9 @@ const CategoryGridTile = (props) => {
 											margin:
 												-Config.deviceHeight * 0.007,
 											fontFamily: "noto-sans-jp-regular",
+											fontSize:
+												10 +
+												Config.deviceHeight * 0.006,
 											color:
 												props.item.remainingTime == 0
 													? Colors.ThirdlyDark

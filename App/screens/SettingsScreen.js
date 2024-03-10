@@ -30,7 +30,29 @@ const SettingsScreen = (props) => {
 	const [notification, setNotification] = useState(false);
 	const [items, setItems] = useState([
 		{
-			label: "English",
+			label: (
+				<View
+					style={{
+						justifyContent: "center",
+						paddingTop:
+							Platform.OS == "ios"
+								? Config.deviceHeight * 0.005
+								: 0,
+					}}
+				>
+					<Text
+						style={{
+							fontFamily: "noto-sans-jp-regular",
+							fontSize:
+								Config.deviceHeight < 756
+									? Config.deviceHeight * 0.016
+									: Config.deviceHeight * 0.013,
+						}}
+					>
+						English
+					</Text>
+				</View>
+			),
 			value: "en",
 			icon: () => (
 				<View style={{ flexDirection: "row" }}>
@@ -49,7 +71,29 @@ const SettingsScreen = (props) => {
 			),
 		},
 		{
-			label: "Deutsch",
+			label: (
+				<View
+					style={{
+						justifyContent: "center",
+						paddingTop:
+							Platform.OS == "ios"
+								? Config.deviceHeight * 0.005
+								: 0,
+					}}
+				>
+					<Text
+						style={{
+							fontFamily: "noto-sans-jp-regular",
+							fontSize:
+								Config.deviceHeight < 756
+									? Config.deviceHeight * 0.016
+									: Config.deviceHeight * 0.013,
+						}}
+					>
+						Deutsch
+					</Text>
+				</View>
+			),
 			value: "de",
 			icon: () => (
 				<Image
@@ -59,7 +103,29 @@ const SettingsScreen = (props) => {
 			),
 		},
 		{
-			label: "Nederlands",
+			label: (
+				<View
+					style={{
+						justifyContent: "center",
+						paddingTop:
+							Platform.OS == "ios"
+								? Config.deviceHeight * 0.005
+								: 0,
+					}}
+				>
+					<Text
+						style={{
+							fontFamily: "noto-sans-jp-regular",
+							fontSize:
+								Config.deviceHeight < 756
+									? Config.deviceHeight * 0.016
+									: Config.deviceHeight * 0.013,
+						}}
+					>
+						Nederlands
+					</Text>
+				</View>
+			),
 			value: "nl",
 			icon: () => (
 				<Image
@@ -161,7 +227,14 @@ const SettingsScreen = (props) => {
 					<Text
 						style={{
 							fontFamily: "noto-sans-jp-regular",
-							color: Colors.SecondaryDark,
+							fontSize:
+								Config.deviceWidth * 0.013 +
+								Config.deviceHeight * 0.01,
+							color: Colors.PrimaryDark,
+							marginBottom:
+								Platform.OS === "ios"
+									? Config.deviceHeight * 0.01
+									: 0,
 						}}
 					>
 						{i18n.t("general.loggedInAs")}
@@ -186,6 +259,9 @@ const SettingsScreen = (props) => {
 							<Text
 								style={{
 									fontFamily: "noto-sans-jp-regular",
+									fontSize:
+										Config.deviceWidth * 0.014 +
+										Config.deviceHeight * 0.012,
 									marginBottom:
 										Platform.OS === "ios"
 											? Config.deviceWidth * 0.015
@@ -195,7 +271,12 @@ const SettingsScreen = (props) => {
 								{i18n.t("general.fullName")}
 							</Text>
 							<Text
-								style={{ fontFamily: "noto-sans-jp-regular" }}
+								style={{
+									fontFamily: "noto-sans-jp-regular",
+									fontSize:
+										Config.deviceWidth * 0.014 +
+										Config.deviceHeight * 0.012,
+								}}
 							>
 								{i18n.t("general.companyIdentification")}
 							</Text>
@@ -212,6 +293,9 @@ const SettingsScreen = (props) => {
 							<Text
 								style={{
 									fontFamily: "noto-sans-jp-regular",
+									fontSize:
+										Config.deviceWidth * 0.014 +
+										Config.deviceHeight * 0.012,
 									marginBottom:
 										Platform.OS === "ios"
 											? Config.deviceWidth * 0.015
@@ -221,7 +305,12 @@ const SettingsScreen = (props) => {
 								{name}
 							</Text>
 							<Text
-								style={{ fontFamily: "noto-sans-jp-regular" }}
+								style={{
+									fontFamily: "noto-sans-jp-regular",
+									fontSize:
+										Config.deviceWidth * 0.014 +
+										Config.deviceHeight * 0.012,
+								}}
 							>
 								{cid}
 							</Text>
@@ -248,7 +337,14 @@ const SettingsScreen = (props) => {
 					<Text
 						style={{
 							fontFamily: "noto-sans-jp-regular",
+							fontSize:
+								Config.deviceWidth * 0.013 +
+								Config.deviceHeight * 0.01,
 							color: Colors.PrimaryDark,
+							marginBottom:
+								Platform.OS === "ios"
+									? Config.deviceHeight * 0.01
+									: 0,
 						}}
 					>
 						{i18n.t("general.language")}
@@ -296,7 +392,14 @@ const SettingsScreen = (props) => {
 					<Text
 						style={{
 							fontFamily: "noto-sans-jp-regular",
+							fontSize:
+								Config.deviceWidth * 0.013 +
+								Config.deviceHeight * 0.01,
 							color: Colors.PrimaryDark,
+							marginBottom:
+								Platform.OS === "ios"
+									? Config.deviceHeight * 0.01
+									: 0,
 						}}
 					>
 						{i18n.t("general.information")}
@@ -312,7 +415,14 @@ const SettingsScreen = (props) => {
 									: Config.deviceWidth * 0.015,
 						}}
 					>
-						<Text style={{ fontFamily: "noto-sans-jp-regular" }}>
+						<Text
+							style={{
+								fontFamily: "noto-sans-jp-regular",
+								fontSize:
+									Config.deviceWidth * 0.014 +
+									Config.deviceHeight * 0.012,
+							}}
+						>
 							{i18n.t("general.version")}{" "}
 							{Constants.expoConfig.version}
 						</Text>
@@ -330,12 +440,18 @@ export const tabOptions = (navData) => {
 			iconColor = props.focused ? Colors.Primary : Colors.PrimaryDark;
 			return (
 				<Settings
-					width={Config.deviceWidth * 0.067}
+					width={
+						Platform.isPad
+							? 38
+							: Config.deviceWidth * 0.03 +
+							  Config.deviceHeight * 0.02
+					}
 					color={iconColor}
 				/>
 			);
 		},
 		tabBarLabel: i18n.t("general.settings"),
+		tabBarLabelPosition: "below-icon",
 	};
 };
 
@@ -361,8 +477,8 @@ const styles = StyleSheet.create({
 			Platform.OS === "ios" ? Config.deviceHeight * 0.015 : 0,
 	},
 	icon: {
-		width: 25,
-		height: 25,
+		width: Config.deviceHeight * 0.032,
+		height: Config.deviceHeight * 0.032,
 	},
 });
 

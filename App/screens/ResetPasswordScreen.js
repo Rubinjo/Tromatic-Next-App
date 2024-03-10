@@ -24,12 +24,12 @@ const ResetPasswordScreen = (props) => {
 	const [error, setError] = useState();
 	const [isLoading, setIsLoading] = useState(false);
 
-	const { resetPasswordAccount } = UserAuth;
+	const { resetPasswordAccount } = UserAuth();
 
 	// Show alert when error occurs
 	useEffect(() => {
 		if (error) {
-			Alert.alert(i18n.t("general.error"), error, [
+			Alert.alert(i18n.t("general.error.error"), error, [
 				{ text: i18n.t("general.okAllCaps") },
 			]);
 		}
@@ -42,7 +42,9 @@ const ResetPasswordScreen = (props) => {
 		} else {
 			setIsLoading(true);
 			try {
+				console.log("Resetting password for email: " + email);
 				await resetPasswordAccount(email);
+				console.log("Reset password email sent");
 				props.navigation.navigate("ResetConfirm");
 				setIsLoading(false);
 			} catch (err) {
@@ -65,7 +67,11 @@ const ResetPasswordScreen = (props) => {
 				}}
 			>
 				<TromaticNextLogo
-					height={Config.deviceWidth * 0.2}
+					height={
+						Config.deviceWidth < 768
+							? Config.deviceWidth * 0.2
+							: 142 + (Config.deviceWidth * 0.05 - 39)
+					}
 					color={Colors.PrimaryLight}
 				/>
 			</View>
@@ -105,7 +111,18 @@ const ResetPasswordScreen = (props) => {
 						style={styles.button}
 						onPress={resetPasswordEmail}
 					>
-						<Text style={styles.headText}>
+						<Text
+							style={[
+								styles.headText,
+								{
+									fontSize:
+										Config.deviceWidth < 768
+											? Config.deviceWidth * 0.07
+											: 54 +
+											  (Config.deviceWidth * 0.025 - 20),
+								},
+							]}
+						>
 							{i18n.t("authentication.reset")}
 						</Text>
 					</TouchableOpacity>
@@ -113,14 +130,15 @@ const ResetPasswordScreen = (props) => {
 			</View>
 			<View
 				style={{
-					marginBottom:
-						Platform.OS == "android"
-							? Config.deviceHeight * 0.02
-							: 0,
+					marginBottom: Config.deviceHeight * 0.02,
 				}}
 			>
 				<BesBollmannLogo
-					height={Config.deviceWidth * 0.07}
+					height={
+						Config.deviceWidth < 768
+							? Config.deviceWidth * 0.07
+							: 56 + (Config.deviceWidth * 0.025 - 20)
+					}
 					color={Colors.PrimaryLight}
 				/>
 			</View>
@@ -143,7 +161,7 @@ const styles = StyleSheet.create({
 	textInputContainer: {
 		height: Config.deviceHeight * 0.12,
 		marginTop: Config.deviceHeight * 0.04,
-		marginBottom: Config.deviceWidth * 0.1,
+		marginBottom: Config.deviceHeight * 0.08,
 	},
 	textInputBox: {
 		flex: 1,
@@ -153,8 +171,8 @@ const styles = StyleSheet.create({
 		width: Config.deviceWidth * 0.15,
 		height: "80%",
 		backgroundColor: Colors.SecondaryLight,
-		borderTopLeftRadius: 6,
-		borderBottomLeftRadius: 6,
+		borderTopLeftRadius: Config.deviceWidth * 0.012,
+		borderBottomLeftRadius: Config.deviceWidth * 0.012,
 		alignItems: "center",
 		justifyContent: "center",
 	},
@@ -162,8 +180,8 @@ const styles = StyleSheet.create({
 		width: Config.deviceWidth * 0.65,
 		height: "80%",
 		backgroundColor: "white",
-		borderTopRightRadius: 8,
-		borderBottomRightRadius: 8,
+		borderTopRightRadius: Config.deviceWidth * 0.012,
+		borderBottomRightRadius: Config.deviceWidth * 0.012,
 		paddingHorizontal: Config.deviceWidth * 0.04,
 		fontSize: Config.deviceWidth * 0.05,
 	},
@@ -174,7 +192,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		backgroundColor: Colors.Secondary,
-		borderRadius: 8,
+		borderRadius: Config.deviceWidth * 0.018,
 		paddingHorizontal: Config.deviceWidth * 0.2,
 		paddingVertical: Platform.OS == "ios" ? Config.deviceHeight * 0.015 : 0,
 	},

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Platform } from "react-native";
 
 import Config from "../utils/config";
 import Colors from "../assets/constants/colors";
@@ -36,17 +36,31 @@ const FullSlider = (props) => {
 						flexDirection: "row",
 						paddingHorizontal: 3 + Config.deviceWidth * 0.03,
 						alignItems: "center",
-						marginTop: Config.deviceHeight * 0.003,
+						marginTop:
+							Config.deviceHeight < 768
+								? Config.deviceHeight * 0.014
+								: Config.deviceHeight < 1024
+								? Config.deviceHeight * 0.008
+								: Config.deviceHeight * 0.005,
 					}}
 				>
 					<Stopwatch
-						width={Config.deviceWidth * 0.05}
+						width={
+							Config.deviceWidth < 720
+								? Config.deviceWidth * 0.05
+								: 36 + Config.deviceWidth * 0.005 - 3.5
+						}
 						color={Colors.PrimaryLight}
-						marginTop={Config.deviceHeight * 0.005}
+						marginTop={
+							Platform.OS === "android"
+								? Config.deviceHeight * 0.01
+								: 0
+						}
 					/>
 					<Text
 						style={{
 							fontFamily: "noto-sans-jp-regular",
+							fontSize: 6 + Config.deviceHeight * 0.01,
 							color: Colors.PrimaryLight,
 							paddingHorizontal: Config.deviceWidth * 0.02,
 						}}
@@ -56,9 +70,9 @@ const FullSlider = (props) => {
 					<Text
 						style={{
 							fontFamily: "noto-sans-jp-bold",
+							fontSize: 6 + Config.deviceHeight * 0.01,
 							color: Colors.PrimaryLight,
 							paddingHorizontal: 3 + Config.deviceWidth * 0.03,
-							marginTop: Config.deviceHeight * 0.003,
 						}}
 					>
 						{fancyTimeFormat(props.remainingTime)}
@@ -71,7 +85,7 @@ const FullSlider = (props) => {
 
 const styles = StyleSheet.create({
 	track: {
-		height: "100%",
+		height: Config.deviceHeight * 0.06,
 	},
 	thumb: {
 		opacity: 0,
