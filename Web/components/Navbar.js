@@ -3,7 +3,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { getCookie, setCookie } from "cookies-next";
 import { useTranslations } from "next-intl";
 
 import { UserAuth } from "../context/AuthContext";
@@ -66,11 +65,18 @@ const languages = [
 const Navbar = () => {
 	const { user, logOut } = UserAuth();
 	const [loading, setLoading] = useState(true);
-	const [selectedLanguage, setSelectedLanguage] = useState(
-		languages.find(
-			(language) => language.locale === getCookie("NEXT_LOCALE")
-		)
-	);
+	const [selectedLanguage, setSelectedLanguage] = useState(() => {
+		const localeJSONStr =
+			typeof document !== "undefined" &&
+			document.cookie
+				.split("; ")
+				.find((cookie) => cookie.startsWith("NEXT_LOCALE="))
+				?.split("=")[1];
+		return (
+			languages.find((language) => language.locale === localeJSONStr) ||
+			languages.find((language) => language.locale === "en")
+		);
+	});
 
 	const t = useTranslations("Navbar");
 
@@ -82,13 +88,13 @@ const Navbar = () => {
 		}
 	};
 
-	const handleLanguageChange = (language) => {
+	const handleLanguageChange = async (language) => {
 		setSelectedLanguage(language);
-		setCookie("NEXT_LOCALE", language.locale, {
-			path: "/",
-			maxAge: 31536000, // 1 year
-			sameSite: "lax",
+		await fetch(`/api/locale?lang=${encodeURIComponent(language.locale)}`, {
+			method: "POST",
+			credentials: "include",
 		});
+
 		setTimeout(() => {
 			window.location.reload();
 		}, 500);

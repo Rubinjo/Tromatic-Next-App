@@ -4,10 +4,11 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { NextIntlClientProvider } from "next-intl";
+import { unstable_setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 export function generateStaticParams() {
-	return [{ locale: "en" }, { locale: "de" }];
+	return [{ locale: "en" }, { locale: "de" }, { locale: "nl" }];
 }
 
 export const metadata = {
@@ -28,6 +29,7 @@ export const metadata = {
 const inter = Inter({ subsets: ["latin"] });
 
 export default async function RootLayout({ children, params: { locale } }) {
+	unstable_setRequestLocale(locale);
 	let messages;
 	try {
 		messages = (await import(`../../messages/${locale}.json`)).default;

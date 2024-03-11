@@ -1,7 +1,9 @@
 import Table from "@/components/Table";
 import { useTranslations } from "next-intl";
+import { unstable_setRequestLocale } from "next-intl/server";
 
-const Users = () => {
+const Users = ({ params: { locale } }) => {
+	unstable_setRequestLocale(locale);
 	const t = useTranslations("Table");
 
 	const columns = [

@@ -37,11 +37,11 @@ const ResetToken = () => {
 				// if userData does not contain a resetToken or the resetToken does not the passwordToken of the path redirect user to 404 page
 				if (
 					userData.resetToken &&
-                    userData.resetTokenExpiration &&
+					userData.resetTokenExpiration &&
 					userData.resetToken === resetToken &&
-                    userData.resetTokenExpiration > Date.now()
+					userData.resetTokenExpiration > Date.now()
 				) {
-                    setUid(uid);
+					setUid(uid);
 					setResetToken(passwordToken);
 				} else {
 					redirect("/404");
@@ -62,19 +62,14 @@ const ResetToken = () => {
 			toast.error("Passwords do not match", toastOptions);
 			e.target.reset();
 		} else {
-			const resetPassword = httpsCallable(
-				functions,
-				"resetPassword"
-			);
-			const result = await resetPassword(
-				{
-					text: {
-						uid: uid,
-						resetToken: resetToken,
-						password: e.target.password.value,
-					},
-				}
-			);
+			const resetPassword = httpsCallable(functions, "resetPassword");
+			const result = await resetPassword({
+				text: {
+					uid: uid,
+					resetToken: resetToken,
+					password: e.target.password.value,
+				},
+			});
 			if (result.data.status === "success") {
 				window.close();
 			} else {
@@ -84,22 +79,36 @@ const ResetToken = () => {
 	};
 
 	return (
-        <div className="flex justify-center items-center h-screen">
-            <div className="w-96 p-8 bg-white rounded shadow">
-                <h1 className="text-2xl font-bold mb-4">Set Password</h1>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <label className="flex flex-col">
-                        <span className="mb-1">Password:</span>
-                        <input type="password" name="password" autoFocus className="border border-gray-300 px-3 py-2 rounded" />
-                    </label>
-                    <label className="flex flex-col">
-                        <span className="mb-1">Confirm Password:</span>
-                        <input type="password" name="confirmPassword" className="border border-gray-300 px-3 py-2 rounded" />
-                    </label>
-                    <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Set Password</button>
-                </form>
-            </div>
-        </div>
+		<div className="flex justify-center items-center h-screen">
+			<div className="w-96 p-8 bg-white rounded shadow">
+				<h1 className="text-2xl font-bold mb-4">Set Password</h1>
+				<form onSubmit={handleSubmit} className="space-y-4">
+					<label className="flex flex-col">
+						<span className="mb-1">Password:</span>
+						<input
+							type="password"
+							name="password"
+							autoFocus
+							className="border border-gray-300 px-3 py-2 rounded"
+						/>
+					</label>
+					<label className="flex flex-col">
+						<span className="mb-1">Confirm Password:</span>
+						<input
+							type="password"
+							name="confirmPassword"
+							className="border border-gray-300 px-3 py-2 rounded"
+						/>
+					</label>
+					<button
+						type="submit"
+						className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+					>
+						Set Password
+					</button>
+				</form>
+			</div>
+		</div>
 	);
 };
 
