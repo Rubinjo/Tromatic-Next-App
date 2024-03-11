@@ -14,7 +14,7 @@ export default {
 	slug: "Tromatic-NEXT",
 	owner: "your-expo-owner",
 	currentFullName: "tromatic-next",
-	version: "1.0.13",
+	version: "1.0.14",
 	platforms: ["ios", "android"],
 	orientation: "portrait",
 	primaryColor: "#0F7BCA",
@@ -39,7 +39,7 @@ export default {
 	},
 	ios: {
 		supportsTablet: true,
-		buildNumber: "1.0.13",
+		buildNumber: "1.0.14",
 		bundleIdentifier: "nl.bes-bollmann.tromatic-next",
 	},
 	android: {
@@ -50,7 +50,7 @@ export default {
 			backgroundColor: "#0F7BCA",
 		},
 		softwareKeyboardLayoutMode: "pan",
-		versionCode: 14,
+		versionCode: 15,
 	},
 	extra: {
 		APIKEY: apiKey,
