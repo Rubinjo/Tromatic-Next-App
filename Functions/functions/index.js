@@ -919,10 +919,10 @@ exports.resetPassword = onCall(
             .collection("users")
             .doc(request.data.text.uid)
             .get();
-        if (userRecord.exists()) {
+        if (userRecord) {
           const userData = userRecord.data();
           if (
-            (userData.resetToken === request.data.text.resetToken) && (userData.resetTokenExpiration > new Date())
+            (userData.resetToken === request.data.text.resetToken) && (new Date(userData.resetTokenExpiration.toDate()) > new Date())
           ) {
             await auth.updateUser(request.data.text.uid, {
               password: request.data.text.password,
