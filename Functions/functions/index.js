@@ -979,7 +979,7 @@ exports.setAuthUserPasswordFunction = onCall(
                 .doc(request.data.text.uid)
                 .update({
                   passwordToken: null,
-                  accountTokenExpiration: null,
+                  tokenExpiration: null,
                 });
             return {status: "success"};
           } else {
