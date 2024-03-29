@@ -29,6 +29,7 @@
         "fullName": "Volledige naam",
         "email": "Email",
         "role": "Rol",
+        "owner": "Owner",
         "admin": "Admin",
         "editor": "Editor",
         "viewer": "Viewer",

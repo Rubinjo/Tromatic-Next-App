@@ -429,12 +429,17 @@ const Table = ({
             const formData = new FormData(event.target);
             const values = Object.fromEntries(formData);
 
-            const isRoleChanged = values.role !== editModalData.role;
+            const isRoleChanged =
+                values.role !== editModalData.role && values.role !== undefined;
             const isFullNameChanged =
-                values.fullName !== editModalData.fullName;
-            const isEmailChanged = values.email !== editModalData.email;
+                values.fullName !== editModalData.fullName &&
+                values.fullName !== undefined;
+            const isEmailChanged =
+                values.email !== editModalData.email &&
+                values.email !== undefined;
             const isCompanyIdChanged =
-                values.companyId !== editModalData.companyId;
+                values.companyId !== editModalData.companyId &&
+                values.companyId !== undefined;
             if (
                 isRoleChanged ||
                 isFullNameChanged ||
@@ -739,7 +744,13 @@ const Table = ({
                                     name="role"
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                     defaultValue={editModalData.role}
+                                    disabled={editModalData.role === "owner"}
                                 >
+                                    {editModalData.role === "owner" && (
+                                        <option value="owner">
+                                            {t("owner")}
+                                        </option>
+                                    )}
                                     <option value="admin">{t("admin")}</option>
                                     <option value="editor">
                                         {t("editor")}
