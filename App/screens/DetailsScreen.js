@@ -217,7 +217,8 @@ const DetailsScreen = (props) => {
     useEffect(() => {
         props.navigation.setOptions({
             headerRight: (props) =>
-                areChanges && (role === "owner" || role === "editor") ? (
+                areChanges &&
+                (role === "owner" || role === "admin" || role === "editor") ? (
                     <TouchableOpacity
                         onPress={sendData}
                         style={{ marginRight: 12 }}
@@ -229,7 +230,9 @@ const DetailsScreen = (props) => {
                         />
                     </TouchableOpacity>
                 ) : data.remainingTime > 0 &&
-                  (role === "owner" || role === "editor") ? (
+                  (role === "owner" ||
+                      role === "admin" ||
+                      role === "editor") ? (
                     <TouchableOpacity
                         onPress={() =>
                             Alert.alert(
