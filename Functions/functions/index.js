@@ -508,7 +508,6 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
   // Get user details
   const uid = event.params.uid;
   const userRecord = await auth.getUser(uid);
-  const userRef = firestore.collection("users").doc(uid);
 
   // Generate a temporary key of 32 characters (256 bits)
   const tempTokenAccount = crypto.randomBytes(32).toString("hex");
@@ -531,6 +530,8 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
       ),
       {added: serverTimestamp()},
   );
+
+  const userRef = firestore.collection("users").doc(uid);
 
   // Check if user created via Web or App
   if (userRecord.metadata.lastSignInTime === null) {
@@ -648,6 +649,8 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
         }
       }
     }
+    // Send verification e-mail to user
+    await sendVerificationEmail(language, userRecord, cid, tempTokenVerification);
     const accountInfo = await transporter.sendMail({
       from: `"Tromatic NEXT Team" <${process.env.SMTP_USERNAME}>`,
       to: Object.values(userDetails).map(
@@ -752,8 +755,6 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
 
       `,
     });
-    // Send verification e-mail to user
-    await sendVerificationEmail(language, userRecord, cid, tempTokenVerification);
   }
 });
 

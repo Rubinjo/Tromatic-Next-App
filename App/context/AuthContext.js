@@ -20,8 +20,7 @@ export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [role, setRole] = useState(null);
     const [cid, setCid] = useState(null);
-
-    let loading = false;
+    const [isRegistering, setIsRegistering] = useState(false);
 
     /**
      * Register user account
@@ -39,15 +38,15 @@ export const AuthContextProvider = ({ children }) => {
         password,
         language
     ) => {
+        setIsRegistering(true);
         const lcCompanyID = companyID.toLowerCase();
         try {
-            loading = true;
             const newUser = await createUserWithEmailAndPassword(
                 auth,
                 email,
                 password
             );
-            await updateProfile(newUser.user, {
+            updateProfile(newUser.user, {
                 displayName: fullName,
             });
             await setDoc(doc(firestore, "users", newUser.user.uid), {
@@ -62,13 +61,13 @@ export const AuthContextProvider = ({ children }) => {
                 lastActivity: serverTimestamp(),
                 language: language,
             });
-            loading = false;
         } catch (error) {
-            loading = false;
+            setIsRegistering(false);
             console.log(error.message);
             throw new Error(error.message);
         } finally {
             await signOutAccount();
+            setIsRegistering(false);
         }
     };
 
@@ -204,46 +203,47 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     useEffect(() => {
+        if (isRegistering) {
+            return;
+        }
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-            if (!loading) {
-                setUser(currentUser);
-                if (!currentUser) {
-                    setRole(null);
-                    setCid(null);
-                } else {
-                    if (await checkPrivilege("owner")) {
-                        setRole("owner");
-                    } else if (await checkPrivilege("admin")) {
-                        setRole("admin");
-                    } else if (await checkPrivilege("editor")) {
-                        setRole("editor");
-                    } else if (await checkPrivilege("viewer")) {
-                        setRole("editor");
-                    } else if (auth.currentUser) {
-                        // Wait for all other code to run before signing out
-                        signOutAccount();
-                        Alert.alert(
-                            i18n.t("authentication.error.notApprovedTitle"),
-                            i18n.t("authentication.error.notApprovedMessage"),
-                            [
-                                {
-                                    text: "OK",
-                                    onPress: () => console.log("OK Pressed"),
-                                },
-                            ],
-                            { cancelable: true }
-                        );
-                    }
-                    get(
-                        ref(firebase, `users/${auth.currentUser.uid}/cid`)
-                    ).then((snapshot) => {
-                        setCid(snapshot.val());
-                    });
+            setUser(currentUser);
+            if (!currentUser) {
+                setRole(null);
+                setCid(null);
+            } else {
+                if (await checkPrivilege("owner")) {
+                    setRole("owner");
+                } else if (await checkPrivilege("admin")) {
+                    setRole("admin");
+                } else if (await checkPrivilege("editor")) {
+                    setRole("editor");
+                } else if (await checkPrivilege("viewer")) {
+                    setRole("editor");
+                } else if (auth.currentUser) {
+                    // Wait for all other code to run before signing out
+                    signOutAccount();
+                    Alert.alert(
+                        i18n.t("authentication.error.notApprovedTitle"),
+                        i18n.t("authentication.error.notApprovedMessage"),
+                        [
+                            {
+                                text: "OK",
+                                onPress: () => console.log("OK Pressed"),
+                            },
+                        ],
+                        { cancelable: true }
+                    );
                 }
+                get(ref(firebase, `users/${auth.currentUser.uid}/cid`)).then(
+                    (snapshot) => {
+                        setCid(snapshot.val());
+                    }
+                );
             }
         });
         return () => unsubscribe();
-    }, []);
+    }, [isRegistering]);
 
     return (
         <AuthContext.Provider
