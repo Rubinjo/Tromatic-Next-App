@@ -1067,8 +1067,8 @@ const DetailsScreen = (props) => {
                 snapPoints={[
                     `${
                         Config.deviceHeight < 720
-                            ? 12 + data.numOfWmProbes * 7.5
-                            : 9.5 + data.numOfWmProbes * 6.9
+                            ? 12 + data.numOfCTProbes * 7.5
+                            : 9.5 + data.numOfCTProbes * 6.9
                     }%`,
                 ]}
                 backgroundStyle={{
@@ -1094,7 +1094,7 @@ const DetailsScreen = (props) => {
                                     width: "90%",
                                     marginVertical:
                                         Platform.OS === "ios"
-                                            ? Config.deviceHeight * 0.02
+                                            ? Config.deviceHeight * 0.015
                                             : 0,
                                 }}
                             >
