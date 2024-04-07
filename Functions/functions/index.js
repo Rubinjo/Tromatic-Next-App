@@ -1100,7 +1100,7 @@ exports.setAuthVerified = onCall(
             await auth.updateUser(request.data.text.uid, {
               emailVerified: true,
             });
-            if (userData.passwordToken === null) {
+            if (userData.verificationToken === null) {
               await firestore
                   .collection("users")
                   .doc(request.data.text.uid)
