@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { usePathname, redirect } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { getDoc, doc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { toast } from "react-toastify";
@@ -34,7 +34,7 @@ const EmailToken = () => {
 					!userData.emailToken ||
 					userData.emailToken !== emailToken
 				) {
-					redirect("/404");
+					toast.error("Invalid email token", toastOptions);
 				} else {
 					const setAuthVerified = httpsCallable(
 						functions,

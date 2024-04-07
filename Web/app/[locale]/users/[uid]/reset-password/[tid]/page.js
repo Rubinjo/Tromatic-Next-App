@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { usePathname, redirect } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { getDoc, doc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { toast } from "react-toastify";

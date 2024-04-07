@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { usePathname, redirect } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { getDoc, doc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { toast } from "react-toastify";
@@ -34,18 +34,17 @@ const PasswordToken = () => {
 
 			if (userSnap.exists()) {
 				const userData = userSnap.data();
-				// if userData does not contain a passwordToken or the passwordToken does not the passwordToken of the path redirect user to 404 page
 				if (
 					!userData.passwordToken ||
 					userData.passwordToken !== passwordToken
 				) {
-					redirect("/404");
+					toast.error("Invalid password token", toastOptions);
 				} else {
 					setUid(uid);
 					setPasswordToken(passwordToken);
 				}
 			} else {
-				redirect("/404");
+				toast.error("Invalid password token", toastOptions);
 			}
 		}
 

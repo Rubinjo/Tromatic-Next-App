@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { usePathname, useSearchParams, redirect } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { getDoc, doc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { toast } from "react-toastify";
@@ -40,7 +40,7 @@ const RoleToken = () => {
 					!userData.verificationToken ||
 					userData.verificationToken !== roleToken
 				) {
-					redirect("/404");
+					toast.error("Invalid role token", toastOptions);
 				} else {
 					const setAuthUserRoleToken = httpsCallable(
 						functions,
@@ -66,7 +66,7 @@ const RoleToken = () => {
 					}
 				}
 			} else {
-				redirect("/404");
+				toast.error("Invalid role token", toastOptions);
 			}
 		}
 
