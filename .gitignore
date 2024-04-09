@@ -13,6 +13,9 @@ web-build
 *.pnp.js
 *.pem
 
+App/.vscode/settings.json
+App/assets/config/keys.js
+
 # macOS
 **/.DS_Store
 
