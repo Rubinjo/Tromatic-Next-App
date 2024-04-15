@@ -2,11 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { getDoc, doc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { toast } from "react-toastify";
 
-import { firestore, functions } from "@/firebase";
+import { functions } from "@/firebase";
 import Spinner from "@/components/Spinner";
 
 const EmailToken = () => {
@@ -31,48 +30,40 @@ const EmailToken = () => {
             const splitPath = pathname.split("/");
             const uid = splitPath[2];
             const emailToken = splitPath[4];
-            const userSnap = await getDoc(doc(firestore, `users/${uid}`));
-            if (userSnap.exists()) {
-                const userData = userSnap.data();
-                if (
-                    !userData.emailToken ||
-                    userData.emailToken !== emailToken
-                ) {
-                    toast.error("Invalid email token", toastOptions);
-                    setError(true);
-                } else {
-                    const setAuthVerified = httpsCallable(
-                        functions,
-                        "setAuthVerified"
+            const setAuthVerified = httpsCallable(
+                functions,
+                "setAuthVerified"
+            );
+            try {
+                const result = await setAuthVerified({
+                    text: {
+                        uid: uid,
+                        emailToken: emailToken,
+                    },
+                });
+                if (result.data.status === "success") {
+                    toast.success(
+                        "Email verified, you can close this window",
+                        toastOptions
                     );
-                    const result = await setAuthVerified({
-                        text: {
-                            uid: uid,
-                            emailToken: userData.emailToken,
-                        },
-                    });
-                    if (result.data.status === "success") {
-                        toast.success(
-                            "Email verified, you can close this window",
-                            toastOptions
-                        );
-                        setSuccess(true);
-                    } else {
-                        toast.error(
-                            "Something went wrong, please try again later",
-                            toastOptions
-                        );
-                        setError(true);
-                    }
+                    setSuccess(true);
+                } else {
+                    toast.error(
+                        "Something went wrong, please try again later",
+                        toastOptions
+                    );
+                    setError(true);
                 }
-            } else {
+            } catch (error) {
+                console.error(error);
                 toast.error(
                     "Something went wrong, please try again later",
                     toastOptions
                 );
                 setError(true);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         }
 
         fetchData();
