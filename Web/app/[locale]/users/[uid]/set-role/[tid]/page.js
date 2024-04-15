@@ -41,11 +41,18 @@ const RoleToken = () => {
                 const result = await setAuthUserRoleToken({
                     text: {
                         uid: uid,
-                        verificationToken: userData.verificationToken,
+                        verificationToken: roleToken,
                         role: role,
                         cid: cid,
                     },
                 });
+                if (result.data.status === "success") {
+                    toast.success("Role set, you can close this window", toastOptions);
+                    setSuccess(true);
+                } else {
+                    toast.error("Something went wrong, please try again later", toastOptions);
+                    setError(true);
+                }
             } catch (error) {
                 toast.error("Invalid role token", toastOptions);
                 setError(true);
