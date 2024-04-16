@@ -90,7 +90,8 @@
         "notVerifiedMessage": "Bitte bestätigen Sie Ihre E-Mail-Adresse, um sich anzumelden",
         "notApprovedTitle": "Konto nicht genehmigt",
         "notApprovedMessage": "Ihr Konto muss noch vom Unternehmensadministrator genehmigt werden",
-        "notVerifiedResend": "Senden"
+        "notVerifiedResend": "Senden",
+        "emailInUse": "Diese E-Mail-Adresse wird bereits verwendet"
       }
     },
     "status": {

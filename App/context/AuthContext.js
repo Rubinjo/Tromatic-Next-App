@@ -62,11 +62,13 @@ export const AuthContextProvider = ({ children }) => {
                 language: language,
             });
         } catch (error) {
-            setIsRegistering(false);
-            console.log(error.message);
-            throw new Error(error.message);
+            throw error;
         } finally {
-            await signOutAccount();
+            try {
+                await signOutAccount();
+            } catch (error) {
+                console.log(error.message);
+            }
             setIsRegistering(false);
         }
     };

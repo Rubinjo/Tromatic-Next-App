@@ -90,7 +90,8 @@
         "notVerifiedMessage": "Please verify your email to log in",
         "notApprovedTitle": "Account not approved",
         "notApprovedMessage": "Your account is pending approval by the company admin",
-        "notVerifiedResend": "Resend"
+        "notVerifiedResend": "Resend",
+        "emailInUse": "Email is already in use"
       }
     },
     "status": {
