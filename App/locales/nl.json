@@ -87,10 +87,11 @@
         "incorrectSignIn": "Inloggegevens kloppen niet.",
         "databaseError": "Uw verzoek kon niet worden verwerkt, probeer het later opnieuw",
         "notVerifiedTitle": "Account niet geverifieerd",
-        "notVerifiedMessage": "Controleer uw e-mailadres om in te loggen",
+        "notVerifiedMessage": "Controleer uw email om in te loggen",
         "notApprovedTitle": "Account nog niet goedgekeurd",
         "notApprovedMessage": "Uw account wacht op goedkeuring door de bedrijfsbeheerder",
-        "notVerifiedResend": "Versturen"
+        "notVerifiedResend": "Versturen",
+        "emailInUse": "Email is al in gebruik"
       }
     },
     "status": {
