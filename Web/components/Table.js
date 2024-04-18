@@ -39,7 +39,7 @@ const Table = ({
 	const [error, setError] = useState();
 	const [sorting, setSorting] = useState([
 		{
-			id: type === "machines" ? "machineName" : "lastActivity",
+			id: type == "machines" ? "dateTimeMessage" : "lastActivity",
 			desc: true,
 		},
 	]);
