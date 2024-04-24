@@ -213,23 +213,32 @@ export const AuthContextProvider = ({ children }) => {
             const batch = writeBatch(firestore);
 
             if (oldUser.role !== newUser.role) {
-                if (oldUser.role !== "Unassigned") {
+                if (oldUser.role !== "unassigned") {
                     updates[`${oldUser.role}/${oldUser.id}`] = null;
                 }
                 updates[`${newUser.role}/${oldUser.id}`] = {
                     assignedAt: serverTimestamp(),
                 };
-                batch.update(doc(firestore, "authorization", oldUser.id), {
-                    isEditor: true
-                        ? newUser.role === "editor" ||
-                          newUser.role === "admin" ||
-                          newUser.role === "owner"
-                        : false,
-                    isAdmin: true
-                        ? newUser.role === "admin" || newUser.role === "owner"
-                        : false,
-                    isOwner: true ? newUser.role === "owner" : false,
-                });
+                if (oldUser.role === "unassigned") {
+                    batch.set(doc(firestore, "authorization", oldUser.id), {
+                        isEditor: false,
+                        isAdmin: false,
+                        isOwner: false,
+                    });
+                } else {
+                    batch.update(doc(firestore, "authorization", oldUser.id), {
+                        isEditor: true
+                            ? newUser.role === "editor" ||
+                              newUser.role === "admin" ||
+                              newUser.role === "owner"
+                            : false,
+                        isAdmin: true
+                            ? newUser.role === "admin" ||
+                              newUser.role === "owner"
+                            : false,
+                        isOwner: true ? newUser.role === "owner" : false,
+                    });
+                }
             }
 
             if (oldUser.fullName !== newUser.fullName) {
