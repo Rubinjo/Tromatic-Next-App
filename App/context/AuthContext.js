@@ -221,7 +221,7 @@ export const AuthContextProvider = ({ children }) => {
                 } else if (await checkPrivilege("editor")) {
                     setRole("editor");
                 } else if (await checkPrivilege("viewer")) {
-                    setRole("editor");
+                    setRole("viewer");
                 } else if (auth.currentUser) {
                     // Wait for all other code to run before signing out
                     signOutAccount();
