@@ -1,6 +1,6 @@
 import { Service } from "node-windows";
 import path from "path";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -8,7 +8,8 @@ const __dirname = path.dirname(__filename);
 // Create service objects
 const senderSvc = new Service({
     name: "Tromatic Next Sender",
-    description: "Sends Tromatic data to server for functioning Tromatic Next app.",
+    description:
+        "Sends Tromatic data to server for functioning Tromatic Next app.",
     script: path.join(__dirname, "sender.js"),
     grow: 1,
     maxRetries: 100,
@@ -24,6 +25,15 @@ const receiverSvc = new Service({
     maxRestarts: 5,
 });
 
+const gathererSvc = new Service({
+    name: "Tromatic Next Gatherer",
+    description: "Gathers drying programs.",
+    script: path.join(__dirname, "gatherer.js"),
+    grow: 1,
+    maxRetries: 100,
+    maxRestarts: 5,
+});
+
 // Start services after install
 senderSvc.on("install", function () {
     senderSvc.start();
@@ -33,5 +43,10 @@ receiverSvc.on("install", function () {
     receiverSvc.start();
 });
 
+gathererSvc.on("install", function () {
+    gathererSvc.start();
+});
+
 senderSvc.install();
 receiverSvc.install();
+gathererSvc.install();
