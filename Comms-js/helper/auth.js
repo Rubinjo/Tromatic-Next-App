@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { getDatabase } from "firebase/database";
+import { getFirestore } from "firebase/firestore";
 
 /**
  * @param {{APIKEY: string, AUTHDOMAIN: string, DATABASEURL: string, PROJECTID: string, STORAGEBUCKET: string, MESSAGINGSENDERID: string, APPID: string}} firebaseConfig
@@ -15,7 +16,7 @@ async function setupFirebase(firebaseConfig, email, password) {
     } catch (e) {
         console.error(e.message);
     }
-    return [getDatabase(app), auth];
+    return [getDatabase(app), getFirestore(app), auth];
 }
 
-export default setupFirebase
+export default setupFirebase;
