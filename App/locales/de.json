@@ -23,6 +23,7 @@
       "timeRemaining": "Verbleibende Zeit:",
       "temperature": "Temperatur",
       "rpm": "RPM",
+      "phase": "Phase",
       "woodMoisture": "Holzfeuchte",
       "humidity": "Luftfeuchtigkeit",
       "valves": "Ventile",
@@ -33,6 +34,7 @@
       "viewGraph": "Grafik anzeigen",
       "coreT": "Kern T",
       "measurements": "Messungen",
+      "measurementsShort": "M",
       "upcoming": "Kommende",
       "combined": "Kombiniert",
       "SetPointTemp": "Solltemp",
@@ -43,6 +45,8 @@
         "error": "Fehler",
         "StopProgram": "Programm beenden",
         "StopProgramMessage": "Sind Sie sicher, dass Sie das Programm stoppen möchten?",
+        "PauseProgram": "Programm pausieren",
+        "PauseProgramMessage": "Sind Sie sicher, dass Sie das Programm pausieren möchten?",
         "retry": "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal",
         "database": "Die Datenbank konnte nicht erreicht werden"
       }

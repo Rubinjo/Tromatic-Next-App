@@ -23,6 +23,7 @@
       "timeRemaining": "Resterende tijd:",
       "temperature": "Temperatuur",
       "rpm": "RPM",
+      "phase": "Fase",
       "woodMoisture": "Houtvochtigheid",
       "humidity": "Luchtvochtigheid",
       "valves": "Kleppen",
@@ -33,6 +34,7 @@
       "viewGraph": "Bekijk grafiek",
       "coreT": "Kern T",
       "measurements": "Metingen",
+      "measurementsShort": "M",
       "upcoming": "Aankomend",
       "combined": "Gecombineerd",
       "SetPointTemp": "Ingestelde Temp",
@@ -40,8 +42,11 @@
       "SetPointHum": "Ingestelde Luchtvocht",
       "CurrentHum": "Actuele Luchtvocht",
       "error": {
+        "error": "Error",
         "StopProgram": "Stop Programma",
         "StopProgramMessage": "Weet je zeker dat je het programma wilt stoppen?",
+        "PauseProgram": "Pauzeer Programma",
+        "PauseProgramMessage": "Weet je zeker dat je het programma wilt pauzeren?",
         "retry": "Iets is fout gegaan, probeer het opnieuw",
         "database": "Database kon niet worden bereikt",
         "databaseError": "Je verzoek kon niet worden verwerkt, probeer het later opnieuw"

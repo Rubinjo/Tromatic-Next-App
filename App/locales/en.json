@@ -23,6 +23,7 @@
       "timeRemaining": "Time remaining:",
       "temperature": "Temperature",
       "rpm": "RPM",
+      "phase": "Phase",
       "woodMoisture": "Wood moisture",
       "humidity": "Humidity",
       "valves": "Dampers",
@@ -33,16 +34,20 @@
       "viewGraph": "View graph",
       "coreT": "Core T",
       "measurements": "Measurements",
+      "measurementsShort": "M",
       "upcoming": "Upcoming",
       "combined": "Combined",
       "SetPointTemp": "Set Point Temp",
       "CurrentTemp": "Current Temp",
       "SetPointHum": "Set Point Hum",
       "CurrentHum": "Current Hum",
+
       "error": {
         "error": "Error",
         "StopProgram": "Stop Program",
         "StopProgramMessage": "Are you sure you want to stop the program?",
+        "PauseProgram": "Pause Program",
+        "PauseProgramMessage": "Are you sure you want to pause the program?",
         "retry": "Something went wrong, please try again later",
         "database": "Database could not be reached"
       }
