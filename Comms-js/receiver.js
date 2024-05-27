@@ -79,7 +79,11 @@ function sendData(mid, dateTime, lastEditor, changedDict) {
         LastEditor: lastEditor,
     };
     if (changedDict.hasOwnProperty("RemainingTime")) {
-        machineData["stop_program"] = true;
+        if (changedDict["RemainingTime"] === 0) {
+            machineData["stop_program"] = true;
+        } else if (changedDict["RemainingTime"] === -1) {
+            machineData["pause_program"] = true;
+        }
         delete changedDict["RemainingTime"];
     }
 

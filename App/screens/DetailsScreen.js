@@ -19,7 +19,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 import { UserAuth } from "../context/AuthContext";
 import { firebase } from "../firebaseConfig";
@@ -42,6 +42,7 @@ import Valve from "../assets/icons/Valve";
 import Heating from "../assets/icons/Heating";
 import Sprayer from "../assets/icons/Sprayer";
 import FanDirection from "../assets/icons/FanDirection";
+import Stop from "../assets/icons/Stop";
 import { ScrollView } from "react-native-gesture-handler";
 import Status from "../models/status";
 
@@ -233,32 +234,67 @@ const DetailsScreen = (props) => {
                   (role === "owner" ||
                       role === "admin" ||
                       role === "editor") ? (
-                    <TouchableOpacity
-                        onPress={() =>
-                            Alert.alert(
-                                i18n.t("general.error.StopProgram"),
-                                i18n.t("general.error.StopProgramMessage"),
-                                [
-                                    {
-                                        text: i18n.t("general.yes"),
-                                        onPress: () => sendStop(),
-                                    },
-                                    {
-                                        text: i18n.t("general.no"),
-                                        onPress: () =>
-                                            console.log("No Pressed"),
-                                    },
-                                ]
-                            )
-                        }
-                        style={{ marginRight: 12 }}
+                    <View
+                        style={{
+                            flexDirection: "row",
+                        }}
                     >
-                        <MaterialCommunityIcons
-                            name={"cog-stop"}
-                            size={34}
-                            color={"white"}
-                        />
-                    </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() =>
+                                Alert.alert(
+                                    i18n.t("general.error.PauseProgram"),
+                                    i18n.t("general.error.PauseProgramMessage"),
+                                    [
+                                        {
+                                            text: i18n.t("general.yes"),
+                                            onPress: () => sendPause(),
+                                        },
+                                        {
+                                            text: i18n.t("general.no"),
+                                            onPress: () =>
+                                                console.log("No Pressed"),
+                                        },
+                                    ]
+                                )
+                            }
+                            style={{
+                                marginHorizontal: 12,
+                                justifyContent: "center",
+                            }}
+                        >
+                            <FontAwesome6
+                                name="pause"
+                                size={20 + Config.deviceWidth * 0.025}
+                                color="white"
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() =>
+                                Alert.alert(
+                                    i18n.t("general.error.StopProgram"),
+                                    i18n.t("general.error.StopProgramMessage"),
+                                    [
+                                        {
+                                            text: i18n.t("general.yes"),
+                                            onPress: () => sendStop(),
+                                        },
+                                        {
+                                            text: i18n.t("general.no"),
+                                            onPress: () =>
+                                                console.log("No Pressed"),
+                                        },
+                                    ]
+                                )
+                            }
+                            style={{
+                                marginHorizontal: 12,
+                                justifyContent: "center",
+                            }}
+                        >
+                            {/* <Ionicons name="stop" size={34} color="white" /> */}
+                            <Stop color="white" />
+                        </TouchableOpacity>
+                    </View>
                 ) : (
                     <View></View>
                 ),
@@ -367,6 +403,18 @@ const DetailsScreen = (props) => {
         update(ref(firebase), updates);
     };
 
+    const sendPause = () => {
+        const updates = {};
+        updates["machines/" + props.route.params.machineId + "/LastEditor"] =
+            "u" + user.uid;
+        updates[
+            "machines/" + props.route.params.machineId + "/DateTimeMessage"
+        ] = new Date().toISOString();
+        updates["machines/" + props.route.params.machineId + "/RemainingTime"] =
+            -1;
+        update(ref(firebase), updates);
+    };
+
     function handleCTModal() {
         bottomSheetCTModalRef.current?.present();
         setModalOpen(true);
@@ -472,39 +520,113 @@ const DetailsScreen = (props) => {
                                 color={Colors.Primary}
                                 direction={directionValue(data.fanDirection)}
                             />
-                            <Text
-                                style={{
-                                    fontFamily: "noto-sans-jp-regular",
-                                    fontSize: Config.deviceWidth * 0.032,
-                                    marginVertical:
-                                        Platform.OS === "ios"
-                                            ? 0
-                                            : -Config.deviceHeight * 0.008,
-                                }}
-                            >
-                                {i18n.t("general.rpm")}
-                            </Text>
                             <View
                                 style={{
-                                    alignItems: "center",
-                                    backgroundColor: Colors.PrimaryLight,
-                                    width: Config.deviceWidth * 0.3,
-                                    borderRadius: Config.deviceWidth * 0.02,
-                                    marginBottom: Config.deviceHeight * 0.02,
+                                    flexDirection: "row",
                                 }}
                             >
-                                <Text
+                                <View
                                     style={{
-                                        fontFamily: "noto-sans-jp-regular",
-                                        fontSize: Config.deviceWidth * 0.042,
-                                        marginVertical:
-                                            Platform.OS === "ios"
-                                                ? Config.deviceHeight * 0.008
-                                                : -Config.deviceHeight * 0.006,
+                                        alignItems: "center",
+                                        marginHorizontal:
+                                            Config.deviceWidth * 0.005,
                                     }}
                                 >
-                                    {data.RPM}
-                                </Text>
+                                    <Text
+                                        style={{
+                                            fontFamily: "noto-sans-jp-regular",
+                                            fontSize:
+                                                Config.deviceWidth * 0.032,
+                                            marginVertical:
+                                                Platform.OS === "ios"
+                                                    ? 0
+                                                    : -Config.deviceHeight *
+                                                      0.008,
+                                        }}
+                                    >
+                                        {i18n.t("general.rpm")}
+                                    </Text>
+                                    <View
+                                        style={{
+                                            alignItems: "center",
+                                            backgroundColor:
+                                                Colors.PrimaryLight,
+                                            width: Config.deviceWidth * 0.18,
+                                            borderRadius:
+                                                Config.deviceWidth * 0.02,
+                                            marginBottom:
+                                                Config.deviceHeight * 0.02,
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontFamily:
+                                                    "noto-sans-jp-regular",
+                                                fontSize:
+                                                    Config.deviceWidth * 0.042,
+                                                marginVertical:
+                                                    Platform.OS === "ios"
+                                                        ? Config.deviceHeight *
+                                                          0.008
+                                                        : -Config.deviceHeight *
+                                                          0.006,
+                                            }}
+                                        >
+                                            {data.RPM}
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View
+                                    style={{
+                                        alignItems: "center",
+                                        marginHorizontal:
+                                            Config.deviceWidth * 0.005,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontFamily: "noto-sans-jp-regular",
+                                            fontSize:
+                                                Config.deviceWidth * 0.032,
+                                            marginVertical:
+                                                Platform.OS === "ios"
+                                                    ? 0
+                                                    : -Config.deviceHeight *
+                                                      0.008,
+                                        }}
+                                    >
+                                        {i18n.t("general.phase")}
+                                    </Text>
+                                    <View
+                                        style={{
+                                            alignItems: "center",
+                                            backgroundColor:
+                                                Colors.PrimaryLight,
+                                            width: Config.deviceWidth * 0.18,
+                                            borderRadius:
+                                                Config.deviceWidth * 0.02,
+                                            marginBottom:
+                                                Config.deviceHeight * 0.02,
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontFamily:
+                                                    "noto-sans-jp-regular",
+                                                fontSize:
+                                                    Config.deviceWidth * 0.042,
+                                                marginVertical:
+                                                    Platform.OS === "ios"
+                                                        ? Config.deviceHeight *
+                                                          0.008
+                                                        : -Config.deviceHeight *
+                                                          0.006,
+                                            }}
+                                        >
+                                            1/10
+                                        </Text>
+                                    </View>
+                                </View>
                             </View>
                             <Wood
                                 height={Config.deviceHeight * 0.062}
