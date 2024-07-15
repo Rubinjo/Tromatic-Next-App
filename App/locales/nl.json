@@ -45,6 +45,8 @@
         "error": "Error",
         "StopProgram": "Stop Programma",
         "StopProgramMessage": "Weet je zeker dat je het programma wilt stoppen?",
+        "InputBlocked": "Input geblokkeerd",
+        "InputBlockedMessage": "De connected pc is momenteel in gebruik, probeer het later opnieuw",
         "PauseProgram": "Pauzeer Programma",
         "PauseProgramMessage": "Weet je zeker dat je het programma wilt pauzeren?",
         "retry": "Iets is fout gegaan, probeer het opnieuw",

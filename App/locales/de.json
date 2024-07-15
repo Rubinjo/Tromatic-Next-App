@@ -45,6 +45,8 @@
         "error": "Fehler",
         "StopProgram": "Programm beenden",
         "StopProgramMessage": "Sind Sie sicher, dass Sie das Programm stoppen möchten?",
+        "InputBlocked": "Eingabe blockiert",
+        "InputBlockedMessage": "Der angeschlossene PC wird derzeit verwendet, bitte versuchen Sie es später erneut",
         "PauseProgram": "Programm pausieren",
         "PauseProgramMessage": "Sind Sie sicher, dass Sie das Programm pausieren möchten?",
         "retry": "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später noch einmal",

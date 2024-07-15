@@ -51,6 +51,7 @@ const DetailsScreen = (props) => {
     const [areChanges, setAreChanges] = useState(false);
     const [dataFB, setDataFB] = useState({});
     const [data, setData] = useState({
+        appInputBlocked: true,
         deviceName: "",
         currentHum: 0,
         currentTemp: 0,
@@ -73,6 +74,8 @@ const DetailsScreen = (props) => {
         fansOpMode: 0,
         dateTimeMessage: new Date(),
         currentWM: 0,
+        currentPhase: 0,
+        numOfPhases: 0,
         CTs: [
             { id: 1, value: 0 },
             { id: 2, value: 0 },
@@ -116,6 +119,7 @@ const DetailsScreen = (props) => {
             const machine = snapshot.val();
             setDataFB({
                 ...dataFB,
+                appInputBlocked: machine.AppInputBlocked,
                 deviceName: machine.DeviceName,
                 currentHum: machine.CurrentHum,
                 currentTemp: machine.CurrentTemp,
@@ -139,6 +143,8 @@ const DetailsScreen = (props) => {
                 fansOpMode: machine.FansOpMode,
                 dateTimeMessage: new Date(machine.DateTimeMessage),
                 currentWM: machine.CurrentWM,
+                currentPhase: machine.CurrentPhase,
+                numOfPhases: machine.NumOfPhases,
                 CTs: [
                     { id: 1, value: machine.CTValue1 },
                     { id: 2, value: machine.CTValue2 },
@@ -330,6 +336,19 @@ const DetailsScreen = (props) => {
     };
 
     const sendData = () => {
+        if (data.appInputBlocked) {
+            Alert.alert(
+                i18n.t("general.error.InputBlocked"),
+                i18n.t("general.error.InputBlockedMessage"),
+                [
+                    {
+                        text: i18n.t("general.okAllCaps"),
+                        onPress: () => console.log("Confirmation pressed"),
+                    },
+                ]
+            );
+            return;
+        }
         const updates = {};
         if (data.setPointTemp != dataFB.setPointTemp) {
             updates[
@@ -391,6 +410,19 @@ const DetailsScreen = (props) => {
     };
 
     const sendStop = () => {
+        if (data.appInputBlocked) {
+            Alert.alert(
+                i18n.t("general.error.InputBlocked"),
+                i18n.t("general.error.InputBlockedMessage"),
+                [
+                    {
+                        text: i18n.t("general.okAllCaps"),
+                        onPress: () => console.log("Confirmation pressed"),
+                    },
+                ]
+            );
+            return;
+        }
         const updates = {};
         updates["machines/" + props.route.params.machineId + "/LastEditor"] =
             "u" + user.uid;
@@ -404,6 +436,19 @@ const DetailsScreen = (props) => {
     };
 
     const sendPause = () => {
+        if (data.appInputBlocked) {
+            Alert.alert(
+                i18n.t("general.error.InputBlocked"),
+                i18n.t("general.error.InputBlockedMessage"),
+                [
+                    {
+                        text: i18n.t("general.okAllCaps"),
+                        onPress: () => console.log("Confirmation pressed"),
+                    },
+                ]
+            );
+            return;
+        }
         const updates = {};
         updates["machines/" + props.route.params.machineId + "/LastEditor"] =
             "u" + user.uid;
@@ -623,7 +668,8 @@ const DetailsScreen = (props) => {
                                                           0.006,
                                             }}
                                         >
-                                            1/10
+                                            {data.currentPhase}/
+                                            {data.numOfPhases}
                                         </Text>
                                     </View>
                                 </View>

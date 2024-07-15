@@ -46,6 +46,8 @@
         "error": "Error",
         "StopProgram": "Stop Program",
         "StopProgramMessage": "Are you sure you want to stop the program?",
+        "InputBlocked": "Input Blocked",
+        "InputBlockedMessage": "The connected pc is currently in use, please try again later",
         "PauseProgram": "Pause Program",
         "PauseProgramMessage": "Are you sure you want to pause the program?",
         "retry": "Something went wrong, please try again later",
