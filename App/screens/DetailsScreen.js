@@ -336,7 +336,7 @@ const DetailsScreen = (props) => {
     };
 
     const sendData = () => {
-        if (data.appInputBlocked) {
+        if (dataFB.appInputBlocked) {
             Alert.alert(
                 i18n.t("general.error.InputBlocked"),
                 i18n.t("general.error.InputBlockedMessage"),
@@ -410,7 +410,7 @@ const DetailsScreen = (props) => {
     };
 
     const sendStop = () => {
-        if (data.appInputBlocked) {
+        if (dataFB.appInputBlocked) {
             Alert.alert(
                 i18n.t("general.error.InputBlocked"),
                 i18n.t("general.error.InputBlockedMessage"),
@@ -436,7 +436,7 @@ const DetailsScreen = (props) => {
     };
 
     const sendPause = () => {
-        if (data.appInputBlocked) {
+        if (dataFB.appInputBlocked) {
             Alert.alert(
                 i18n.t("general.error.InputBlocked"),
                 i18n.t("general.error.InputBlockedMessage"),
