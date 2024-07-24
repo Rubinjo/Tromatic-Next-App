@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, ActivityIndicator, Alert } from "react-native";
 import { query, collection, where, getDocs } from "firebase/firestore";
-import { VictoryChart, VictoryAxis, VictoryLine } from "victory-native";
+import {
+    VictoryChart,
+    VictoryAxis,
+    VictoryLine,
+    VictoryLabel,
+} from "victory-native";
 import { AntDesign } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Config from "../utils/config";
 import i18n from "../utils/i18n";
 import Colors from "../assets/constants/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Thermometer from "../assets/icons/Thermometer";
-import Humidity from "../assets/icons/Humidity";
 import WoodThermometer from "../assets/icons/WoodThermometer";
 import WoodMoisture from "../assets/icons/WoodMoisture";
 
@@ -24,7 +29,12 @@ const GraphScreen = (props) => {
     const [CTs, setCTs] = useState([]);
     const [WMs, setWMs] = useState([]);
     const [activeTime, setActiveTime] = useState(0);
-    const [activeVar, setActiveVar] = useState(["CurrentTemp", "SetPointTemp"]);
+    const [activeVar, setActiveVar] = useState([
+        "CurrentTemp",
+        "SetPointTemp",
+        "CurrentHum",
+        "SetPointHum",
+    ]);
     // Till what timeOffset is already loaded into data
     const [loaded, setLoaded] = useState(0);
     const [error, setError] = useState();
@@ -253,6 +263,21 @@ const GraphScreen = (props) => {
                         width={Config.deviceWidth * 0.95}
                         domainPadding={{ y: 25 }}
                     >
+                        <VictoryLabel
+                            text={
+                                activeVar.includes("CurrentTemp") &&
+                                activeVar.includes("CurrentHum")
+                                    ? "°C / %"
+                                    : activeVar.includes("CTValue1") &&
+                                      !activeVar.includes("CurrentHum")
+                                    ? "    °C"
+                                    : "     %"
+                            }
+                            x={25}
+                            y={35}
+                            textAnchor="middle"
+                            style={{ fontSize: 6 + Config.deviceWidth * 0.015 }}
+                        />
                         <VictoryAxis
                             tickFormat={
                                 loading
@@ -280,13 +305,13 @@ const GraphScreen = (props) => {
                         />
                         <VictoryAxis
                             dependentAxis
-                            tickFormat={(y) =>
-                                y +
-                                (activeVar.includes("CurrentTemp") ||
-                                activeVar.includes("CTValue1")
-                                    ? " °C"
-                                    : " %")
-                            }
+                            // tickFormat={(y) =>
+                            //     y +
+                            //     (activeVar.includes("CurrentTemp") ||
+                            //     activeVar.includes("CTValue1")
+                            //         ? " °C"
+                            //         : " %")
+                            // }
                             style={{
                                 grid: {
                                     stroke: Colors.ThirdlyDark,
@@ -565,13 +590,14 @@ const GraphScreen = (props) => {
                 >
                     <View
                         style={{
-                            width: "33%",
+                            width: "25%",
                             backgroundColor:
                                 activeVar.includes("CurrentTemp") &&
                                 !activeVar.includes("CTValue1")
                                     ? Colors.Secondary
                                     : Colors.PrimaryLight,
                             borderTopLeftRadius: Config.deviceWidth * 0.02,
+                            borderBottomLeftRadius: Config.deviceWidth * 0.02,
                         }}
                     >
                         <TouchableOpacity
@@ -582,11 +608,26 @@ const GraphScreen = (props) => {
                                 alignItems: "center",
                             }}
                             onPress={() =>
-                                setVarName(["CurrentTemp", "SetPointTemp"])
+                                setVarName([
+                                    "CurrentTemp",
+                                    "SetPointTemp",
+                                    "CurrentHum",
+                                    "SetPointHum",
+                                ])
                             }
                         >
-                            <Thermometer
+                            {/* <Thermometer
                                 height={Config.deviceHeight * 0.043}
+                                color={
+                                    activeVar.includes("CurrentTemp") &&
+                                    !activeVar.includes("CTValue1")
+                                        ? Colors.PrimaryLight
+                                        : Colors.PrimaryDark
+                                }
+                            /> */}
+                            <MaterialCommunityIcons
+                                name="hydraulic-oil-temperature"
+                                size={Config.deviceHeight * 0.04}
                                 color={
                                     activeVar.includes("CurrentTemp") &&
                                     !activeVar.includes("CTValue1")
@@ -609,7 +650,7 @@ const GraphScreen = (props) => {
                                             : Colors.PrimaryDark,
                                 }}
                             >
-                                {i18n.t("general.temperature")}
+                                {i18n.t("general.kiln")}
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -621,7 +662,7 @@ const GraphScreen = (props) => {
                     />
                     <View
                         style={{
-                            width: "34%",
+                            width: "25%",
                             backgroundColor:
                                 activeVar.includes("CurrentTemp") &&
                                 activeVar.includes("CTValue1")
@@ -640,13 +681,15 @@ const GraphScreen = (props) => {
                                 setVarName([
                                     "CurrentTemp",
                                     "SetPointTemp",
+                                    "CurrentHum",
+                                    "SetPointHum",
                                     ...CTs,
                                 ])
                             }
                         >
                             <AntDesign
                                 name="link"
-                                size={Config.deviceHeight * 0.043}
+                                size={Config.deviceHeight * 0.04}
                                 color={
                                     activeVar.includes("CurrentTemp") &&
                                     activeVar.includes("CTValue1")
@@ -681,13 +724,12 @@ const GraphScreen = (props) => {
                     />
                     <View
                         style={{
-                            width: "33%",
+                            width: "25%",
                             backgroundColor:
                                 activeVar.includes("CTValue1") &&
                                 !activeVar.includes("CurrentTemp")
                                     ? Colors.Secondary
                                     : Colors.PrimaryLight,
-                            borderTopRightRadius: Config.deviceWidth * 0.02,
                         }}
                     >
                         <TouchableOpacity
@@ -700,7 +742,7 @@ const GraphScreen = (props) => {
                             onPress={() => setVarName(CTs)}
                         >
                             <WoodThermometer
-                                height={Config.deviceHeight * 0.043}
+                                height={Config.deviceHeight * 0.038}
                                 color={
                                     activeVar.includes("CTValue1") &&
                                     !activeVar.includes("CurrentTemp")
@@ -727,70 +769,6 @@ const GraphScreen = (props) => {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                </View>
-                <View
-                    style={{
-                        borderBottomWidth: 1,
-                        borderColor: Colors.SecondaryLight,
-                    }}
-                />
-                <View
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "space-around",
-                        height: Config.deviceHeight * 0.08,
-                    }}
-                >
-                    <View
-                        style={{
-                            width: "33%",
-                            backgroundColor:
-                                activeVar.includes("CurrentHum") &&
-                                !activeVar.includes("WMValue1")
-                                    ? Colors.Secondary
-                                    : Colors.PrimaryLight,
-                            borderBottomLeftRadius: Config.deviceWidth * 0.02,
-                        }}
-                    >
-                        <TouchableOpacity
-                            style={{
-                                width: "100%",
-                                height: "100%",
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                            onPress={() =>
-                                setVarName(["CurrentHum", "SetPointHum"])
-                            }
-                        >
-                            <Humidity
-                                height={Config.deviceHeight * 0.04}
-                                color={
-                                    activeVar.includes("CurrentHum") &&
-                                    !activeVar.includes("WMValue1")
-                                        ? Colors.PrimaryLight
-                                        : Colors.PrimaryDark
-                                }
-                            />
-                            <Text
-                                style={{
-                                    fontFamily:
-                                        activeVar.includes("CurrentHum") &&
-                                        !activeVar.includes("WMValue1")
-                                            ? "noto-sans-jp-bold"
-                                            : "noto-sans-jp-regular",
-                                    fontSize: Config.deviceHeight * 0.011,
-                                    color:
-                                        activeVar.includes("CurrentHum") &&
-                                        !activeVar.includes("WMValue1")
-                                            ? Colors.PrimaryLight
-                                            : Colors.PrimaryDark,
-                                }}
-                            >
-                                {i18n.t("general.humidity")}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
                     <View
                         style={{
                             borderRightWidth: 1,
@@ -799,72 +777,13 @@ const GraphScreen = (props) => {
                     />
                     <View
                         style={{
-                            width: "34%",
-                            backgroundColor:
-                                activeVar.includes("CurrentHum") &&
-                                activeVar.includes("WMValue1")
-                                    ? Colors.Secondary
-                                    : Colors.PrimaryLight,
-                        }}
-                    >
-                        <TouchableOpacity
-                            style={{
-                                width: "100%",
-                                height: "100%",
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                            onPress={() =>
-                                setVarName([
-                                    "CurrentHum",
-                                    "SetPointHum",
-                                    ...WMs,
-                                ])
-                            }
-                        >
-                            <AntDesign
-                                name="link"
-                                size={Config.deviceHeight * 0.043}
-                                color={
-                                    activeVar.includes("CurrentHum") &&
-                                    activeVar.includes("WMValue1")
-                                        ? Colors.PrimaryLight
-                                        : Colors.PrimaryDark
-                                }
-                            />
-                            <Text
-                                style={{
-                                    fontFamily:
-                                        activeVar.includes("CurrentHum") &&
-                                        activeVar.includes("WMValue1")
-                                            ? "noto-sans-jp-bold"
-                                            : "noto-sans-jp-regular",
-                                    fontSize: Config.deviceHeight * 0.011,
-                                    color:
-                                        activeVar.includes("CurrentHum") &&
-                                        activeVar.includes("WMValue1")
-                                            ? Colors.PrimaryLight
-                                            : Colors.PrimaryDark,
-                                }}
-                            >
-                                {i18n.t("general.combined")}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View
-                        style={{
-                            borderRightWidth: 1,
-                            borderColor: Colors.SecondaryLight,
-                        }}
-                    />
-                    <View
-                        style={{
-                            width: "33%",
+                            width: "25%",
                             backgroundColor:
                                 activeVar.includes("WMValue1") &&
                                 !activeVar.includes("CurrentHum")
                                     ? Colors.Secondary
                                     : Colors.PrimaryLight,
+                            borderTopRightRadius: Config.deviceWidth * 0.02,
                             borderBottomRightRadius: Config.deviceWidth * 0.02,
                         }}
                     >
@@ -878,7 +797,7 @@ const GraphScreen = (props) => {
                             onPress={() => setVarName(WMs)}
                         >
                             <WoodMoisture
-                                height={Config.deviceHeight * 0.036}
+                                height={Config.deviceHeight * 0.03}
                                 color={
                                     activeVar.includes("WMValue1") &&
                                     !activeVar.includes("CurrentHum")

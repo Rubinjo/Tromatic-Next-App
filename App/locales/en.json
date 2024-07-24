@@ -41,7 +41,7 @@
       "CurrentTemp": "Current Temp",
       "SetPointHum": "Set Point Hum",
       "CurrentHum": "Current Hum",
-
+      "kiln": "Kiln",
       "error": {
         "error": "Error",
         "StopProgram": "Stop Program",

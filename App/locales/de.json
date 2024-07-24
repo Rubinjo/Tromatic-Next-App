@@ -41,6 +41,7 @@
       "CurrentTemp": "Aktuelle Temp",
       "SetPointHum": "Soll-Feucht",
       "CurrentHum": "Aktuelle Feucht",
+      "kiln": "Kiln",
       "error": {
         "error": "Fehler",
         "StopProgram": "Programm beenden",

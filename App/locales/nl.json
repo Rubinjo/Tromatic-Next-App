@@ -41,6 +41,7 @@
       "CurrentTemp": "Actuele Temp",
       "SetPointHum": "Ingestelde Luchtvocht",
       "CurrentHum": "Actuele Luchtvocht",
+      "kiln": "Kiln",
       "error": {
         "error": "Error",
         "StopProgram": "Stop Programma",
