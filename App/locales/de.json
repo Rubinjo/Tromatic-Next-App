@@ -33,6 +33,8 @@
       "coreTemperatures": "Kerntemperaturen",
       "viewGraph": "Grafik anzeigen",
       "coreT": "Kern T",
+      "combT": "Komb T",
+      "combM": "Komb M",
       "measurements": "Messungen",
       "measurementsShort": "M",
       "upcoming": "Kommende",

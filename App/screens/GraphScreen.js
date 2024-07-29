@@ -7,7 +7,6 @@ import {
     VictoryLine,
     VictoryLabel,
 } from "victory-native";
-import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Config from "../utils/config";
@@ -15,6 +14,7 @@ import i18n from "../utils/i18n";
 import Colors from "../assets/constants/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Thermometer from "../assets/icons/Thermometer";
+import Humidity from "../assets/icons/Humidity";
 import WoodThermometer from "../assets/icons/WoodThermometer";
 import WoodMoisture from "../assets/icons/WoodMoisture";
 
@@ -590,7 +590,7 @@ const GraphScreen = (props) => {
                 >
                     <View
                         style={{
-                            width: "25%",
+                            width: "20%",
                             backgroundColor:
                                 activeVar.includes("CurrentTemp") &&
                                 !activeVar.includes("CTValue1")
@@ -662,7 +662,7 @@ const GraphScreen = (props) => {
                     />
                     <View
                         style={{
-                            width: "25%",
+                            width: "20%",
                             backgroundColor:
                                 activeVar.includes("CurrentTemp") &&
                                 activeVar.includes("CTValue1")
@@ -687,9 +687,8 @@ const GraphScreen = (props) => {
                                 ])
                             }
                         >
-                            <AntDesign
-                                name="link"
-                                size={Config.deviceHeight * 0.04}
+                            <Thermometer
+                                height={Config.deviceHeight * 0.038}
                                 color={
                                     activeVar.includes("CurrentTemp") &&
                                     activeVar.includes("CTValue1")
@@ -712,7 +711,7 @@ const GraphScreen = (props) => {
                                             : Colors.PrimaryDark,
                                 }}
                             >
-                                {i18n.t("general.combined")}
+                                {i18n.t("general.combT")}
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -724,7 +723,68 @@ const GraphScreen = (props) => {
                     />
                     <View
                         style={{
-                            width: "25%",
+                            width: "20%",
+                            backgroundColor:
+                                activeVar.includes("CurrentHum") &&
+                                activeVar.includes("WMValue1")
+                                    ? Colors.Secondary
+                                    : Colors.PrimaryLight,
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                            onPress={() =>
+                                setVarName([
+                                    "CurrentTemp",
+                                    "SetPointTemp",
+                                    "CurrentHum",
+                                    "SetPointHum",
+                                    ...WMs,
+                                ])
+                            }
+                        >
+                            <Humidity
+                                height={Config.deviceHeight * 0.038}
+                                color={
+                                    activeVar.includes("CurrentHum") &&
+                                    activeVar.includes("WMValue1")
+                                        ? Colors.PrimaryLight
+                                        : Colors.PrimaryDark
+                                }
+                            />
+                            <Text
+                                style={{
+                                    fontFamily:
+                                        activeVar.includes("CurrentHum") &&
+                                        activeVar.includes("WMValue1")
+                                            ? "noto-sans-jp-bold"
+                                            : "noto-sans-jp-regular",
+                                    fontSize: Config.deviceHeight * 0.011,
+                                    color:
+                                        activeVar.includes("CurrentHum") &&
+                                        activeVar.includes("WMValue1")
+                                            ? Colors.PrimaryLight
+                                            : Colors.PrimaryDark,
+                                }}
+                            >
+                                {i18n.t("general.combM")}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View
+                        style={{
+                            borderRightWidth: 1,
+                            borderColor: Colors.SecondaryLight,
+                        }}
+                    />
+                    <View
+                        style={{
+                            width: "20%",
                             backgroundColor:
                                 activeVar.includes("CTValue1") &&
                                 !activeVar.includes("CurrentTemp")
@@ -777,7 +837,7 @@ const GraphScreen = (props) => {
                     />
                     <View
                         style={{
-                            width: "25%",
+                            width: "20%",
                             backgroundColor:
                                 activeVar.includes("WMValue1") &&
                                 !activeVar.includes("CurrentHum")
