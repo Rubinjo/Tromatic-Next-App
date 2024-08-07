@@ -115,10 +115,10 @@ const DetailsScreen = (props) => {
             firebase,
             "machines/" + props.route.params.machineId
         );
-        onValue(machineRef, (snapshot) => {
+        const unsubscribe = onValue(machineRef, (snapshot) => {
             const machine = snapshot.val();
-            setDataFB({
-                ...dataFB,
+            setDataFB((prevState) => ({
+                ...prevState,
                 appInputBlocked: machine.AppInputBlocked,
                 deviceName: machine.DeviceName,
                 currentHum: machine.CurrentHum,
@@ -211,8 +211,9 @@ const DetailsScreen = (props) => {
                         active: machine.WMActive10,
                     },
                 ],
-            });
+            }));
         });
+        return () => unsubscribe();
     }, [refreshing]);
 
     useEffect(() => {
@@ -336,77 +337,93 @@ const DetailsScreen = (props) => {
     };
 
     const sendData = () => {
-        if (dataFB.appInputBlocked) {
-            Alert.alert(
-                i18n.t("general.error.InputBlocked"),
-                i18n.t("general.error.InputBlockedMessage"),
-                [
-                    {
-                        text: i18n.t("general.okAllCaps"),
-                        onPress: () => console.log("Confirmation pressed"),
-                    },
-                ]
-            );
-            return;
-        }
-        const updates = {};
-        if (data.setPointTemp != dataFB.setPointTemp) {
+        setDataFB((prevDataFB) => {
+            if (prevDataFB.appInputBlocked) {
+                Alert.alert(
+                    i18n.t("general.error.InputBlocked"),
+                    i18n.t("general.error.InputBlockedMessage"),
+                    [
+                        {
+                            text: i18n.t("general.okAllCaps"),
+                            onPress: () => console.log("Confirmation pressed"),
+                        },
+                    ]
+                );
+                return prevDataFB;
+            }
+            const updates = {};
+            if (data.setPointTemp != dataFB.setPointTemp) {
+                updates[
+                    "machines/" + props.route.params.machineId + "/TempOffset"
+                ] =
+                    dataFB.tempOffset +
+                    (data.setPointTemp - dataFB.setPointTemp);
+            }
+            if (data.setPointHum != dataFB.setPointHum) {
+                updates[
+                    "machines/" + props.route.params.machineId + "/EMCOffset"
+                ] = dataFB.EMCOffset + (data.setPointHum - dataFB.setPointHum);
+            }
+            if (data.WMs[0].active != dataFB.WMs[0].active) {
+                updates[
+                    "machines/" + props.route.params.machineId + "/WMActive1"
+                ] = data.WMs[0].active;
+            }
+            if (data.WMs[1].active != dataFB.WMs[1].active) {
+                updates[
+                    "machines/" + props.route.params.machineId + "/WMActive2"
+                ] = data.WMs[1].active;
+            }
+            if (data.WMs[2].active != dataFB.WMs[2].active) {
+                updates[
+                    "machines/" + props.route.params.machineId + "/WMActive3"
+                ] = data.WMs[2].active;
+            }
+            if (data.WMs[3].active != dataFB.WMs[3].active) {
+                updates[
+                    "machines/" + props.route.params.machineId + "/WMActive4"
+                ] = data.WMs[3].active;
+            }
+            if (data.WMs[4].active != dataFB.WMs[4].active) {
+                updates[
+                    "machines/" + props.route.params.machineId + "/WMActive5"
+                ] = data.WMs[4].active;
+            }
+            if (data.WMs[5].active != dataFB.WMs[5].active) {
+                updates[
+                    "machines/" + props.route.params.machineId + "/WMActive6"
+                ] = data.WMs[5].active;
+            }
+            if (data.WMs[6].active != dataFB.WMs[6].active) {
+                updates[
+                    "machines/" + props.route.params.machineId + "/WMActive7"
+                ] = data.WMs[6].active;
+            }
+            if (data.WMs[7].active != dataFB.WMs[7].active) {
+                updates[
+                    "machines/" + props.route.params.machineId + "/WMActive8"
+                ] = data.WMs[7].active;
+            }
+            if (data.WMs[8].active != dataFB.WMs[8].active) {
+                updates[
+                    "machines/" + props.route.params.machineId + "/WMActive9"
+                ] = data.WMs[8].active;
+            }
+            if (data.WMs[9].active != dataFB.WMs[9].active) {
+                updates[
+                    "machines/" + props.route.params.machineId + "/WMActive10"
+                ] = data.WMs[9].active;
+            }
             updates[
-                "machines/" + props.route.params.machineId + "/TempOffset"
-            ] = dataFB.tempOffset + (data.setPointTemp - dataFB.setPointTemp);
-        }
-        if (data.setPointHum != dataFB.setPointHum) {
-            updates["machines/" + props.route.params.machineId + "/EMCOffset"] =
-                dataFB.EMCOffset + (data.setPointHum - dataFB.setPointHum);
-        }
-        if (data.WMs[0].active != dataFB.WMs[0].active) {
-            updates["machines/" + props.route.params.machineId + "/WMActive1"] =
-                data.WMs[0].active;
-        }
-        if (data.WMs[1].active != dataFB.WMs[1].active) {
-            updates["machines/" + props.route.params.machineId + "/WMActive2"] =
-                data.WMs[1].active;
-        }
-        if (data.WMs[2].active != dataFB.WMs[2].active) {
-            updates["machines/" + props.route.params.machineId + "/WMActive3"] =
-                data.WMs[2].active;
-        }
-        if (data.WMs[3].active != dataFB.WMs[3].active) {
-            updates["machines/" + props.route.params.machineId + "/WMActive4"] =
-                data.WMs[3].active;
-        }
-        if (data.WMs[4].active != dataFB.WMs[4].active) {
-            updates["machines/" + props.route.params.machineId + "/WMActive5"] =
-                data.WMs[4].active;
-        }
-        if (data.WMs[5].active != dataFB.WMs[5].active) {
-            updates["machines/" + props.route.params.machineId + "/WMActive6"] =
-                data.WMs[5].active;
-        }
-        if (data.WMs[6].active != dataFB.WMs[6].active) {
-            updates["machines/" + props.route.params.machineId + "/WMActive7"] =
-                data.WMs[6].active;
-        }
-        if (data.WMs[7].active != dataFB.WMs[7].active) {
-            updates["machines/" + props.route.params.machineId + "/WMActive8"] =
-                data.WMs[7].active;
-        }
-        if (data.WMs[8].active != dataFB.WMs[8].active) {
-            updates["machines/" + props.route.params.machineId + "/WMActive9"] =
-                data.WMs[8].active;
-        }
-        if (data.WMs[9].active != dataFB.WMs[9].active) {
+                "machines/" + props.route.params.machineId + "/DateTimeMessage"
+            ] = new Date().toISOString();
             updates[
-                "machines/" + props.route.params.machineId + "/WMActive10"
-            ] = data.WMs[9].active;
-        }
-        updates[
-            "machines/" + props.route.params.machineId + "/DateTimeMessage"
-        ] = new Date().toISOString();
-        updates["machines/" + props.route.params.machineId + "/LastEditor"] =
-            "u" + user.uid;
-        update(ref(firebase), updates);
-        setAreChanges(false);
+                "machines/" + props.route.params.machineId + "/LastEditor"
+            ] = "u" + user.uid;
+            update(ref(firebase), updates);
+            setAreChanges(false);
+            return prevDataFB;
+        });
     };
 
     const sendStop = () => {
