@@ -593,7 +593,8 @@ const GraphScreen = (props) => {
                             width: "20%",
                             backgroundColor:
                                 activeVar.includes("CurrentTemp") &&
-                                !activeVar.includes("CTValue1")
+                                !activeVar.includes("CTValue1") &&
+                                !activeVar.includes("WMValue1")
                                     ? Colors.Secondary
                                     : Colors.PrimaryLight,
                             borderTopLeftRadius: Config.deviceWidth * 0.02,
@@ -630,7 +631,8 @@ const GraphScreen = (props) => {
                                 size={Config.deviceHeight * 0.04}
                                 color={
                                     activeVar.includes("CurrentTemp") &&
-                                    !activeVar.includes("CTValue1")
+                                    !activeVar.includes("CTValue1") &&
+                                    !activeVar.includes("WMValue1")
                                         ? Colors.PrimaryLight
                                         : Colors.PrimaryDark
                                 }
@@ -639,13 +641,15 @@ const GraphScreen = (props) => {
                                 style={{
                                     fontFamily:
                                         activeVar.includes("CurrentTemp") &&
-                                        !activeVar.includes("CTValue1")
+                                        !activeVar.includes("CTValue1") &&
+                                        !activeVar.includes("WMValue1")
                                             ? "noto-sans-jp-bold"
                                             : "noto-sans-jp-regular",
                                     fontSize: Config.deviceHeight * 0.011,
                                     color:
                                         activeVar.includes("CurrentTemp") &&
-                                        !activeVar.includes("CTValue1")
+                                        !activeVar.includes("CTValue1") &&
+                                        !activeVar.includes("WMValue1")
                                             ? Colors.PrimaryLight
                                             : Colors.PrimaryDark,
                                 }}
