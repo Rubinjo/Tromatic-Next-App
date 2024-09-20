@@ -36,17 +36,17 @@ let newStatus = 0;
 let numStatusChanges = 0;
 
 const [auth, db, _] = await setupFirebase(
-  {
-    apiKey: process.env.APIKEY,
-    authDomain: process.env.AUTHDOMAIN,
-    databaseURL: process.env.DATABASEURL,
-    projectId: process.env.PROJECTID,
-    storageBucket: process.env.STORAGEBUCKET,
-    messagingSenderId: process.env.MESSAGINGSENDERID,
-    appId: process.env.APPID,
-  },
-  process.env.EMAIL,
-  process.env.PASSWORD
+    {
+        apiKey: process.env.APIKEY,
+        authDomain: process.env.AUTHDOMAIN,
+        databaseURL: process.env.DATABASEURL,
+        projectId: process.env.PROJECTID,
+        storageBucket: process.env.STORAGEBUCKET,
+        messagingSenderId: process.env.MESSAGINGSENDERID,
+        appId: process.env.APPID,
+    },
+    process.env.EMAIL,
+    process.env.PASSWORD
 );
 
 const registeredMachines = [];
@@ -59,127 +59,133 @@ const registeredMachines = [];
  * @param {string} filename - Name of file that has changed.
  */
 fs.watch(FOLDER, (event, filename) => {
-  if (filename.split(".").pop() === "json") {
-    if (fsWait) return;
-    // Debounce function
-    // Protection against a file triggering multiple times for a single action
-    fsWait = setTimeout(() => {
-      fsWait = false;
-    }, 100);
-    // Use MD5 hash for checksum
-    // Extra protection against a file triggering multiple times for a single action
-    md5Current = md5(fs.readFileSync(`${FOLDER}/${filename}`));
-    if (md5Current === md5Previous) {
-      return;
-    }
-    md5Previous = md5Current;
-    log.info(`${filename} file recorded`, 0);
-    try {
-      jsonString = fs.readFileSync(`${FOLDER}/${filename}`);
-      jsonData = JSON.parse(jsonString);
-      if (newStatus === jsonData.Status) {
-        numStatusChanges++;
-        if (numStatusChanges > 2) {
-          oldStatus = newStatus;
+    if (filename.split(".").pop() === "json") {
+        if (fsWait) return;
+        // Debounce function
+        // Protection against a file triggering multiple times for a single action
+        fsWait = setTimeout(() => {
+            fsWait = false;
+        }, 100);
+        // Use MD5 hash for checksum
+        // Extra protection against a file triggering multiple times for a single action
+        md5Current = md5(fs.readFileSync(`${FOLDER}/${filename}`));
+        if (md5Current === md5Previous) {
+            return;
         }
-      } else {
-        newStatus = jsonData.Status;
-        numStatusChanges = 0;
-      }
-      if (
-        !registeredMachines.includes(
-          `m${auth.currentUser.uid}_${jsonData.DryChamberID}`
-        )
-      ) {
-        get(
-          ref(
-            db,
-            `companies/${process.env.CID}/machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
-          )
-        ).then((snapshot) => {
-          if (snapshot.exists()) {
-            update(
-              ref(
-                db,
-                `companies/${process.env.CID}/machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
-              ),
-              {
-                lastRestart: serverTimestamp(),
-              }
-            );
-          } else {
-            set(
-              ref(
-                db,
-                `companies/${process.env.CID}/machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
-              ),
-              {
-                creation: serverTimestamp(),
-                type: "Demo",
-              }
-            );
-          }
-        });
+        md5Previous = md5Current;
+        log.info(`${filename} file recorded`, 0);
+        try {
+            jsonString = fs.readFileSync(`${FOLDER}/${filename}`);
+            jsonData = JSON.parse(jsonString);
+            if (newStatus === jsonData.Status) {
+                numStatusChanges++;
+                if (numStatusChanges > 2) {
+                    oldStatus = newStatus;
+                }
+            } else {
+                newStatus = jsonData.Status;
+                numStatusChanges = 0;
+            }
+            if (
+                !registeredMachines.includes(
+                    `m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+                )
+            ) {
+                get(
+                    ref(
+                        db,
+                        `companies/${process.env.CID}/machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+                    )
+                ).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        update(
+                            ref(
+                                db,
+                                `companies/${process.env.CID}/machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+                            ),
+                            {
+                                lastRestart: serverTimestamp(),
+                            }
+                        );
+                    } else {
+                        set(
+                            ref(
+                                db,
+                                `companies/${process.env.CID}/machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+                            ),
+                            {
+                                creation: serverTimestamp(),
+                                type: "Demo",
+                            }
+                        );
+                    }
+                });
 
-        registeredMachines.push(
-          `m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+                registeredMachines.push(
+                    `m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+                );
+            }
+            const updates = {};
+            updates[
+                `machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+            ] = {
+                CID: process.env.CID,
+                DateTimeMessage: jsonData.DateTimeMessage,
+                Status: oldStatus,
+                CurrentTemp: jsonData.CurrentTemp,
+                SetPointTemp: jsonData.SetPointTemp,
+                CurrentHum: jsonData.CurrentHum,
+                SetPointHum: jsonData.SetPointHum,
+                RemainingTime: jsonData.RemainingTime,
+                TotalTime: jsonData.TotalTime,
+                NumOfWmProbes: jsonData.NumOfWmProbes,
+                HeatingValvePos: jsonData.HeatingValvePos,
+                DamperPos: jsonData.DamperPos,
+                SprayPos: jsonData.SprayPos,
+                RPM: jsonData.RPM,
+                FanDirection: jsonData.FanDirection,
+                TempOffset: jsonData.TempOffset,
+                EMCOffset: jsonData.EMCOffset,
+                NumOfCTProbes: jsonData.NumOfCTProbes,
+                DamperOpMode: jsonData.DamperOpMode,
+                HeaterOpMode: jsonData.HeaterOpMode,
+                SprayOpMode: jsonData.SprayOpMode,
+                FansOpMode: jsonData.FansOpMode,
+                LastEditor: `m${auth.currentUser.uid}_${jsonData.DryChamberID}`,
+                DeviceName: jsonData.DeviceName,
+                CurrentPhase: jsonData.CurrentPhase,
+                NumOfPhases: jsonData.NumOfPhases,
+                PhaseType: jsonData.PhaseType,
+                AppInputBlocked: jsonData.AppInputBlocked,
+            };
+            for (let i = 1; i <= jsonData.NumOfWmProbes; i++) {
+                updates[
+                    `machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+                ][`WMValue${i}`] = jsonData[`WMValue${i}`];
+                updates[
+                    `machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+                ][`WMActive${i}`] = jsonData[`WMActive${i}`];
+            }
+            for (let i = 1; i <= jsonData.NumOfCTProbes; i++) {
+                updates[
+                    `machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+                ][`CTValue${i}`] = jsonData[`CTValue${i}`];
+            }
+            if (jsonData.CurrentWM) {
+                updates[
+                    `machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`
+                ]["CurrentWM"] = jsonData.CurrentWM;
+            }
+            update(ref(db), updates);
+        } catch (e) {
+            const errorMessage =
+                typeof e === "string" ? e : e.message || JSON.stringify(e);
+            log.error(errorMessage, 58);
+        }
+    } else {
+        log.warn(
+            `${filename} file has no .json extension and is ignored`,
+            1630
         );
-      }
-      const updates = {};
-      updates[`machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`] = {
-        CID: process.env.CID,
-        DateTimeMessage: jsonData.DateTimeMessage,
-        Status: oldStatus,
-        CurrentTemp: jsonData.CurrentTemp,
-        SetPointTemp: jsonData.SetPointTemp,
-        CurrentHum: jsonData.CurrentHum,
-        SetPointHum: jsonData.SetPointHum,
-        RemainingTime: jsonData.RemainingTime,
-        TotalTime: jsonData.TotalTime,
-        NumOfWmProbes: jsonData.NumOfWmProbes,
-        HeatingValvePos: jsonData.HeatingValvePos,
-        DamperPos: jsonData.DamperPos,
-        SprayPos: jsonData.SprayPos,
-        RPM: jsonData.RPM,
-        FanDirection: jsonData.FanDirection,
-        TempOffset: jsonData.TempOffset,
-        EMCOffset: jsonData.EMCOffset,
-        NumOfCTProbes: jsonData.NumOfCTProbes,
-        DamperOpMode: jsonData.DamperOpMode,
-        HeaterOpMode: jsonData.HeaterOpMode,
-        SprayOpMode: jsonData.SprayOpMode,
-        FansOpMode: jsonData.FansOpMode,
-        LastEditor: `m${auth.currentUser.uid}_${jsonData.DryChamberID}`,
-        DeviceName: jsonData.DeviceName,
-        CurrentPhase: jsonData.CurrentPhase,
-        NumOfPhases: jsonData.NumOfPhases,
-        PhaseType: jsonData.PhaseType,
-        AppInputBlocked: jsonData.AppInputBlocked,
-      };
-      for (let i = 1; i <= jsonData.NumOfWmProbes; i++) {
-        updates[`machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`][
-          `WMValue${i}`
-        ] = jsonData[`WMValue${i}`];
-        updates[`machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`][
-          `WMActive${i}`
-        ] = jsonData[`WMActive${i}`];
-      }
-      for (let i = 1; i <= jsonData.NumOfCTProbes; i++) {
-        updates[`machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`][
-          `CTValue${i}`
-        ] = jsonData[`CTValue${i}`];
-      }
-      if (jsonData.CurrentWM) {
-        updates[`machines/m${auth.currentUser.uid}_${jsonData.DryChamberID}`][
-          "CurrentWM"
-        ] = jsonData.CurrentWM;
-      }
-      update(ref(db), updates);
-    } catch (e) {
-      const errorMessage = typeof e === "string" ? e : e.message;
-      log.error(errorMessage, 58);
     }
-  } else {
-    log.warn(`${filename} file has no .json extension and is ignored`, 1630);
-  }
 });

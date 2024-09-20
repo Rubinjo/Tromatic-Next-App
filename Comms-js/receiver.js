@@ -96,7 +96,9 @@ function sendData(mid, dateTime, lastEditor, changedDict) {
         jsonString,
         function (e) {
             if (e) {
-                log.error(e, 82);
+                const errorMessage =
+                    typeof e === "string" ? e : e.message || JSON.stringify(e);
+                log.error(errorMessage, 82);
             } else {
                 log.info(`${mid}.json was added/updated`, 0);
             }
@@ -189,5 +191,7 @@ try {
         }
     });
 } catch (e) {
-    log.error(e, 58);
+    const errorMessage =
+        typeof e === "string" ? e : e.message || JSON.stringify(e);
+    log.error(errorMessage, 58);
 }
