@@ -134,7 +134,7 @@ function filterDictionaryByKeys(dictionary) {
     return result;
 }
 
-const [db, _, auth] = await setupFirebase(
+const { db } = await setupFirebase(
     {
         apiKey: process.env.APIKEY,
         authDomain: process.env.AUTHDOMAIN,

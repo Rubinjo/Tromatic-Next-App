@@ -9,15 +9,15 @@ import { getFirestore } from "firebase/firestore";
  * @param {string} password - Password of concerned user
  */
 async function setupFirebase(firebaseConfig, email, password) {
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch (e) {
-    console.error(e.message);
-    throw new Error(`Failed to sign in: ${e.message}`);
-  }
-  return [auth, getDatabase(app), getFirestore(app)];
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+    } catch (e) {
+        console.error(e.message);
+        throw new Error(`Failed to sign in: ${e.message}`);
+    }
+    return { auth, db: getDatabase(app), firestore: getFirestore(app) };
 }
 
 export default setupFirebase;

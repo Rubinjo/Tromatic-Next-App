@@ -35,7 +35,7 @@ let oldStatus = 1;
 let newStatus = 0;
 let numStatusChanges = 0;
 
-const [auth, db, _] = await setupFirebase(
+const { auth, db } = await setupFirebase(
     {
         apiKey: process.env.APIKEY,
         authDomain: process.env.AUTHDOMAIN,
