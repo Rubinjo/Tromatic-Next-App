@@ -88,22 +88,15 @@ function sendData(mid, dateTime, lastEditor, changedDict) {
     }
 
     const jsonString = stringifyCRLF({ ...machineData, ...changedDict });
-    fs.writeFile(
-        `../receiver/${mid}_${dateTime
-            .toJSON()
-            .slice(0, 19)
-            .replaceAll(":", "-")}.json`,
-        jsonString,
-        function (e) {
-            if (e) {
-                const errorMessage =
-                    typeof e === "string" ? e : e.message || JSON.stringify(e);
-                log.error(errorMessage, 82);
-            } else {
-                log.info(`${mid}.json was added/updated`, 0);
-            }
+    fs.writeFile(`../receiver/receive${mid}.json`, jsonString, function (e) {
+        if (e) {
+            const errorMessage =
+                typeof e === "string" ? e : e.message || JSON.stringify(e);
+            log.error(errorMessage, 82);
+        } else {
+            log.info(`${mid}.json was added/updated`, 0);
         }
-    );
+    });
 }
 
 // Function to get the keys with changed values
