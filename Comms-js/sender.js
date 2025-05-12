@@ -24,13 +24,6 @@ log.info(`Watching for file changes on ${FOLDER}`, 0);
  */
 let md5Previous = null;
 
-/**
- * Variable to check if timeout period is over.
- * @type {boolean}
- */
-let fsWait = false;
-let jsonData, jsonString, md5Current;
-
 let oldStatus = 1;
 let newStatus = 0;
 let numStatusChanges = 0;
@@ -51,6 +44,33 @@ const { auth, db } = await setupFirebase(
 
 const registeredMachines = [];
 
+function waitForStableFile(filePath, stableTime = 1000, checkInterval = 500) {
+    return new Promise((resolve, reject) => {
+        let lastSize = -1;
+        let stableCounter = 0;
+
+        const interval = setInterval(() => {
+            fs.stat(filePath, (err, stats) => {
+                if (err) {
+                    clearInterval(interval);
+                    return reject(err);
+                }
+
+                if (stats.size === lastSize) {
+                    stableCounter += checkInterval;
+                    if (stableCounter >= stableTime) {
+                        clearInterval(interval);
+                        resolve(true);
+                    }
+                } else {
+                    lastSize = stats.size;
+                    stableCounter = 0;
+                }
+            });
+        }, checkInterval);
+    });
+}
+
 /**
  * Send drychamber values to firebase constantly.
  * Done by watching machine outputted .json files that are located in specified folder location.
@@ -58,25 +78,23 @@ const registeredMachines = [];
  * @param {string} event - Type of event that happened.
  * @param {string} filename - Name of file that has changed.
  */
-fs.watch(FOLDER, (event, filename) => {
+fs.watch(FOLDER, async (event, filename) => {
     if (filename.split(".").pop() === "json") {
-        if (fsWait) return;
-        // Debounce function
-        // Protection against a file triggering multiple times for a single action
-        fsWait = setTimeout(() => {
-            fsWait = false;
-        }, 100);
+        const filePath = `${FOLDER}/${filename}`;
+
+        // Wait for file size to stabilize
+        await waitForStableFile(filePath);
+
+        const fileContent = fs.readFileSync(filePath);
+
         // Use MD5 hash for checksum
         // Extra protection against a file triggering multiple times for a single action
-        md5Current = md5(fs.readFileSync(`${FOLDER}/${filename}`));
-        if (md5Current === md5Previous) {
-            return;
-        }
+        const md5Current = md5(fileContent);
+        if (md5Current === md5Previous) return;
         md5Previous = md5Current;
         log.info(`${filename} file recorded`, 0);
         try {
-            jsonString = fs.readFileSync(`${FOLDER}/${filename}`);
-            jsonData = JSON.parse(jsonString);
+            const jsonData = JSON.parse(fileContent);
             if (newStatus === jsonData.Status) {
                 numStatusChanges++;
                 if (numStatusChanges > 2) {
