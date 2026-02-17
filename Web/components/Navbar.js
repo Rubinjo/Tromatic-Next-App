@@ -142,6 +142,14 @@ const Navbar = () => {
 									{t("users")}
 								</Link>
 							</li>
+							<li className="px-4 cursor-pointer">
+								<Link
+									href="/portal/company"
+									className="text-white font-semibold"
+								>
+									{t("company")}
+								</Link>
+							</li>
 						</>
 					) : (
 						<li />
