@@ -11,6 +11,7 @@ import { AuthContextProvider } from "./context/AuthContext";
 import AppNavigator from "./navigation/AppNavigator";
 import { store, persistor } from "./store/store";
 
+// App
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
