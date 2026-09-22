@@ -18,9 +18,9 @@ The retained product branding, public store identifiers, public business contact
 
 ## Local verification
 
-Run `node scripts/audit-publication.cjs --history` for a dependency-free heuristic scan. It prints categories and locations, never matched values. Expected findings include the public business contact, placeholder integration email, and old README password placeholders. Use a dedicated scanner such as `gitleaks git . --log-opts="--all" --redact` as well. Neither scanner establishes the absence of every possible confidential fact.
+Run `node scripts/audit-publication.cjs --history` for a dependency-free heuristic scan. It prints categories and locations, never matched values. The heuristic scan reports eight reviewed matches: the public business contact in current/historical documents, the placeholder integration email, redacted Firebase configuration placeholders, and old README password placeholders. Use a dedicated scanner such as `gitleaks git . --log-opts="--all" --redact` as well. Neither scanner establishes the absence of every possible confidential fact.
 
-The cleanup must be verified by checking all refs for removed paths and original deployment values, checking preserved commit topology, and rerunning secret scans. Unreachable pre-rewrite objects and reflogs must be expired after the backup is verified.
+Verification completed on 2026-09-22: all 438 pre-rewrite commits were retained, with identical parent relationships after ID mapping, messages, names, and timestamps. All 1,099 reachable blobs were checked for the original deployment values and prohibited historical paths. Gitleaks 8.30.1 reported zero findings across rewritten refs. Git integrity checks passed, old reflogs were expired, and unreachable old objects were pruned after backup verification. A subsequent documentation commit records these results.
 
 ## Firebase rules
 
