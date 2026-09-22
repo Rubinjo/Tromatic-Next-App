@@ -7,6 +7,6 @@ Next.js App Router application for customer, machine, and user administration, p
 3. Run `npm run dev`.
 4. Open `http://localhost:3000/en/portal/login`.
 
-`NEXT_PUBLIC_*` variables are browser-visible configuration, never server secrets. Authorized accounts, backend functions, and database rules must be provisioned separately. Use `npm run lint` for the existing lint command and `npm run build` to check a configured production build.
+Authorized accounts, backend functions, and database rules must be provisioned separately. Use `npm run lint` for the existing lint command and `npm run build` to check a configured production build.
 
-No Firebase project alias is committed. Any deployment must explicitly select your own project. Review the older dependencies before deploying a new instance.
+Select your own Firebase project when deploying a development instance.
