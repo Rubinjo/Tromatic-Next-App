@@ -78,7 +78,7 @@ The repository demonstrates mobile UI, data visualization, localization, web adm
 
 ## Publication and security
 
-The repository history has been sanitized locally while retaining its commit sequence and branches. See [publication notes](docs/PUBLICATION.md) for verification scope and the remaining GitHub synchronization step. [Firebase rule review](docs/FIREBASE_RULES.md) records the hardened policy and integration changes.
+The repository history has been sanitized while retaining its commit sequence and branches, and both GitHub branches have been updated. See [publication notes](docs/PUBLICATION.md) for verification scope and remaining publication checks. [Firebase rule review](docs/FIREBASE_RULES.md) records the hardened policy and integration changes.
 
 [Security reporting](SECURITY.md) · [Contribution guidance](CONTRIBUTING.md)
 
