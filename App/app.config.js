@@ -4,7 +4,7 @@ const apiKey = process.env.APIKEY;
 const authDomain = process.env.AUTHDOMAIN;
 const databaseURL = process.env.DATABASEURL;
 const projectId = process.env.PROJECTID;
-const storageBucket = process.env.STROAGEBUCKET;
+const storageBucket = process.env.STORAGEBUCKET;
 const messagingSenderId = process.env.MESSAGINGSENDERID;
 const appId = process.env.APPID;
 const googleServiceFile = process.env.GOOGLE_SERVICES_JSON;
@@ -12,7 +12,7 @@ const googleServiceFile = process.env.GOOGLE_SERVICES_JSON;
 export default {
 	name: "Tromatic NEXT",
 	slug: "Tromatic-NEXT",
-	owner: "your-expo-owner",
+	...(process.env.EXPO_OWNER ? { owner: process.env.EXPO_OWNER } : {}),
 	currentFullName: "tromatic-next",
 	version: "1.0.20",
 	platforms: ["ios", "android"],
@@ -24,10 +24,12 @@ export default {
 		resizeMode: "contain",
 		backgroundColor: "#0F7BCA",
 	},
-	updates: {
-		fallbackToCacheTimeout: 0,
-		url: "https://u.expo.dev/00000000-0000-4000-8000-000000000000",
-	},
+	...(process.env.EXPO_UPDATE_URL
+		? { updates: {
+			fallbackToCacheTimeout: 0,
+			url: process.env.EXPO_UPDATE_URL,
+		} }
+		: {}),
 	runtimeVersion: {
 		policy: "sdkVersion",
 	},
@@ -58,11 +60,11 @@ export default {
 		AUTHDOMAIN: authDomain,
 		DATABASEURL: databaseURL,
 		PROJECTID: projectId,
-		STROAGEBUCKET: storageBucket,
+		STORAGEBUCKET: storageBucket,
 		MESSAGINGSENDERID: messagingSenderId,
 		APPID: appId,
-		eas: {
-			projectId: "00000000-0000-4000-8000-000000000000",
-		},
+		...(process.env.EAS_PROJECT_ID
+			? { eas: { projectId: process.env.EAS_PROJECT_ID } }
+			: {}),
 	},
 };

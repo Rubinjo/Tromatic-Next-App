@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+  <title id="title">Tromatic NEXT — industrial drying, connected</title>
+  <desc id="desc">Engineering portfolio illustration showing the connection from an industrial installation through cloud services to mobile and web experiences. This is not an application screenshot.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071d32"/><stop offset="1" stop-color="#103c60"/></linearGradient>
+    <linearGradient id="accent"><stop stop-color="#42c9ee"/><stop offset="1" stop-color="#5da4ff"/></linearGradient>
+  </defs>
+  <rect width="1200" height="520" rx="24" fill="url(#bg)"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="60" y="65" fill="#72d8f2" font-size="15" letter-spacing="3">ENGINEERING PORTFOLIO / MOBILE + CLOUD + INDUSTRIAL</text>
+    <text x="60" y="142" fill="#fff" font-size="62" font-weight="700">Tromatic NEXT</text>
+    <text x="62" y="187" fill="#c2d8e9" font-size="26">Industrial drying, connected.</text>
+    <text x="62" y="231" fill="#a4bfd3" font-size="18">Live conditions. Historical insight. Controls within reach.</text>
+    <path d="M320 343 H445 M755 343 H880" stroke="#42c9ee" stroke-width="3"/>
+    <g fill="#102f49" stroke="#38617e">
+      <rect x="60" y="280" width="260" height="128" rx="15"/>
+      <rect x="445" y="280" width="310" height="128" rx="15"/>
+      <rect x="880" y="280" width="260" height="128" rx="15"/>
+    </g>
+    <g fill="#72d8f2" font-size="13" letter-spacing="2">
+      <text x="84" y="313">01 / INSTALLATION</text><text x="469" y="313">02 / CLOUD</text><text x="904" y="313">03 / EXPERIENCE</text>
+    </g>
+    <g fill="#fff" font-size="23" font-weight="600">
+      <text x="84" y="350">Windows bridge</text><text x="469" y="350">Firebase services</text><text x="904" y="350">Mobile + web</text>
+    </g>
+    <g fill="#b6cedf" font-size="16">
+      <text x="84" y="382">Files to live telemetry</text><text x="469" y="382">State, history and notifications</text><text x="904" y="382">React Native + Next.js</text>
+    </g>
+    <path d="M60 449 H1140" stroke="#345670"/>
+    <text x="60" y="483" fill="#c2d8e9" font-size="16">iOS + Android</text><text x="280" y="483" fill="#c2d8e9" font-size="16">EN / NL / DE</text><text x="520" y="483" fill="#c2d8e9" font-size="16">Customer application</text>
+    <text x="1140" y="483" text-anchor="end" fill="#85a9c2" font-size="13">Architecture illustration</text>
+  </g>
+</svg>

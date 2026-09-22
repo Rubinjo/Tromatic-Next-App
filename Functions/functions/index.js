@@ -17,6 +17,9 @@ const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 require("dotenv").config();
 
+const portalBaseUrl = (process.env.PORTAL_BASE_URL || "http://localhost:3000")
+    .replace(/\/$/, "");
+
 const expo = new Expo({accessToken: process.env.EXPO_ACCESS_TOKEN});
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -137,7 +140,7 @@ const sendVerificationEmail = async (language, userRecord, cid, emailToken) => {
 
   ${verifyDict[language]}
 
-  https://tromatic.app/users/${userRecord.uid}/set-email/${emailToken}
+  ${portalBaseUrl}/users/${userRecord.uid}/set-email/${emailToken}
 
   ${unwantedDict[language]}
 
@@ -203,7 +206,7 @@ const sendVerificationEmail = async (language, userRecord, cid, emailToken) => {
               <p>${verifyDict[language]}</p>
 
               <div class="button-container">
-                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-email/${emailToken}">${buttonMailDict[language]}</a>
+                  <a class="button" href="${portalBaseUrl}/users/${userRecord.uid}/set-email/${emailToken}">${buttonMailDict[language]}</a>
               </div>
 
               <p>${unwantedDict[language]}</p>
@@ -224,12 +227,20 @@ exports.scheduledFbToFsFunction = onSchedule(
     "every 30 minutes",
     async (event) => {
       const snapshot = await get(ref(firebase, "machines"));
-      const machines = snapshot.val();
-      const batch = firestore.batch();
+      const machines = snapshot.val() || {};
+      let batch = firestore.batch();
+      let batchWrites = 0;
       const dateIdString = new Date().toISOString();
       const dateExpiration = new Date();
       dateExpiration.setDate(dateExpiration.getDate() + 30);
       for (const [key, value] of Object.entries(machines)) {
+        // Rules authorize history queries using trusted machine-level tenancy.
+        // Skip malformed records instead of creating an unscoped parent.
+        if (!value || typeof value.CID !== "string" || value.CID.length === 0) {
+          continue;
+        }
+        batch.set(firestore.collection("machines").doc(key),
+            {CID: value.CID}, {merge: true});
         value["Expiration"] = dateExpiration;
         value["DateTimeMessage"] = new Date(value["DateTimeMessage"]);
         const machineRef = firestore
@@ -238,8 +249,14 @@ exports.scheduledFbToFsFunction = onSchedule(
             .collection("history")
             .doc(dateIdString);
         batch.set(machineRef, value);
+        batchWrites += 2;
+        if (batchWrites >= 450) {
+          await batch.commit();
+          batch = firestore.batch();
+          batchWrites = 0;
+        }
       }
-      await batch.commit();
+      if (batchWrites > 0) await batch.commit();
     },
 );
 
@@ -546,7 +563,7 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
 
       ${linkDict[language]}
 
-      https://tromatic.app/users/${userRecord.uid}/set-password/${tempTokenAccount}
+      ${portalBaseUrl}/users/${userRecord.uid}/set-password/${tempTokenAccount}
 
       ${unwantedDict[language]}
 
@@ -605,7 +622,7 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
                   <p>${linkDict[language]}</p>
 
                   <div class="button-container">
-                      <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-password/${tempTokenAccount}">${buttonAccountDict[language]}</a>
+                      <a class="button" href="${portalBaseUrl}/users/${userRecord.uid}/set-password/${tempTokenAccount}">${buttonAccountDict[language]}</a>
                   </div>
 
                   <p>${unwantedDict[language]}</p>
@@ -667,16 +684,16 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
       ${optionsDict[language]}
 
       1. ${adminDict[language]}
-        https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=admin&cid=${cid}
+        ${portalBaseUrl}/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=admin&cid=${cid}
 
       2. ${editorDict[language]}
-        https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=editor&cid=${cid}
+        ${portalBaseUrl}/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=editor&cid=${cid}
 
       3. ${viewerDict[language]}
-        https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=viewer&cid=${cid}
+        ${portalBaseUrl}/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=viewer&cid=${cid}
 
       4. ${deleteDict[language]}
-        https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=delete&cid=${cid}
+        ${portalBaseUrl}/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=delete&cid=${cid}
 
       ${timeDict[language]}
 
@@ -737,13 +754,13 @@ exports.onUserCreatedFunction = onValueCreated("users/{uid}", async (event) => {
 
                   <p>${optionsDict[language]}</p>
 
-                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=admin&cid=${cid}">${adminDict[language]}</a>
+                  <a class="button" href="${portalBaseUrl}/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=admin&cid=${cid}">${adminDict[language]}</a>
 
-                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=editor&cid=${cid}">${editorDict[language]}</a>
+                  <a class="button" href="${portalBaseUrl}/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=editor&cid=${cid}">${editorDict[language]}</a>
 
-                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=viewer&cid=${cid}">${viewerDict[language]}</a>
+                  <a class="button" href="${portalBaseUrl}/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=viewer&cid=${cid}">${viewerDict[language]}</a>
 
-                  <a class="button" href="https://tromatic.app/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=delete&cid=${cid}">${deleteDict[language]}</a>
+                  <a class="button" href="${portalBaseUrl}/users/${userRecord.uid}/set-role/${tempTokenAccount}?role=delete&cid=${cid}">${deleteDict[language]}</a>
 
                   <p>${timeDict[language]}</p>
                   <p>${thanksDict[language]}</p>
@@ -821,7 +838,7 @@ exports.sendResetPasswordEmailFunction = onCall(
 
             ${resetlinkDict[language]}
 
-            https://tromatic.app/users/${userRecord.uid}/reset-password/${resetToken}
+            ${portalBaseUrl}/users/${userRecord.uid}/reset-password/${resetToken}
 
             ${unwantedDict[language]}
 
@@ -881,7 +898,7 @@ exports.sendResetPasswordEmailFunction = onCall(
                         <p>${resetlinkDict[language]}</p>
 
                         <div class="button-container">
-                            <a class="button" href="https://tromatic.app/users/${userRecord.uid}/reset-password/${resetToken}">${buttonResetDict[language]}</a>
+                            <a class="button" href="${portalBaseUrl}/users/${userRecord.uid}/reset-password/${resetToken}">${buttonResetDict[language]}</a>
                         </div>
 
                         <p>${unwantedDict[language]}</p>

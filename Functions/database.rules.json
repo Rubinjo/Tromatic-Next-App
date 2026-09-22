@@ -1,0 +1,82 @@
+{
+  "rules": {
+    ".read": "auth != null && root.child('owner').hasChild(auth.uid)",
+    ".write": "auth != null && root.child('owner').hasChild(auth.uid)",
+    "admin": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child($uid).child('cid').val() === root.child('users').child(auth.uid).child('cid').val() && !root.child('owner').hasChild($uid)))",
+        ".write": "auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child($uid).child('cid').val() === root.child('users').child(auth.uid).child('cid').val() && !root.child('owner').hasChild($uid) && auth.uid !== $uid"
+      }
+    },
+    "editor": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child($uid).child('cid').val() === root.child('users').child(auth.uid).child('cid').val() && !root.child('owner').hasChild($uid)))",
+        ".write": "auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child($uid).child('cid').val() === root.child('users').child(auth.uid).child('cid').val() && !root.child('owner').hasChild($uid) && auth.uid !== $uid"
+      }
+    },
+    "viewer": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child($uid).child('cid').val() === root.child('users').child(auth.uid).child('cid').val() && !root.child('owner').hasChild($uid)))",
+        ".write": "auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child($uid).child('cid').val() === root.child('users').child(auth.uid).child('cid').val() && !root.child('owner').hasChild($uid) && auth.uid !== $uid"
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child($uid).child('cid').val() === root.child('users').child(auth.uid).child('cid').val() && !root.child('owner').hasChild($uid)))",
+        ".validate": "newData.hasChildren(['cid', 'email', 'fullName'])",
+        "cid": {
+          ".validate": "newData.isString() && ((auth != null && root.child('owner').hasChild(auth.uid)) || newData.val() === data.val())"
+        },
+        "email": {
+          ".write": "auth != null && root.child('users').child($uid).exists() && (auth.uid === $uid || (auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child($uid).child('cid').val() === root.child('users').child(auth.uid).child('cid').val() && !root.child('owner').hasChild($uid)))",
+          ".validate": "newData.isString()"
+        },
+        "fullName": {
+          ".write": "auth != null && root.child('users').child($uid).exists() && (auth.uid === $uid || (auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child($uid).child('cid').val() === root.child('users').child(auth.uid).child('cid').val() && !root.child('owner').hasChild($uid)))",
+          ".validate": "newData.isString()"
+        },
+        "lastActivity": {
+          ".write": "auth != null && root.child('users').child($uid).exists() && (auth.uid === $uid || (auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child($uid).child('cid').val() === root.child('users').child(auth.uid).child('cid').val() && !root.child('owner').hasChild($uid)))",
+          ".validate": "newData.isNumber()"
+        },
+        "language": {
+          ".write": "auth != null && root.child('users').child($uid).exists() && (auth.uid === $uid || (auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child($uid).child('cid').val() === root.child('users').child(auth.uid).child('cid').val() && !root.child('owner').hasChild($uid)))",
+          ".validate": "newData.val() === 'en' || newData.val() === 'nl' || newData.val() === 'de'"
+        },
+        "expoPushToken": {
+          ".write": "auth != null && root.child('users').child($uid).exists() && (auth.uid === $uid || (auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child($uid).child('cid').val() === root.child('users').child(auth.uid).child('cid').val() && !root.child('owner').hasChild($uid)))",
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "machines": {
+      "$mid": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && data.child('CID').val() === root.child('users').child(auth.uid).child('cid').val() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('machines').hasChild($mid)",
+        ".write": "auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && data.exists() && newData.exists() && data.child('CID').val() === root.child('users').child(auth.uid).child('cid').val() && newData.child('CID').val() === data.child('CID').val() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('machines').hasChild($mid)",
+        ".validate": "newData.child('CID').isString()"
+      }
+    },
+    "companies": {
+      "$cid": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('users').child(auth.uid).child('cid').val() === $cid",
+        "users": {
+          "$uid": {
+            ".write": "auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child(auth.uid).child('cid').val() === $cid && root.child('users').child($uid).child('cid').val() === $cid && !root.child('owner').hasChild($uid) && auth.uid !== $uid"
+          }
+        },
+        "machines": {
+          "$mid": {
+            ".write": "auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child(auth.uid).child('cid').val() === $cid && root.child('machines').child($mid).child('CID').val() === $cid"
+          }
+        },
+        "language": {
+          ".write": "auth != null && root.child('users').child(auth.uid).child('cid').isString() && root.child('companies').child(root.child('users').child(auth.uid).child('cid').val()).child('users').hasChild(auth.uid) && root.child('admin').hasChild(auth.uid) && root.child('users').child(auth.uid).child('cid').val() === $cid",
+          ".validate": "newData.val() === 'en' || newData.val() === 'nl' || newData.val() === 'de'"
+        }
+      }
+    }
+  }
+}

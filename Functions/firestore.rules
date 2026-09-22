@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function role(name) {
+      return signedIn() &&
+        get(/databases/$(database)/documents/authorization/$(request.auth.uid)).data.get(name, false) == true;
+    }
+    function owner() {
+      return role('isOwner');
+    }
+    function companyMember(cid) {
+      return signedIn() && cid is string &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.cid == cid &&
+        (role('isViewer') || role('isEditor') || role('isAdmin'));
+    }
+    function sameCompany(userID) {
+      return companyMember(get(/databases/$(database)/documents/users/$(userID)).data.cid);
+    }
+    function managesUser(userID) {
+      return role('isAdmin') && request.auth.uid != userID && sameCompany(userID) &&
+        get(/databases/$(database)/documents/authorization/$(userID)).data.get('isOwner', false) != true;
+    }
+
+    // Trusted parent metadata is written by the history scheduler / Admin SDK.
+    match /machines/{machineID} {
+      allow read: if owner() || companyMember(resource.data.CID);
+      allow write: if owner();
+      match /history/{entryID} {
+        allow read: if owner() || companyMember(
+          get(/databases/$(database)/documents/machines/$(machineID)).data.CID);
+        // Historical telemetry must not be forgeable by client accounts.
+        allow write: if owner();
+      }
+    }
+
+    // These records also contain account-action tokens. Firestore reads expose
+    // the entire document, so clients use RTDB for readable profile information.
+    match /users/{userID} {
+      allow read: if owner();
+      allow create, delete: if owner();
+      allow update: if owner() || (
+        signedIn() && (request.auth.uid == userID || managesUser(userID)) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fullName', 'email']) &&
+        request.resource.data.fullName is string && request.resource.data.email is string
+      );
+    }
+
+    match /authorization/{userID} {
+      allow read: if signedIn() &&
+        (request.auth.uid == userID || owner() || (role('isAdmin') && sameCompany(userID)));
+      allow create: if owner() || (
+        role('isAdmin') && request.auth.uid != userID && sameCompany(userID) && safeRoles()
+      );
+      allow update: if owner() || (
+        managesUser(userID) && safeRoles()
+      );
+      allow delete: if owner();
+      function safeRoles() {
+        return request.resource.data.keys().hasOnly(['isOwner', 'isAdmin', 'isEditor', 'isViewer']) &&
+          request.resource.data.isOwner == false &&
+          request.resource.data.isAdmin is bool &&
+          request.resource.data.isEditor is bool &&
+          request.resource.data.get('isViewer', false) is bool;
+      }
+    }
+
+    match /companies/{cid}/{document=**} {
+      allow read, write: if owner() || (role('isAdmin') && companyMember(cid));
+    }
+  }
+}
